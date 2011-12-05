@@ -11,6 +11,110 @@ import popen2
 import os, sys, datetime, time, re, getpass, csv
 
 
+
+def getString(control,ignoredisabled=False):
+
+    """
+    Give any control... Get the string from
+
+        x = self.getString(self.listWidget_2)
+        if str(x)!=str(None):
+            thingstoupdate = self.updateString(thingstoupdate,"Status=\""+x+"\""," , ")
+    """
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QListWidget'>"  and control.selectedItems().__len__()>0 and ( ignoredisabled or control.isEnabled()):
+        return control.selectedItems()[0].text()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QComboBox'>"  and control.currentText()!="" and ( ignoredisabled or control.isEnabled()):
+        return control.currentText()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QDateTimeEdit'>"  and ( ignoredisabled or control.isEnabled()):
+            return now("yyyy-MM-dd hh:mm:ss",control.dateTime())
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTimeEdit'>"  and ( ignoredisabled or control.isEnabled()):
+            return now("hh:mm",control.time())
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QLineEdit'>"  and control.text()!="" and ( ignoredisabled or control.isEnabled() ):
+            return control.text()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTextEdit'>"  and control.toPlainText()!="" and ( ignoredisabled or control.isEnabled()):
+            return control.toPlainText()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QCalendarWidget'>"  and ( ignoredisabled or control.isEnabled()):
+            return self.now("yyyy-MM-dd",control.selectedDate())
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTabWidget'>"  and ( ignoredisabled or control.isEnabled()):
+            return control.currentIndex()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QDockWidget'>"  and ( ignoredisabled or control.isEnabled()):
+            return control.isVisible()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QSpinBox'>"  and ( ignoredisabled or control.isEnabled()):
+           return control.value()
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QLabel'>"  and ( ignoredisabled or control.isEnabled()):
+           return control.text()
+
+    return None
+
+
+def putString(control,Strx,ignoredisabled=False):
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QListWidget'>" and (control.isEnabled() or ignoredisabled):
+        d = control.findItems(str(Strx),Qt.MatchRecursive and Qt.MatchFixedString and Qt.MatchExactly )
+        if d.__len__()>0:
+            control.setItemSelected(d[0],True)
+        else:
+            d = control.findItems(str("None"),Qt.MatchRecursive and Qt.MatchFixedString and Qt.MatchExactly )
+            if d.__len__()>0:
+                control.setItemSelected(d[0],True)
+
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QComboBox'>" and (control.isEnabled() or ignoredisabled):
+        d = control.findText(str(Strx))
+        if d>-1:
+            control.setCurrentIndex(d)
+        else:
+            d = control.findText(str("None"))
+            if d>-1:
+                control.setCurrentIndex(d)
+
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QLineEdit'>" and (control.isEnabled() or ignoredisabled):
+            control.setText(str(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QSpinBox'>" and (control.isEnabled() or ignoredisabled):
+        if str(Strx)!="None":
+            control.setValue(int(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QGroupBox'>" and (control.isEnabled() or ignoredisabled):
+            control.setChecked(bool(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QCheckBox'>" and (control.isEnabled() or ignoredisabled):
+            control.setChecked(bool(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QCheckBox'>" and (control.isEnabled() or ignoredisabled):
+            control.setChecked(bool(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTabWidget'>" and (control.isEnabled() or ignoredisabled):
+            control.setCurrentIndex(int(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QDockWidget'>" and (control.isEnabled() or ignoredisabled):
+            control.setVisible(smart_bool(Strx))
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QDateTimeEdit'>" and (control.isEnabled() or ignoredisabled):
+            control.setDateTime(Strx)
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTimeEdit'>" and (control.isEnabled() or ignoredisabled):
+            control.setTime(Strx)
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QTextEdit'>" and (control.isEnabled() or ignoredisabled):
+            control.setPlainText(Strx)
+
+    if str(type(control)) == "<class 'PyQt4.QtGui.QLabel'>" and (control.isEnabled() or ignoredisabled):
+            control.setText(Strx)
+
+
 def getUsername():
         return os.environ.get('USERNAME');
 
