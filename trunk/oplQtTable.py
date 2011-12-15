@@ -86,7 +86,6 @@ class oplQtTable():
     def headFormatting(self,widget,Mode=0):
 
         self.widget = widget
-        self.widget.prResizeMode = Mode
         if Mode==0:
             self.widget.resizeColumnsToContents()
             self.widget.horizontalHeader().setStretchLastSection(True)
@@ -100,20 +99,25 @@ class oplQtTable():
             self.widget.horizontalHeader().setResizeMode(
                                             QtGui.QHeaderView.Stretch)
 
+    def resizeColumnsEx(self,widget,skipLast=True):
+        self.widget = widget
+        for r in range(self.widget.columnCount()-1) :
+            self.widget.resizeColumnToContents(r)
 
-    def resizeColumns(self,table,rule=[]):
 
-        table.resizeColumnsToContents()
+    def resizeColumns(self,widget,rule=[]):
 
-        colCount = table.columnCount()
-        tableWidth = table.width()
+        self.widget.resizeColumnsToContents()
+
+        colCount = self.widget.columnCount()
+        tableWidth = self.widget.width()
         colOldWidths = []
         percentColOldWidth = []
         colNewWidths = []
         totalColOldWidth = 0
 
         for colNo in xrange(0,colCount):
-            vals = table.columnWidth(colNo)
+            vals = self.widget.columnWidth(colNo)
             colOldWidths.append(vals)
             totalColOldWidth += vals
 
@@ -127,13 +131,13 @@ class oplQtTable():
 
         if not len(rule):
             for c,newWidth in enumerate(colNewWidths):
-                table.setColumnWidth(c,newWidth-1)
+                self.widget.setColumnWidth(c,newWidth-1)
         elif len(rule):
             for c,newWidth in enumerate(colNewWidths):
                 if not c in rule:
-                    table.setColumnWidth(c,newWidth-1)
+                    self.widget.setColumnWidth(c,newWidth-1)
 
-        table.setColumnWidth(colCount,newWidth-3)
+        self.widget.setColumnWidth(colCount,newWidth-3)
 
     def createItem(self,Text='',Data=''):
         itm = QtGui.QTableWidgetItem()
@@ -146,7 +150,7 @@ class oplQtTable():
                      append=0,
                      rowHeight=15,
                      insertAtFirst=False,
-                     allowEmpty=False):
+                     allowEmpty=True):
         self.widget = widget
         if not append: self.clearTable(self.widget)
         sortingVal = self.widget.isSortingEnabled()
@@ -247,13 +251,21 @@ class oplQtTable():
                 return item
         return None
 
+    def getRowItems(self, widget, row=0):
+        items = []
+        self.widget = widget
+        for i in range(self.widget.columnCount()):
+            items.append(self.widget.item(row,i))
+        return items
+
     def getSelectedRowNo(self,widget):
-        widget.blockSignals(1)
-        rowCount = widget.rowCount(); returnList = []
+        self.widget = widget
+        self.widget.blockSignals(1)
+        rowCount = self.widget.rowCount(); returnList = []
         for i in range(rowCount) :
-            if widget.item(i, 0).isSelected() :
+            if self.widget.item(i, 0) and self.widget.item(i, 0).isSelected() :
                 returnList.append(i)
-        widget.blockSignals(0)
+        self.widget.blockSignals(0)
         return returnList
 
     def getSelectedItems(self,widget):
