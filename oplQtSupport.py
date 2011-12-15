@@ -33,7 +33,6 @@ class oplQtSupport():
     def showRelax(self):
         QtGui.qApp.restoreOverrideCursor()
 
-
     def getIconFile(self, icon=""):
         iconFile = icon if icon else self.__defaultIcon()
         iconFile = iconFile.lstrip("\\")
@@ -61,7 +60,7 @@ class oplQtSupport():
             pxmap = QtGui.QPixmap()
             icon = QtGui.QIcon()
 
-        if item.isWindow():
+        if hasattr(item,"isWindow") and item.isWindow():
             item.setWindowIcon(icon)
         elif itemType == type(QtGui.QPushButton()):
             item.setIcon(icon)
