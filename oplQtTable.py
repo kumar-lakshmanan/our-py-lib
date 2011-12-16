@@ -269,18 +269,19 @@ class oplQtTable():
         return returnList
 
     def getSelectedItems(self,widget):
-        widget.blockSignals(1)
-        colCount = widget.columnCount();
-        rowCount = widget.rowCount(); returnList = []
+        self.widget = widget
+        self.widget.blockSignals(1)
+        colCount = self.widget.columnCount();
+        rowCount = self.widget.rowCount(); returnList = []
         for r in range(rowCount) :
             ColList = []
             for c in range(colCount-1) :
-                if widget.item(r, c) and widget.item(r, c).isSelected() :
-                    ColList.append(widget.item(r, c))
+                if self.widget.item(r, c) and self.widget.item(r, c).isSelected() :
+                    ColList.append(self.widget.item(r, c))
             if ColList:
                 returnList.append(ColList)
 
-        widget.blockSignals(0)
+        self.widget.blockSignals(0)
         return returnList
 
     def getItemsText(self, items, format='Text'):
@@ -298,20 +299,23 @@ class oplQtTable():
                     res.append(txt)
         return res
 
-    def getHeaderColNo(self, table, headerText):
-        for i in xrange(0,table.columnCount()):
-            if table.horizontalHeaderItem(i).text() == str(Text):
+    def getHeaderColNo(self, widget, headerText):
+        self.widget = widget
+        for i in xrange(0,self.widget.columnCount()):
+            if self.widget.horizontalHeaderItem(i).text() == str(headerText):
                 return int(i)
         return -1
 
-    def getColHeader(self,table,colNo):
-        return str(table.horizontalHeaderItem(int(colNo)).text())
+    def getColHeader(self,widget,colNo):
+        self.widget = widget
+        return str(self.widget.horizontalHeaderItem(int(colNo)).text())
 
     def isItemExist(self, item):
         return not sip.isdeleted(item)
 
-    def isTextExist(self, table, string):
-        if table.findItems(str(string), QtCore.Qt.MatchExactly).__len__()==0:
+    def isTextExist(self, widget, string):
+        self.widget = widget
+        if self.widget.findItems(str(string), QtCore.Qt.MatchExactly).__len__()==0:
             return False
         else:
             return True
@@ -324,14 +328,15 @@ class oplQtTable():
         self.widget = item.tableWidget()
         self.widget.closePersistentEditor(item)
 
-    def closeAllPersEditor(self,table):
-        table.blockSignals(1)
-        colCount = table.columnCount()
-        rowCount = table.rowCount()
+    def closeAllPersEditor(self,widget):
+        self.widget = widget
+        self.widget.blockSignals(1)
+        colCount = self.widget.columnCount()
+        rowCount = self.widget.rowCount()
         for r in range(rowCount) :
             for c in range(colCount-1) :
-                tableWidget.closePersistentEditor(table.item(r, c))
-        table.blockSignals(0)
+                self.widget.closePersistentEditor(self.widget.item(r, c))
+        self.widget.blockSignals(0)
 
     def populateContent(self,
                             widget,
