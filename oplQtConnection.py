@@ -5,6 +5,10 @@ class oplQtConnection():
     def __init__(self, uiMain):
         self.uiMain = uiMain
 
+    def sigConnect(self, sigSender=None, signal='', FunctionToInvoke=None):
+        if not sigSender is None and not signal is '' and not FunctionToInvoke is None:
+            QtCore.QObject.connect(sigSender,QtCore.SIGNAL(signal),FunctionToInvoke)
+
     def connectToClick(self, widget, FunctionToInvoke):
         widget.__class__.mousePressEvent = lambda widget, event: widget.emit(QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), event)
         self.uiMain.connect(widget, QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), FunctionToInvoke)
