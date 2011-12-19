@@ -9,6 +9,35 @@ class oplQtConnection():
         if not sigSender is None and not signal is '' and not FunctionToInvoke is None:
             QtCore.QObject.connect(sigSender,QtCore.SIGNAL(signal),FunctionToInvoke)
 
+    def connectDockAndAction(self, dock, action):
+        if dock and action:
+            self.sigConnect(action, "toggled(bool)",
+                                    lambda vis, dck=dock,
+                                           act=action:
+                                           self._sigActToggle(vis,dck,act))
+            self.sigConnect(dock, "visibilityChanged(bool)",
+                                    lambda vis, dck=dock,
+                                           act=action:
+                                            self._sigDckVisibility(vis,dck,act))
+
+    def _sigActToggle(self,*arg):
+        dck = arg[1]
+        act = arg[2]
+        dck.blockSignals(1)
+        act.blockSignals(1)
+        dck.setVisible(act.isChecked())
+        dck.blockSignals(0)
+        act.blockSignals(0)
+
+    def _sigDckVisibility(self,*arg):
+        dck = arg[1]
+        act = arg[2]
+        dck.blockSignals(1)
+        act.blockSignals(1)
+        act.setChecked(dck.isVisible())
+        dck.blockSignals(0)
+        act.blockSignals(0)
+
     def connectToClick(self, widget, FunctionToInvoke):
         widget.__class__.mousePressEvent = lambda widget, event: widget.emit(QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), event)
         self.uiMain.connect(widget, QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), FunctionToInvoke)
