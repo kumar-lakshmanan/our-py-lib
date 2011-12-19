@@ -26,6 +26,25 @@ class oplQtSupport():
         self.defaultIcon2=defaultIcon2;
         self.defaultIcon3=defaultIcon3 if defaultIcon3 else "default.png";
 
+    def getText(self, widget):
+        data = None
+        if type(widget) is type(QtGui.QLineEdit()):
+            data = str(widget.text())
+        return data
+
+    def setText(self, widget, value):
+        if type(widget) is type(QtGui.QLineEdit()):
+            widget.setText(str(value))
+
+    def setData(self, widget, data=""):
+        widget.setProperty("tag", data)
+
+    def getData(self, widget):
+        if hasattr(widget,"property"):
+            return widget.property("tag")
+        else:
+            return None
+
     def showBusy(self):
         busyCursor = QtGui.QCursor(QtCore.Qt.WaitCursor)
         QtGui.qApp.setOverrideCursor(busyCursor)
