@@ -103,6 +103,33 @@ class oplQtSupport():
                 index = tabWidget.indexOf(item)
                 tabWidget.setTabIcon(index,icon)
 
+    def tweakDock(self, AnimateDock = True, ForceTabbedDock = True, AutoTabHeadOrientation = True, Lock = False):
+        dkop = QtGui.QMainWindow.DockOptions()
+        dkop = dkop.__or__(QtGui.QMainWindow.AllowTabbedDocks)
+        dkop = dkop.__or__(QtGui.QMainWindow.AllowNestedDocks)
+
+        if AnimateDock:
+            dkop = dkop.__or__(QtGui.QMainWindow.AnimatedDocks)
+        if ForceTabbedDock:
+            dkop = dkop.__or__(QtGui.QMainWindow.ForceTabbedDocks)
+        if AutoTabHeadOrientation:
+            dkop = dkop.__or__(QtGui.QMainWindow.VerticalTabs)
+
+        self.uiMain.setDockOptions(dkop)
+
+        dkFeature = QtGui.QDockWidget.DockWidgetFeatures()
+
+        if Lock:
+            dkFeature = dkFeature.__or__(QtGui.QDockWidget.NoDockWidgetFeatures)
+        else:
+            dkFeature = dkFeature.__or__(QtGui.QDockWidget.DockWidgetMovable)
+            dkFeature = dkFeature.__or__(QtGui.QDockWidget.DockWidgetFloatable)
+            dkFeature = dkFeature.__or__(QtGui.QDockWidget.DockWidgetClosable)
+
+        for eachObj in self.uiMain.children():
+            if type(eachObj) == type(QtGui.QDockWidget()):
+                eachObj.setFeatures(dkFeature)
+
     def uiLayoutSave(self, layoutFile='layout.lyt'):
         dirname = os.path.dirname(layoutFile)
         if dirname!='' and not os.path.exists(dirname):
@@ -124,12 +151,31 @@ class oplQtSupport():
             self.uiMain.resize(lst[1])
             self.uiMain.move(lst[2])
 
+
     def showInputBox(self, Title='Information', Message='Information', DefaultValue=''):
         comments, ok = QtGui.QInputDialog.getText(self.uiMain, str(Title), str(Message), QtGui.QLineEdit.Normal, DefaultValue)
         if ok and not comments.isEmpty():
             return comments
         else:
             return ''
+
+    def showYesNoBox(self,Title='Information',Message='Information'):
+        ret = QtGui.QMessageBox.question(self.uiMain, Title, Message, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+        return ret == QtGui.QMessageBox.Yes
+
+    def showIformationBox(self, Title='Information', Message='Information'):
+        QtGui.QMessageBox.information(self.uiMain, Title, Message)
+
+
+    def getFileToOpen(self,Title='Select a file to open...',FileName='',FileType='All Files (*);;Text Files (*.txt)'):
+        fileName = QtGui.QFileDialog.getOpenFileName(self.uiMain, str(Title), FileName, str(FileType))
+        if not fileName.isEmpty(): return str(fileName)
+        return ''
+
+    def getFileToSave(self,Title='Choose location to save file...',FileName='',FileType='All Files (*);;Text Files (*.txt)'):
+        fileName = QtGui.QFileDialog.getSaveFileName(self.uiMain, str(Title), FileName, str(FileType))
+        if not fileName.isEmpty(): return str(fileName)
+        return ''
 
     def __defaultIcon(self):
         if self.defaultIcon:
