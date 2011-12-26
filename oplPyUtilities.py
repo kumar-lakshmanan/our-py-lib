@@ -14,8 +14,22 @@ import inspect
 import datetime
 from time import strftime
 import itertools
+import os
 
 class oplPyUtilities():
+
+    def fileSave(self, data, fileName):
+        if fileName and data:
+            f = open(fileName,'w')
+            f.write(str(data))
+            f.close()
+
+    def fileRead(self, fileName):
+        if fileName and os.path.exists(fileName):
+            f = open(fileName,'r')
+            data = f.readlines()
+            return ''.join(data)
+        return ''
 
     def getAttributes(self,cls):
         boring = dir(type('dummy', (object,), {}))
