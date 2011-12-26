@@ -80,10 +80,17 @@ class Process():
         pass
 
     def execute(self):
-        print "Starting..." + self._exe + str(self._args)
+        print "Starting..."
+        print self._exe + " " + self.__argsDisp()
         r = self.prc.start(self._exe, self._args)
         #r = self.prc.startDetached(self.exe, self.lst)
         #r = self.prc.execute(self.exe, self.lst)
+
+    def __argsDisp(self):
+        d = ""
+        for i in self._args:
+            d += " " + i
+        return d
 
     def terminate(self):
         print "Terminating"
