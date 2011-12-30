@@ -35,8 +35,9 @@ class Process():
 
         QtCore.QObject.connect(self.prc,QtCore.SIGNAL("started ()"),self.sigStarted)
         QtCore.QObject.connect(self.prc,QtCore.SIGNAL("stateChanged (QProcess::ProcessState)"),self.sigStateChanged)
-        QtCore.QObject.connect(self.prc,QtCore.SIGNAL("readyReadStandardOutput ()"),self.sigReadStdOutput)
+        #QtCore.QObject.connect(self.prc,QtCore.SIGNAL("readyReadStandardOutput ()"),self.sigReadStdOutput)
         QtCore.QObject.connect(self.prc,QtCore.SIGNAL("readyReadStandardError ()"),self.sigReadStdError)
+        QtCore.QObject.connect(self.prc,QtCore.SIGNAL("readyRead ()"),self.sigReadStdOutput)
         #QtCore.QObject.connect(self.prc,QtCore.SIGNAL("finished (int)"),self.sigFinished)
         QtCore.QObject.connect(self.prc,QtCore.SIGNAL("finished (int,QProcess::ExitStatus)"),self.sigFinished)
         QtCore.QObject.connect(self.prc,QtCore.SIGNAL("error (QProcess::ProcessError)"),self.sigError)
@@ -82,7 +83,7 @@ class Process():
     def execute(self):
         print "Starting..."
         print self._exe + " " + self.__argsDisp()
-        r = self.prc.start(self._exe, self._args)
+        r = self.prc.start(self._exe, self._args, QtCore.QIODevice.ReadWrite|QtCore.QIODevice.Text)
         #r = self.prc.startDetached(self.exe, self.lst)
         #r = self.prc.execute(self.exe, self.lst)
 
@@ -103,10 +104,18 @@ class Process():
 
     def _getErrorData(self):
         #byt = QtCore.QByteArray()
+        #return ''
         byt = self.prc.readAllStandardError()
         return str(byt.data()).strip()
 
     def _getMainData(self):
-        #byt = QtCore.QByteArray()
+        byt = QtCore.QByteArray()
         byt = self.prc.readAllStandardOutput()
         return str(byt.data()).strip()
+
+
+        #byt = ''
+        #while (self.prc.waitForReadyRead()):
+        #    byt += self.prc.readAll();
+        #return byt
+
