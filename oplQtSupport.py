@@ -177,6 +177,12 @@ class oplQtSupport():
         if not fileName.isEmpty(): return str(fileName)
         return ''
 
+    def scrollTextBox(self, box=None):
+        if box:
+            vsb = box.verticalScrollBar()
+            vsb.setValue(vsb.maximum())
+            box.repaint()
+
     def __defaultIcon(self):
         if self.defaultIcon:
             icon=self.defaultIcon
@@ -187,3 +193,4 @@ class oplQtSupport():
         else:
             icon=""
         return icon
+

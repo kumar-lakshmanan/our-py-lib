@@ -18,6 +18,12 @@ import os
 
 class oplPyUtilities():
 
+    def fileSaveAdv(self, folderPath, fileName, data):
+        if not os.path.exists(folderPath): os.makedirs(folderPath)
+        svFile = os.path.join(folderPath,fileName)
+        if os.path.exists(folderPath):
+            self.fileSave(data,svFile)
+
     def fileSave(self, data, fileName):
         if fileName and data:
             f = open(fileName,'w')
