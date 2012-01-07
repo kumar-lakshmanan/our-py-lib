@@ -258,6 +258,13 @@ class oplQtTable():
             items.append(self.widget.item(row,i))
         return items
 
+    def takeRowItems(self, widget, row=0):
+        items = []
+        self.widget = widget
+        for i in range(self.widget.columnCount()):
+            items.append(self.widget.takeItem(row,i))
+        return items
+
     def getSelectedRowNo(self,widget):
         self.widget = widget
         self.widget.blockSignals(1)
