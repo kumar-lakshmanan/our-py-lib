@@ -49,11 +49,14 @@ class Process():
         return lst
 
     def sigStarted(self, *arg):
-        #print "Started"
+        print "Process started!"
+        print arg
         pass
 
     def sigStateChanged(self, *arg):
         #print "StateChange - " + str(arg[0])
+        print "Process state changed!"
+        print arg
         pass
 
     def sigReadStdOutput(self, *arg):
@@ -70,18 +73,21 @@ class Process():
         #byt = QtCore.QByteArray()
         #byt = self.prc.readAllStandardError()
         #print str(byt.data())
+        print "Process error thrown!"
+        print arg
         self._onErrorComes(e)
 
     def sigFinished(self, *arg):
         #print "Fin"
+        print "Process done!"
         self._onCompletion(arg)
 
     def sigError(self, *arg):
-        print "Error in the Process"
-        pass
+        print "Process error occured!"
+        print arg
 
     def execute(self):
-        print "Starting..."
+        print "Process execution starts..."
         print self._exe + " " + self.__argsDisp()
         r = self.prc.start(self._exe, self._args, QtCore.QIODevice.ReadWrite|QtCore.QIODevice.Text)
         #r = self.prc.startDetached(self.exe, self.lst)
