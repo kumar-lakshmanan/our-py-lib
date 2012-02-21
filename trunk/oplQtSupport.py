@@ -151,7 +151,6 @@ class oplQtSupport():
             self.uiMain.resize(lst[1])
             self.uiMain.move(lst[2])
 
-
     def showInputBox(self, Title='Information', Message='Information', DefaultValue=''):
         comments, ok = QtGui.QInputDialog.getText(self.uiMain, str(Title), str(Message), QtGui.QLineEdit.Normal, DefaultValue)
         if ok and not comments.isEmpty():
