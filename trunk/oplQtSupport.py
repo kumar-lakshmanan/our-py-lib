@@ -138,6 +138,13 @@ class oplQtSupport():
         winsiz = self.uiMain.size()
         winpos = self.uiMain.pos()
         lst = [self.uiMain.saveState(),winsiz,winpos]
+
+        for each in self.uiMain.children():
+            if isinstance(each,QtGui.QDockWidget):
+                s = each.size()
+                p = each.pos()
+                lst.append((s,p))
+
         f=open(layoutFile, 'w')
         pickle.dump(lst,f)
         f.close()
@@ -150,6 +157,27 @@ class oplQtSupport():
             self.uiMain.restoreState(lst[0])
             self.uiMain.resize(lst[1])
             self.uiMain.move(lst[2])
+
+            dcks = []
+            for each in self.uiMain.children():
+                if isinstance(each,QtGui.QDockWidget):
+                    dcks.append(each)
+
+            for cnt, each in enumerate(range(3,len(dcks))):
+                dcks[cnt].resize(lst[each][0])
+                dcks[cnt].move(lst[each][1])
+
+
+    def pack(self, fileName, obj):
+        f=open(fileName, 'w')
+        pickle.dump(obj,f)
+        f.close()
+
+    def unpack(self, fileName):
+        f=open(fileName, 'r')
+        data = pickle.load(f)
+        f.close()
+        return data
 
     def showInputBox(self, Title='Information', Message='Information', DefaultValue=''):
         comments, ok = QtGui.QInputDialog.getText(self.uiMain, str(Title), str(Message), QtGui.QLineEdit.Normal, DefaultValue)

@@ -28,9 +28,7 @@ class oplQtWins():
             uName = str(widget).replace(' ','').replace('<','').replace('>','').replace('.','')
             uName = uName.split('at')[0]
             self.win.setObjectName(uName)
-            base = QtGui.QWidget()
-            widget.setupUi(base)
             widget.win = self.win
-            self.win.setWidget(base)
+            self.win.setWidget(widget)
             self.uiMain.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.win)
             return self.win
