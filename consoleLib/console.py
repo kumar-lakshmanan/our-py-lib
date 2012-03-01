@@ -5,7 +5,7 @@
 #
 # Created:     13/01/2011
 # Copyright:   (c) lkumaresan 2011
-# Licence:     Prana Studios India (pvt) ltd
+# Licence:     Personal
 #
 # Description:
 #
