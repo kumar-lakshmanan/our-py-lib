@@ -1,0 +1,103 @@
+// first clean the mayaManAovs
+global proc cleanAovsbatch(){
+	 int $numChannels = `MayaManInfo -getarraysize "EOChannel"`;
+	
+	  for($i = 1; $i <= $numChannels; $i++)
+	  {
+	    int $index = 0;
+	
+	    catch(`MayaManSetData -delarrayelement "EOChannel"      $index`);
+	    catch(`MayaManSetData -delarrayelement "EOEnabled"      $index`);
+	    catch(`MayaManSetData -delarrayelement "EOType"         $index`);
+	    catch(`MayaManSetData -delarrayelement "EODoDither"     $index`);
+	    catch(`MayaManSetData -delarrayelement "EODitherValue"  $index`);
+	    catch(`MayaManSetData -delarrayelement "EOQuantization" $index`);
+	    catch(`MayaManSetData -delarrayelement "EOQuantMin"     $index`);
+	    catch(`MayaManSetData -delarrayelement "EOQuantMax"     $index`);
+	    catch(`MayaManSetData -delarrayelement "EOQuantZero"    $index`);
+	    catch(`MayaManSetData -delarrayelement "EOQuantOne"     $index`);
+	    catch(`MayaManSetData -delarrayelement "EOFilter"       $index`);
+	    catch(`MayaManSetData -delarrayelement "EOFilterX"      $index`);
+	    catch(`MayaManSetData -delarrayelement "EOFilterY"      $index`);
+	    catch(`MayaManSetData -delarrayelement "EOPath"         $index`);
+	    catch(`MayaManSetData -delarrayelement "EODriver"       $index`);
+	    catch(`MayaManSetData -delarrayelement "EODriverArgs"   $index`);
+	    catch(`MayaManSetData -delarrayelement "EOExt"          $index`);
+	  }
+	
+	  catch(`MayaManSetData -delarrayelement "EOPath" 0`);
+			//mayaManExtraChannelsRefreshList();
+}
+
+
+global proc setMayaManAovs(int $SelBit ,string $aovs[]){	
+	 cleanAovsbatch(); 
+	 string $BitValue;
+	 string $quote = "\"";
+	 string $bitZero;
+	 if ($SelBit == "8")
+	 {
+		setAttr "MayaManNugget.QuanOne" 255;
+		setAttr "MayaManNugget.QuanMax" 255;
+		$BitValue = $quote + "255" + $quote;
+		$bitZero = "\"128\"";		
+   }
+	 else
+	 {
+		setAttr "MayaManNugget.QuanOne" 65535;
+		setAttr "MayaManNugget.QuanMax" 65535;
+		$BitValue = $quote + "65535" + $quote;
+		$bitZero = "\"32768\"";
+	}
+
+		setAttr "MayaManNugget.EOToSubDir" 1;
+		string $setChannel[];
+		string $Quant;
+		string $Driver;
+		string $Dith;
+		
+		$Driver = "\"\"";
+		$Dith = "true";
+		$Quant = "true";	
+		string $mayaVersion = `about -v`;
+		for($aov in $aovs){
+			
+		if(`match "2011" $mayaVersion` ==  "2011"){// for maya 2011 3 more args to add for stereo option
+		 	if(`match "__normalC" $aov` == "__normalC"){
+		 		string $toEval =	"  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"1\", true, " + $Dith + ", \".5\", " + $Quant + ",\"0\"," + $BitValue + "," + $bitZero + "," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\", \"0\",\"\",\"\") ";
+		 		eval($toEval);
+		 	}
+		 	else if(`match "__normal" $aov` == "__normal")
+		 	{
+		 				string $toEval =	"  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"3\", true, " + $Dith + ", \".5\", " + $Quant + ",\"0\"," + $BitValue + "," + $bitZero + "," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\", \"0\",\"\",\"\") ";
+		 				eval($toEval);
+		 	}
+		 	else{
+		 	  string $toEval = "  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"1\", true, " + $Dith + ", \".5\", " + $Quant + ", \"0\"," + $BitValue + ",\"0\"," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\", \"0\",\"\",\"\") ";
+		 	  eval($toEval);
+		 	  }
+		 	  
+		 	}// maya version
+		 	else{
+		 		
+		 	if(`match "__normalC" $aov` == "__normalC"){
+		 		string $toEval =	"  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"1\", true, " + $Dith + ", \".5\", " + $Quant + ",\"0\"," + $BitValue + "," + $bitZero + "," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\") ";
+		 		eval($toEval);
+		 	}
+		 	else if(`match "__normal" $aov` == "__normal")
+		 	{
+		 				string $toEval =	"  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"3\", true, " + $Dith + ", \".5\", " + $Quant + ",\"0\"," + $BitValue + "," + $bitZero + "," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\") ";
+		 				eval($toEval);
+		 	}
+		 	else{
+		 	  string $toEval = "  MayaManAddExtraOutputChannel(\""+ $aov + "\""+", \"1\", true, " + $Dith + ", \".5\", " + $Quant + ", \"0\"," + $BitValue + ",\"0\"," + $BitValue + ", \"\", \"0\", \"0\",\"\",\"\"," + $Driver + ", \"\") ";
+		 	  eval($toEval);
+		 	  }
+		 		
+		}// for maya 2008 
+			
+		}
+		
+		
+}
+
