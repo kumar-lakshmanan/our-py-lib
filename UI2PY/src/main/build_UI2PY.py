@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
 
 #PY2EXE CONFIGURATION
-MAIN_SCRIPT_FILE = 'CompileByCMDLine.py'
-APPNAME = 'CompileByCMDLine'
-DESCRIPTION = 'Compile PYTHON apps to exe'
+MAIN_SCRIPT_FILE = 'UI2PY.py'
+APPNAME = 'UI2PY'
+DESCRIPTION = 'Compile PyQT UI to Py File'
 COMPANY_NAME = 'Kaymatrix Studios'
 COPYRIGHT = 'Kaymatrix Studios - Technology'
 VERSION = '0.0.1'
@@ -46,7 +46,7 @@ FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'LKUMARESAN'
 BUNDLE_LEVEL = 1                        # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
-DO_CONSOLE_SCREEN = True
+DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
 INCLUDES = ['sip']
 EXCLUDES = []

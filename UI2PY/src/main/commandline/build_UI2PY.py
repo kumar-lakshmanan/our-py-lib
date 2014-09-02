@@ -20,9 +20,11 @@ if __name__ == '__main__':
 ####Module Pack folders that will be added to sys search path####
     modulePathList = [
                       currentFolder,
-                      currentFolder + '\qtui',
-                      currentFolder + '\main',
-                      currentFolder + '\core'
+                      parentFolder1,
+                      parentFolder1 + '\qtui',
+                      parentFolder1 + '\main',
+                      parentFolder1 + '\main\commandline',
+                      parentFolder1 + '\core'
                       #parentFolder1 + '\lib\Controls',
                       #"C:/Windows/winsxs/x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.21022.8_none_bcb86ed6ac711f91"
                      ]
@@ -34,9 +36,9 @@ if __name__ == '__main__':
 
 
 #PY2EXE CONFIGURATION
-MAIN_SCRIPT_FILE = 'CompileByUI.py'
-APPNAME = 'CompileByUI'
-DESCRIPTION = 'Compile PYTHON apps to exe'
+MAIN_SCRIPT_FILE = 'UI2PY.py'
+APPNAME = 'UI2PY'
+DESCRIPTION = 'Compile PyQT UI to Py File'
 COMPANY_NAME = 'Kaymatrix Studios'
 COPYRIGHT = 'Kaymatrix Studios - Technology'
 VERSION = '0.0.1'
@@ -45,8 +47,8 @@ ICON_FILE = 'AppIcon.ico'
 FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'LKUMARESAN'
 BUNDLE_LEVEL = 1                        # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
-DO_COMPRESS = False
-DO_CONSOLE_SCREEN = False
+DO_COMPRESS = True
+DO_CONSOLE_SCREEN = True
 INCLUDE_SOURCE_ZIP = False
 INCLUDES = ['sip']
 EXCLUDES = []
