@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>PYQT_UI_Compiler</name>
+	<name>UI2PY</name>
 	<comment></comment>
 	<projects>
 		<project>CommonLib</project>

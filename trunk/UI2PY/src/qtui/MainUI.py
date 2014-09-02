@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\CompilePYQTUI\src\qtui\MainUI.ui'
+# Form implementation generated from reading ui file 'F:/Kumaresan/Code/Python/UI2PY/src/qtui/MainUI.ui'
 #
-# Created: Sat Aug 23 14:17:31 2014
+# Created: Tue Sep  2 05:42:20 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "CompilePYQTUI"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "UI2PY"))
         self.toolButton.setText(_translate("MainWindow", "..."))
         self.label_2.setText(_translate("MainWindow", "Output PY File:"))
         self.label.setText(_translate("MainWindow", "Input UI File: "))

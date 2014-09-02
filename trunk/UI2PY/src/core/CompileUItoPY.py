@@ -21,7 +21,7 @@ class CompileUItoPYCls(object):
         pyFileHdl = open(pyFile,'w')
         
         uic.compileUi(uiFileHdl, pyFileHdl)
-        print ("Convert Done!")
+        print ("UI->PY Completed!")
         
         uiFileHdl.close()
         pyFileHdl.close()
@@ -40,5 +40,10 @@ class CompileUItoPYCls(object):
             self.convertCore(uiFile,pyFile)
         else:
             print("File doesn't exist - " + uiFile)
-        print ("Convert Done")
+        print ("Convert Done!")
+        
+if __name__ == '__main__':
+    inputFile = 'F:/Kumaresan/Code/Python/UI2PY/src/qtui/MainUI.ui'
+    ui2py = CompileUItoPYCls() 
+    ui2py.doConvert(inputFile)
         
