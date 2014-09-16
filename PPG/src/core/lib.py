@@ -119,3 +119,11 @@ class ppg(object):
         self.currentScreenName = screenName
         self.reLoad(self.currentScreenName)
 
+
+class ppgGenerator(object):
+
+    def __init__(self):
+        pass
+
+    def doGenerate(self):
+        pass
