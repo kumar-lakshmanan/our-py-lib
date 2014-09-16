@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:/Kumaresan/Code/Python/UI2PY/src/qtui/MainUI.ui'
 #
-# Created: Tue Sep  2 05:42:20 2014
+# Created: Tue Sep  2 06:11:41 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
