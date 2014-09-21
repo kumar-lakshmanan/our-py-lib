@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\wgt_form1_general.ui'
 #
-# Created: Tue Sep 16 06:52:06 2014
+# Created: Wed Sep 17 06:32:50 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,8 +14,9 @@ class Ui_form(object):
         form.setObjectName("form")
         form.resize(526, 416)
         self.gridLayout_2 = QtWidgets.QGridLayout(form)
-        self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2.setHorizontalSpacing(0)
+        self.gridLayout_2.setVerticalSpacing(5)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.widget_2 = QtWidgets.QWidget(form)
         self.widget_2.setObjectName("widget_2")
@@ -91,6 +92,6 @@ class Ui_form(object):
         self.radioButton_2.setText(_translate("form", "Python - Commandline Application"))
         self.groupBox_2.setTitle(_translate("form", "Build"))
         self.checkBox.setText(_translate("form", "Include Py2EXE Build Tempalte"))
-        self.label_3.setText(_translate("form", "Location"))
+        self.label_3.setText(_translate("form", "Code Location"))
         self.label.setText(_translate("form", "Project Name"))
 

@@ -26,8 +26,11 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <property name="spacing">
+   <property name="horizontalSpacing">
     <number>0</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>5</number>
    </property>
    <item row="1" column="0" colspan="2">
     <widget class="QWidget" name="widget_2" native="true">
@@ -142,7 +145,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Location</string>
+         <string>Code Location</string>
         </property>
        </widget>
       </item>
