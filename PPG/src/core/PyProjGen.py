@@ -28,7 +28,10 @@ class PyProjGen():
         self.win = WinMain(self)
         self.win.show()
 
-        self.tls = tools.basic()
+        self.infoStyle = tools.infoStyle()
+        self.infoStyle.errorLevel = 2
+        self.infoStyle.infoLevel = 0
+        self.tls = tools.basic(self.infoStyle)
         self.qtTrees = PyQt.TreeWidget()
         self.qtTools = PyQt.Tools(self.win)
 
@@ -71,9 +74,8 @@ class PyProjGen():
     def btnGenerateProj(self):
         self.ppg.saveCurrentScreen()
         self.ppg.reLoadAll()
-        pn = self.ppg.general.projectName
-        mw = self.ppg.UISettings.mainWindowTitle
-        self.tls.info("pn: " + pn + "mw: " + mw)
+        self.gen = core.lib.ppgGenerator(self.ppg)
+        self.gen.doGenerate()
 
     def btnApply(self):
         self.ppg.saveCurrentScreen()

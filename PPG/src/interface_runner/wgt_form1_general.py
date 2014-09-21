@@ -45,6 +45,9 @@ class Form(object):
 
         self.form.checkBox.setChecked(self.curObj.py2exe)
 
+        self.form.lineEdit.setReadOnly(True)
+        self.form.lineEdit_3.setReadOnly(True)
+
     def getUpdatedUIValues(self):
         self.curObj.projectName = self.tools.getValue(self.form.lineEdit)
         self.curObj.author = self.tools.getValue(self.form.lineEdit_2)

@@ -8,6 +8,7 @@ import os
 import pickle
 import inspect
 import sys
+import shutil
 
 class MySettings(object):
     var1 = "aa"
@@ -19,24 +20,46 @@ class MySettings(object):
     var7 = True
     var8 = None
 
+class infoStyle(object):
+    errorLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
+    infoLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
 
 class basic(object):
     '''
     classdocs
     '''
 
-    def __init__(self):
+
+    def __init__(self, infoStyle=None):
         '''
         Constructor
 
         '''
+        if(infoStyle is None):
+            self.infoStyle = infoStyle()
+        else:
+            self.infoStyle = infoStyle
+
     def error(self, message):
-        print("{} Error: {}".format(self._buildCallerPath(), message))
+        if(self.infoStyle.errorLevel == 0):
+            print("Error: {}".format(message))
+        elif(self.infoStyle.errorLevel == 1):
+            print("{} Error: {}".format(self._buildCallerPath(1), message))
+        elif(self.infoStyle.errorLevel == 2):
+            print("{} Error: {}".format(self._buildCallerPath(), message))
 
     def info(self, message):
-        print("{} Info: {}".format(self._buildCallerPath(), message))
+        if(self.infoStyle.infoLevel == 0):
+            print("{}".format(message))
+        elif(self.infoStyle.infoLevel == 1):
+            print("{} Info: {}".format(self._buildCallerPath(1), message))
+        elif(self.infoStyle.infoLevel == 2):
+            print("{} Info: {}".format(self._buildCallerPath(), message))
 
-    def _buildCallerPath(self):
+    def copyFile(self, src, dst):
+        shutil.copy(src, dst)
+
+    def _buildCallerPath(self, parentOnly=0):
         stack = inspect.stack()
         path = ""
         for eachStack in stack:
@@ -44,7 +67,10 @@ class basic(object):
                 the_class = eachStack[0].f_locals["self"].__class__.__name__
                 the_method = eachStack[0].f_code.co_name
                 if(the_class != "basic"):
-                    path += "{}.{}()->".format(the_class, the_method)
+                    if(parentOnly):
+                        path = "{}.{}()->".format(the_class, the_method)
+                    else:
+                        path += "{}.{}()->".format(the_class, the_method)
         return path
 
     def makePathForFile(self, file):
