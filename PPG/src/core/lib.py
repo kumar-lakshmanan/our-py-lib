@@ -1,6 +1,5 @@
-from interface_runner import wgt_form1_general
+from interface_runner import wgt_form1_general, wgt_form3_py2exe
 from interface_runner import wgt_form2_uisettings
-from interface_runner import wgt_form3_pydev
 import general.tools
 import os
 from PyQt5 import QtCore
@@ -19,10 +18,13 @@ class UISettings(object):
     mainWindowTitle = "This wINYour Project Name"
 
 
-class PyDev(object):
+class Py2Exe(object):
     isEnabled = True
-    addCommonLib = True
-
+    appName = "mainapp"
+    description = "app created by template"
+    company_name = "kumaresan studio"
+    copyrights = "kumar"
+    version = "1.0.0"
 
 class ppg(object):
 
@@ -37,12 +39,12 @@ class ppg(object):
 
         self.general = General()
         self.UISettings = UISettings()
-        self.pyDev = PyDev()
+        self.py2exe = Py2Exe()
 
         self.listOfScreenObjs = []
         self.listOfScreenObjs.append(self.general)
         self.listOfScreenObjs.append(self.UISettings)
-        self.listOfScreenObjs.append(self.pyDev)
+        self.listOfScreenObjs.append(self.py2exe)
 
         self.mainWindow = winHandle
         self.projFolder = ppgFolder
@@ -76,9 +78,9 @@ class ppg(object):
             elif (screenName == 'UISettings'):
                 self.UISettings = self.tls.pickleLoadObject(file)
                 self.currentScreen = self.UISettings
-            elif (screenName == 'PyDev'):
-                self.pyDev = self.tls.pickleLoadObject(file)
-                self.currentScreen = self.pyDev
+            elif (screenName == 'Py2Exe'):
+                self.py2exe = self.tls.pickleLoadObject(file)
+                self.currentScreen = self.py2exe
 
         if (not avoidShowScreen):
             self.showScreen()
@@ -89,8 +91,9 @@ class ppg(object):
             self.currentScreenForm = wgt_form1_general.Form(self.mainWindow, self.currentScreen, self)
         if(self.currentScreenName == "UISettings"):
             self.currentScreenForm = wgt_form2_uisettings.Form(self.mainWindow, self.currentScreen, self)
-        if(self.currentScreenName == "PyDev"):
-            self.currentScreenForm = wgt_form3_pydev.Form(self.mainWindow, self.currentScreen, self)
+        if(self.currentScreenName == "Py2Exe"):
+            self.currentScreenForm = wgt_form3_py2exe.Form(self.mainWindow, self.currentScreen, self)
+
         self.currentScreenForm.populateUI()
 
     def syncLocalObjWithCurrentScreenObj(self):
@@ -102,8 +105,6 @@ class ppg(object):
             self.general = self.currentScreen
         if(self.currentScreenName == "UISettings"):
             self.UISettings = self.currentScreen
-        if(self.currentScreenName == "PyDev"):
-            self.pyDev = self.currentScreen
 
     def reLoadAll(self):
         for eachScreen in self.listOfScreenObjs:
@@ -162,7 +163,10 @@ class ppgGenerator(object):
     def doGenerate(self):
         src = os.path.abspath(os.path.curdir)
         src = os.path.join(src, 'BaseCodes')
-        src = os.path.join(src, 'SampleQtApp')
+        if (self.ppg.general.projectType == 'pyqtwindows'):
+            src = os.path.join(src, 'SampleQtApp')
+        else:
+            src = os.path.join(src, 'SamplePyApp')
 
         dst = self.ppg.general.location
 
@@ -225,13 +229,19 @@ class ppgGenerator(object):
         fl = dstFile.absoluteFilePath()
         path = dstFile.absolutePath()
         name = dstFile.baseName()
-        
+
         if(".project" in fl):
             self._doReplaceParameter(fl, "[[PROJECTNAME]]", self.ppg.general.projectName)
-            
-        if("SampleQtApp" in fl):
+
+        if("SampleQtApp" in fl or "SamplePyApp" in fl):
             self._doReplaceParameter(fl, "[[PROJECTNAME]]", self.ppg.general.projectName)
+            self._doReplaceParameter(fl, "[[AUTHOR]]", self.ppg.general.author)
+            self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
             self._doRenameFiles(fl, self.ppg.general.projectName)
+
+        if("win_main" in fl):
+            self._doReplaceParameter(fl, "[[AUTHOR]]", self.ppg.general.author)
+            self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
 
 
     def _doReplaceParameter(self, fileName, findParameter, replaceWithParameter):
@@ -239,7 +249,7 @@ class ppgGenerator(object):
         matter = f.read()
         f.close()
         matter = matter.replace(findParameter, replaceWithParameter, 100000)
-        
+
         f = open(fileName, mode='w')
         f.write(matter)
         f.close()
