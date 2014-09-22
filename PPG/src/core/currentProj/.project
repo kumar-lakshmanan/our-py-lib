@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CompileUI</name>
+	<name>currentProj</name>
 	<comment></comment>
 	<projects>
+		<project>CommonLib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
