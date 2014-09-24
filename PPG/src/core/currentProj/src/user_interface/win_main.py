@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Created on Sep 21, 2014 Sun - 19:52:57
+# Created on Sep 23, 2014 Tue - 06:38:16
 
 # @author: LKumaresan
 #
@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "fgd"))
         self.label_2.setText(_translate("MainWindow", "Output:"))
         self.label_3.setText(_translate("MainWindow", "This is where the output comes."))
         self.pushButton.setText(_translate("MainWindow", "Click Here"))

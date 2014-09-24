@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\wgt_form3_py2exe.ui'
 #
-# Created: Sun Sep 21 21:41:48 2014
+# Created: Mon Sep 22 07:22:20 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,7 +15,7 @@ class Ui_Form(object):
         Form.resize(566, 480)
         self.gridLayout_2 = QtWidgets.QGridLayout(Form)
         self.gridLayout_2.setSpacing(0)
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 9)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.groupBox = QtWidgets.QGroupBox(Form)
         self.groupBox.setCheckable(True)
@@ -70,8 +70,6 @@ class Ui_Form(object):
         self.label_3.setObjectName("label_3")
         self.gridLayout_5.addWidget(self.label_3, 0, 1, 1, 1)
         self.gridLayout.addWidget(self.widget_3, 2, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(20, 113, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 5, 0, 1, 1)
         self.widget = QtWidgets.QWidget(self.groupBox)
         self.widget.setObjectName("widget")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.widget)
@@ -85,6 +83,8 @@ class Ui_Form(object):
         self.gridLayout_3.addWidget(self.label, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.groupBox, 0, 0, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(20, 113, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout_2.addItem(spacerItem, 1, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

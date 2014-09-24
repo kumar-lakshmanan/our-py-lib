@@ -43,8 +43,6 @@ class Form(object):
         else:
             self.form.radioButton_2.setChecked(1)
 
-        self.form.checkBox.setChecked(self.curObj.py2exe)
-
         self.form.lineEdit.setReadOnly(True)
         self.form.lineEdit_3.setReadOnly(True)
 
@@ -57,8 +55,6 @@ class Form(object):
             self.curObj.projectType = 'pyqtwindows'
         else:
             self.curObj.projectType = 'commandline'
-
-        self.curObj.py2exe = self.form.checkBox.isChecked()
 
         return self.curObj
 

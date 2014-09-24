@@ -35,6 +35,7 @@ class Form(object):
 
     def populateUI(self):
         self.tools.setValue(self.form.lineEdit, self.curObj.mainWindowTitle)
+        self.mainWidget.setEnabled(self.ppjCopy.general.projectType == 'pyqtwindows')
 
     def getUpdatedUIValues(self):
         self.curObj.mainWindowTitle = self.tools.getValue(self.form.lineEdit)
@@ -46,9 +47,6 @@ class Form(object):
         self.form.setupUi(self.mainWidget)
         self.mainWindow.gridLayout_5.addWidget(self.mainWidget, 0, 0, 1, 1)
         self.populateUI()
-
-        # Condition Checks
-        self.mainWidget.setEnabled(self.ppjCopy.general.projectType == 'pyqtwindows')
 
     def unload(self):
         # Unload objects from core UI
