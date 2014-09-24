@@ -55,14 +55,17 @@ class PyProjGen():
     def listFormSelect(self, *eve):
         selectedItem = eve[0]
         selected = selectedItem.text(0)
+        self.ppg.saveCurrentScreen()
         self.ppg.setCurrentScreen(selected)
 
     def btnNewPPG(self):
+        self.ppg.saveCurrentScreen()
         x = self.qtTools.getFolder("Select a new folder to save proj content...")
         if(x != ""):
             self.loadProject(x)
 
     def btnLoadPPG(self):
+        self.ppg.saveCurrentScreen()
         x = self.qtTools.getFolder()
         if(x != ""):
             self.loadProject(x)

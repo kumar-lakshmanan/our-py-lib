@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\wgt_form1_general.ui'
 #
-# Created: Wed Sep 17 06:32:50 2014
+# Created: Mon Sep 22 07:33:03 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,14 +45,6 @@ class Ui_form(object):
         self.radioButton_2.setObjectName("radioButton_2")
         self.gridLayout_6.addWidget(self.radioButton_2, 1, 0, 1, 1)
         self.gridLayout_2.addWidget(self.groupBox, 3, 0, 1, 1)
-        self.groupBox_2 = QtWidgets.QGroupBox(form)
-        self.groupBox_2.setObjectName("groupBox_2")
-        self.gridLayout_7 = QtWidgets.QGridLayout(self.groupBox_2)
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.checkBox = QtWidgets.QCheckBox(self.groupBox_2)
-        self.checkBox.setObjectName("checkBox")
-        self.gridLayout_7.addWidget(self.checkBox, 0, 0, 1, 1)
-        self.gridLayout_2.addWidget(self.groupBox_2, 3, 1, 1, 1)
         self.widget_3 = QtWidgets.QWidget(form)
         self.widget_3.setObjectName("widget_3")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.widget_3)
@@ -90,8 +82,6 @@ class Ui_form(object):
         self.groupBox.setTitle(_translate("form", "Project Type:"))
         self.radioButton.setText(_translate("form", "PyQt - Windows Application"))
         self.radioButton_2.setText(_translate("form", "Python - Commandline Application"))
-        self.groupBox_2.setTitle(_translate("form", "Build"))
-        self.checkBox.setText(_translate("form", "Include Py2EXE Build Tempalte"))
         self.label_3.setText(_translate("form", "Code Location"))
         self.label.setText(_translate("form", "Project Name"))
 

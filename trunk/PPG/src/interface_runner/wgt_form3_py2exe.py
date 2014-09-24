@@ -17,6 +17,7 @@ class Form(object):
     '''
     # parent = PyProjGen.PyProjGen()
     # ppjCopy = core.lib.ppg()
+    
     parent = None
     mainWidget = None
     form = None
@@ -31,16 +32,35 @@ class Form(object):
         self.tools = PyQt.Tools(self.mainWindow)
         self.form = formCode.Ui_Form()
         self.curObj = currentObj
+        # self.curObj = core.lib.Py2Exe()
         self.load()
 
     def populateUI(self):
-        # self.tools.setValue(self.form.lineEdit, self.curObj.mainWindowTitle)
+
+        self.form.groupBox.setChecked(not self.curObj.isEnabled)
+        self.form.groupBox.setChecked(self.curObj.isEnabled)
+
+        self.tools.setValue(self.form.lineEdit, self.curObj.appName)
+        self.tools.setValue(self.form.lineEdit_2, self.curObj.description)
+        self.tools.setValue(self.form.lineEdit_3, self.curObj.company_name)
+        self.tools.setValue(self.form.lineEdit_4, self.curObj.copyrights)
+        self.tools.setValue(self.form.lineEdit_5, self.curObj.version)
+
         pass
 
     def getUpdatedUIValues(self):
         # self.curObj.mainWindowTitle = self.tools.getValue(self.form.lineEdit)
+
+        self.curObj.appName = self.tools.getValue(self.form.lineEdit)
+        self.curObj.description = self.tools.getValue(self.form.lineEdit_2)
+        self.curObj.company_name = self.tools.getValue(self.form.lineEdit_3)
+        self.curObj.copyrights = self.tools.getValue(self.form.lineEdit_4)
+        self.curObj.version = self.tools.getValue(self.form.lineEdit_5)
+
+        self.curObj.isEnabled = self.form.groupBox.isChecked()
+
         return self.curObj
-    
+
     def load(self):
         # Load objects to core UI
         self.mainWidget = QtWidgets.QWidget(self.mainWindow)
@@ -48,8 +68,6 @@ class Form(object):
         self.mainWindow.gridLayout_5.addWidget(self.mainWidget, 0, 0, 1, 1)
         self.populateUI()
 
-        # Condition Checks
-        self.mainWidget.setEnabled(self.ppjCopy.general.projectType == 'pyqtwindows')
 
     def unload(self):
         # Unload objects from core UI

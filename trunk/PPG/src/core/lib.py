@@ -11,11 +11,10 @@ class General(object):
     author = "LKumaresan"
     location = "c:\kumaresan"
     projectType = "pyqtwindows"  # (pyqtwindows/commandline)
-    py2exe = 1
 
 
 class UISettings(object):
-    mainWindowTitle = "This wINYour Project Name"
+    mainWindowTitle = "MainWindow"
 
 
 class Py2Exe(object):
@@ -25,6 +24,7 @@ class Py2Exe(object):
     company_name = "kumaresan studio"
     copyrights = "kumar"
     version = "1.0.0"
+    owner = "kumaresan"
 
 class ppg(object):
 
@@ -85,6 +85,18 @@ class ppg(object):
         if (not avoidShowScreen):
             self.showScreen()
 
+    def syncLocalObjWithCurrentScreenObj(self):
+        '''
+        currentScreenObj may be updated by actual forms and external classes once that is done
+        it is good practice to update all localobjs. This fn will do that.
+        '''
+        if(self.currentScreenName == "General"):
+            self.general = self.currentScreen
+        if(self.currentScreenName == "UISettings"):
+            self.UISettings = self.currentScreen
+        if(self.currentScreenName == "Py2Exe"):
+            self.py2exe = self.currentScreen
+
     def showScreen(self):
         self.clearOldScreen()
         if(self.currentScreenName == "General"):
@@ -95,16 +107,6 @@ class ppg(object):
             self.currentScreenForm = wgt_form3_py2exe.Form(self.mainWindow, self.currentScreen, self)
 
         self.currentScreenForm.populateUI()
-
-    def syncLocalObjWithCurrentScreenObj(self):
-        '''
-        currentScreenObj may be updated by actual forms and external classes once that is done
-        it is good practice to update all localobjs. This fn will do that.
-        '''
-        if(self.currentScreenName == "General"):
-            self.general = self.currentScreen
-        if(self.currentScreenName == "UISettings"):
-            self.UISettings = self.currentScreen
 
     def reLoadAll(self):
         for eachScreen in self.listOfScreenObjs:
@@ -171,23 +173,39 @@ class ppgGenerator(object):
         dst = self.ppg.general.location
 
         self._doReadyFileList(src, dst)
-        # self._addToEclipse()
 
-    def _addToEclipse(self):
-        workspace = "F:\Kumaresan\Code\Python"
-        eclipseProj = ".metadata\.plugins\org.eclipse.core.resources\.projects"
-        projName = self.ppg.general.projectName
-        dst = os.path.join(workspace, eclipseProj, projName)
+        # py2exe
+        if(self.ppg.py2exe.isEnabled):
+            self._doCopyPy2Exe()
 
-        src = os.path.abspath(os.path.curdir)
-        src = os.path.join(src, 'BaseCodes')
-        src = os.path.join(src, 'ToEclipsePath')
+    def _doCopyPy2Exe(self):
+        py2exesrc = os.path.abspath(os.path.curdir)
+        py2exesrc = os.path.join(py2exesrc, 'BaseCodes', 'py2exeTemplate')
 
-        for (path, dirs, files) in os.walk(src):
-            for file in files:
-                srcFile = os.path.join(path, file)
-                dstFile = srcFile.replace(src, dst)
-                self._doCopyFile(srcFile, dstFile)
+        src = os.path.join(py2exesrc, 'py2exeTemplate.py')
+        dst = self.ppg.general.location
+        dstPath = os.path.join(dst, 'src', 'core')
+        dst = os.path.join(dstPath, 'build_' + self.ppg.general.projectName + '.py')
+        buildDir = os.path.join(dstPath, self.ppg.general.projectName + "_bin")
+        if(not os.path.exists(buildDir)):
+            os.makedirs(buildDir)
+
+        self._doCopyFile(src, dst)
+
+        if (self.ppg.general.projectType == 'pyqtwindows'):
+            src = os.path.join(py2exesrc, 'qt.conf')
+            dst = os.path.join(buildDir, 'qt.conf')
+            self._doCopyFile(src, dst)
+
+            src = os.path.join(py2exesrc, 'plugins')
+            buildDir = os.path.join(buildDir, 'plugins')
+            if(not os.path.exists(buildDir)):
+                os.makedirs(buildDir)
+            for (path, dirs, files) in os.walk(src):
+                for file in files:
+                    srcFile = os.path.join(path, file)
+                    dstFile = srcFile.replace(src, buildDir)
+                    self._doCopyFile(srcFile, dstFile)
 
     def _doReadyFileList(self, src, dst):
         for (path, dirs, files) in os.walk(src):
@@ -239,9 +257,27 @@ class ppgGenerator(object):
             self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
             self._doRenameFiles(fl, self.ppg.general.projectName)
 
-        if("win_main" in fl):
+        if("win_main.py" in fl):
             self._doReplaceParameter(fl, "[[AUTHOR]]", self.ppg.general.author)
             self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
+            self._doReplaceParameter(fl, "[[WINDOWTITLE]]", self.ppg.UISettings.mainWindowTitle)
+
+        if("win_main.ui" in fl):
+            self._doReplaceParameter(fl, "[[WINDOWTITLE]]", self.ppg.UISettings.mainWindowTitle)
+
+        if("build_" + self.ppg.general.projectName in fl):
+            self._doReplaceParameter(fl, "[[AUTHOR]]", self.ppg.general.author)
+            self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
+            self._doReplaceParameter(fl, "[[PROJECTNAME]]", self.ppg.general.projectName)
+            self._doReplaceParameter(fl, "[[APPNAME]]", self.ppg.py2exe.appName)
+            self._doReplaceParameter(fl, "[[DESCRIPTION]]", self.ppg.py2exe.description)
+            self._doReplaceParameter(fl, "[[COMPANY]]", self.ppg.py2exe.company_name)
+            self._doReplaceParameter(fl, "[[COPYRIGHTS]]", self.ppg.py2exe.copyrights)
+            self._doReplaceParameter(fl, "[[VERSION]]", self.ppg.py2exe.version)
+            if(self.ppg.general.projectType == 'pyqtwindows'):
+                self._doReplaceParameter(fl, "[[COMMANDLINE]]", "False")
+            else:
+                self._doReplaceParameter(fl, "[[COMMANDLINE]]", "True")
 
 
     def _doReplaceParameter(self, fileName, findParameter, replaceWithParameter):
@@ -270,4 +306,5 @@ class ppgGenerator(object):
 
 if __name__ == '__main__':
     pass
+
 
