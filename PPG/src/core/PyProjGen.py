@@ -3,13 +3,21 @@ Created on Sep 10, 2014
 
 @author: Mukundan
 '''
-from PyQt5 import QtCore, QtGui, QtWidgets
-from interface_runner.win_main import WinMain
-import core.lib
-import sys
-from general import PyQt
-from general import tools
+import inspect
 import os
+import sys
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+from interface_runner.win_main import WinMain
+from kmxGeneral import kmxINIConfigReadWrite
+from kmxGeneral import kmxTools
+from kmxPyQt import kmxQtCommonTools
+from kmxPyQt import kmxQtTreeWidget
+
+
+import core.icons
+import core.lib
 
 
 class PyProjGen():
@@ -28,12 +36,16 @@ class PyProjGen():
         self.win = WinMain(self)
         self.win.show()
 
-        self.infoStyle = tools.infoStyle()
+        self.cfg = kmxINIConfigReadWrite.INIConfig("config.ini")
+        self.iconPath = self.cfg.getOption('UserInterface', 'IconPath')
+        self.icons = core.icons.iconSetup()
+        self.infoStyle = kmxTools.infoStyle()
         self.infoStyle.errorLevel = 2
         self.infoStyle.infoLevel = 0
-        self.tls = tools.basic(self.infoStyle)
-        self.qtTrees = PyQt.TreeWidget()
-        self.qtTools = PyQt.Tools(self.win)
+
+        self.tls = kmxTools.Tools(self.infoStyle)
+        self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
+        self.qtTrees = kmxQtTreeWidget.TreeWidget()
 
         self.loadProject("currentProj")
 
@@ -45,6 +57,20 @@ class PyProjGen():
         self.ppg = core.lib.ppg(self.win, self.ppgFolder)
         self.win.lineEdit.setText(self.ppgFolder)
         self.populateScreens()
+        self.setupIcons()
+
+    def setupIcons(self):
+        # Icon Item
+        itms = self.qtTrees.getRootItems(self.win.treeWidget)
+        iconObjs = inspect.getmembers(self.icons)
+        for eachItem in itms:
+            self.qtTools.setIconByObj(eachItem)
+            for iconObj in iconObjs:
+                if (eachItem.text(0) == iconObj[0]):
+                    self.qtTools.setIconForItem(eachItem, iconObj[1])
+                    break;
+
+        self.qtTools.setIconForItem(self.win, self.icons.windowIcon, isWindow=1)
 
     def populateScreens(self):
         self.win.treeWidget.clear()
@@ -79,9 +105,8 @@ class PyProjGen():
         self.ppg.reLoadAll()
         self.gen = core.lib.ppgGenerator(self.ppg)
         self.gen.doGenerate()
-
-    def btnApply(self):
-        self.ppg.saveCurrentScreen()
+        self.tls.info("Completed!")
+        self.qtTools.showInfoBox("Done!", "Your Python project base code is Ready!\nImport the project to your PyDev and start your work!")
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

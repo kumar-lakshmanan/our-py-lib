@@ -1,15 +1,17 @@
 '''
-Created on Sep 23, 2014 Tue - 06:38:16
+Created on Sep 28, 2014 Sun - 21:08:20
 
-@author: LKumaresan
+@author: Kumaryes
 '''
 
 from distutils.core import setup
-import py2exe
-import sys
 import os
-# import shutil
+import sys
 
+import py2exe
+
+
+# import shutil
 #######Appending Module Search Path########
 if __name__ == '__main__':
     currentFolder = os.getcwd()
@@ -40,16 +42,16 @@ if __name__ == '__main__':
 
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'currentProj.py'
-APPNAME = 'mainapp'
+APPNAME = 'thisnamessg'
 DESCRIPTION = 'app created by template'
 COMPANY_NAME = 'kumaresan studio'
 COPYRIGHT = 'kumar'
 VERSION = '1.0.0'
-USE_ICON = False
-ICON_FILE = 'AppIcon.ico'
+USE_ICON = True
+ICON_FILE = '/02/16/46.png'
 FOLDER_SUFFIX = 'bin'
-RELEASE_OWNER = 'LKumaresan'
-BUNDLE_LEVEL = 1  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+RELEASE_OWNER = 'Kumaryes'
+BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False

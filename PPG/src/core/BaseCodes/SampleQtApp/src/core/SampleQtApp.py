@@ -3,13 +3,17 @@ Created on [[DATETIME]]
 
 @author: [[AUTHOR]]
 '''
+import os
+import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 from interface_runner.win_main import WinMain
-import sys
-from general import PyQt
-from general import tools
-import os
+from kmxGeneral import kmxINIConfigReadWrite
+from kmxGeneral import kmxTools
+from kmxPyQt import kmxQtCommonTools
+from kmxPyQt import kmxQtTreeWidget
+import core.icons
 
 class [[PROJECTNAME]](object):
     '''
@@ -24,9 +28,18 @@ class [[PROJECTNAME]](object):
         self.win = WinMain(self)
         self.win.show()
 
-        self.tls = tools.basic(tools.infoStyle())
-        self.qtTrees = PyQt.TreeWidget()
-        self.qtTools = PyQt.Tools(self.win)
+        self.cfg = kmxINIConfigReadWrite.INIConfig("config.ini")
+        self.iconPath = self.cfg.getOption('UserInterface', 'IconPath')
+        self.icons = core.icons.iconSetup()
+
+        self.tls = kmxTools.Tools(kmxTools.infoStyle())
+        self.qtTrees = kmxQtTreeWidget.TreeWidget()
+        self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
+
+        self.setupUI()
+
+    def setupUI(self):
+        self.qtTools.setIconForItem(self.win, self.icons.windowIcon, isWindow=1)
 
     def btnClickHere(self):
         input = self.qtTools.getValue(self.win.lineEdit)

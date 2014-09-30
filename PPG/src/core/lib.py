@@ -1,9 +1,11 @@
+import os
+import shutil
+
+from PyQt5 import QtCore
+
 from interface_runner import wgt_form1_general, wgt_form3_py2exe
 from interface_runner import wgt_form2_uisettings
-import general.tools
-import os
-from PyQt5 import QtCore
-import shutil
+from kmxGeneral import kmxTools
 
 
 class General(object):
@@ -15,6 +17,7 @@ class General(object):
 
 class UISettings(object):
     mainWindowTitle = "MainWindow"
+    windowIcon = "/02/16/45.png"
 
 
 class Py2Exe(object):
@@ -25,6 +28,7 @@ class Py2Exe(object):
     copyrights = "kumar"
     version = "1.0.0"
     owner = "kumaresan"
+    appIcon = "appicon.ico"
 
 class ppg(object):
 
@@ -32,10 +36,10 @@ class ppg(object):
 
     def __init__(self, winHandle=None, ppgFolder="defaultPPGFolder"):
         if(winHandle is None): return  # For Fake Objs
-        self.infoStyle = general.tools.infoStyle()
+        self.infoStyle = kmxTools.infoStyle()
         self.infoStyle.errorLevel = 2
         self.infoStyle.infoLevel = 0
-        self.tls = general.tools.basic(self.infoStyle)
+        self.tls = kmxTools.Tools(self.infoStyle)
 
         self.general = General()
         self.UISettings = UISettings()
@@ -157,10 +161,10 @@ class ppgGenerator(object):
     def __init__(self, ppgObj):
         self.ppg = ppg(None)
         self.ppg = ppgObj
-        self.infoStyle = general.tools.infoStyle()
+        self.infoStyle = kmxTools.infoStyle()
         self.infoStyle.errorLevel = 2
         self.infoStyle.infoLevel = 0
-        self.tls = general.tools.basic(self.infoStyle)
+        self.tls = kmxTools.Tools(self.infoStyle)
 
     def doGenerate(self):
         src = os.path.abspath(os.path.curdir)
@@ -195,6 +199,14 @@ class ppgGenerator(object):
         if (self.ppg.general.projectType == 'pyqtwindows'):
             src = os.path.join(py2exesrc, 'qt.conf')
             dst = os.path.join(buildDir, 'qt.conf')
+            self._doCopyFile(src, dst)
+
+            src = os.path.join(py2exesrc, 'config.ini')
+            dst = os.path.join(buildDir, 'config.ini')
+            self._doCopyFile(src, dst)
+
+            src = os.path.join(py2exesrc, 'appicon.ico')
+            dst = os.path.join(dstPath, 'appicon.ico')
             self._doCopyFile(src, dst)
 
             src = os.path.join(py2exesrc, 'plugins')
@@ -262,8 +274,8 @@ class ppgGenerator(object):
             self._doReplaceParameter(fl, "[[DATETIME]]", self.tls.getDateTime("%b %d, %Y %a - %H:%M:%S"))
             self._doReplaceParameter(fl, "[[WINDOWTITLE]]", self.ppg.UISettings.mainWindowTitle)
 
-        if("win_main.ui" in fl):
-            self._doReplaceParameter(fl, "[[WINDOWTITLE]]", self.ppg.UISettings.mainWindowTitle)
+        if("icons.py" in fl):
+            self._doReplaceParameter(fl, "[[WINDOWICON]]", self.ppg.UISettings.windowIcon)
 
         if("build_" + self.ppg.general.projectName in fl):
             self._doReplaceParameter(fl, "[[AUTHOR]]", self.ppg.general.author)
@@ -274,6 +286,7 @@ class ppgGenerator(object):
             self._doReplaceParameter(fl, "[[COMPANY]]", self.ppg.py2exe.company_name)
             self._doReplaceParameter(fl, "[[COPYRIGHTS]]", self.ppg.py2exe.copyrights)
             self._doReplaceParameter(fl, "[[VERSION]]", self.ppg.py2exe.version)
+            self._doReplaceParameter(fl, "[[APPICON]]", self.ppg.py2exe.appIcon)
             if(self.ppg.general.projectType == 'pyqtwindows'):
                 self._doReplaceParameter(fl, "[[COMMANDLINE]]", "False")
             else:
