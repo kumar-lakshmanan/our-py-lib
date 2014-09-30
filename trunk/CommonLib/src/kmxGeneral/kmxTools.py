@@ -1,15 +1,36 @@
+
 '''
 Created on Sep 6, 2014
 
 @author: Mukundan
 '''
 
+'''
+from kmxGeneral import kmxINIConfigReadWrite
+from kmxGeneral import kmxTools
+from kmxPyQt import kmxQtCommonTools
+
+
+        self.cfg = kmxINIConfigReadWrite.INIConfig("config.ini")
+        self.iconPath = self.cfg.getOption('UserInterface', 'IconPath')
+        self.icons = core.icons.iconSetup()
+        self.infoStyle = kmxTools.infoStyle()
+        self.infoStyle.errorLevel = 2
+        self.infoStyle.infoLevel = 0
+
+        self.tls = kmxTools.Tools(self.infoStyle)
+        self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
+
+'''
+
+from time import strftime
+import inspect
 import os
 import pickle
-import inspect
-import sys
+import random
 import shutil
-from time import strftime
+import sys
+
 
 class MySettings(object):
     var1 = "aa"
@@ -25,7 +46,7 @@ class infoStyle(object):
     errorLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
     infoLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
 
-class basic(object):
+class Tools(object):
     '''
     classdocs
     '''
@@ -36,10 +57,12 @@ class basic(object):
         Constructor
 
         '''
-        if(infoStyle is None):
-            self.infoStyle = infoStyle()
-        else:
-            self.infoStyle = infoStyle
+        self.randomSeed = 50
+        self.rand = random.Random(self.randomSeed)
+        self.infoStyle = infoStyle
+
+    def getRandom(self, stop, start=0):
+        return self.rand.randrange(start, stop)
 
     def error(self, message):
         if(self.infoStyle.errorLevel == 0):
@@ -153,30 +176,3 @@ class basic(object):
         """
         return strftime(format)
 
-class another(object):
-
-    def __init__(self):
-        pass
-
-    def myFun(self):
-        tls = basic()
-        tls.error('s')
-
-if __name__ == '__main__':
-
-#     print("Saving...")
-#     file = 'texxsts.txt'
-#     tls = tools()
-#     objx = MySettings()
-#     objx.var1 = "Kumaresan"
-#     tls.saveObject(objx, file)
-# 
-#     print("Loading...")
-#     file = 'texxsts.txt'
-#     tls = tools()
-#     xx = tls.loadObject(file)
-#     print("Value " + xx.var1)
-#     
-    
-        an = another()
-        an.myFun()
