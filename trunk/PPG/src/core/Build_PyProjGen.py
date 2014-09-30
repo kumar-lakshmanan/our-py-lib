@@ -1,10 +1,12 @@
 
 from distutils.core import setup
-import py2exe
-import sys
 import os
-# import shutil
+import sys
 
+import py2exe
+
+
+# import shutil
 #######Appending Module Search Path########
 if __name__ == '__main__':
     currentFolder = os.getcwd()
@@ -40,11 +42,11 @@ DESCRIPTION = 'Python Project Template Generator'
 COMPANY_NAME = 'Kaymatrix Studio'
 COPYRIGHT = 'Kumaresan - 2014'
 VERSION = '1.0.0'
-USE_ICON = False
-ICON_FILE = 'AppIcon.ico'
+USE_ICON = True
+ICON_FILE = 'appicon.ico'
 FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'Kumaresan'
-BUNDLE_LEVEL = 1  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
