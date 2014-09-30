@@ -4,10 +4,11 @@ Created on Sep 4, 2014
 @author: Mukundan
 '''
 
-from user_interface import wgt_form3_py2exe as formCode
 from PyQt5 import QtCore, QtGui, QtWidgets
-from general import PyQt
 import sip
+
+from kmxPyQt import kmxQtCommonTools
+from user_interface import wgt_form3_py2exe as formCode
 import core.lib
 
 
@@ -17,7 +18,7 @@ class Form(object):
     '''
     # parent = PyProjGen.PyProjGen()
     # ppjCopy = core.lib.ppg()
-    
+
     parent = None
     mainWidget = None
     form = None
@@ -29,7 +30,7 @@ class Form(object):
 
         self.mainWindow = winHandle
         self.ppjCopy = ppjCopy
-        self.tools = PyQt.Tools(self.mainWindow)
+        self.tools = kmxQtCommonTools.CommonTools(self.mainWindow)
         self.form = formCode.Ui_Form()
         self.curObj = currentObj
         # self.curObj = core.lib.Py2Exe()
@@ -45,6 +46,7 @@ class Form(object):
         self.tools.setValue(self.form.lineEdit_3, self.curObj.company_name)
         self.tools.setValue(self.form.lineEdit_4, self.curObj.copyrights)
         self.tools.setValue(self.form.lineEdit_5, self.curObj.version)
+        self.tools.setValue(self.form.lineEdit_6, self.curObj.appIcon)
 
         pass
 
@@ -56,6 +58,7 @@ class Form(object):
         self.curObj.company_name = self.tools.getValue(self.form.lineEdit_3)
         self.curObj.copyrights = self.tools.getValue(self.form.lineEdit_4)
         self.curObj.version = self.tools.getValue(self.form.lineEdit_5)
+        self.curObj.appIcon = self.tools.getValue(self.form.lineEdit_6)
 
         self.curObj.isEnabled = self.form.groupBox.isChecked()
 

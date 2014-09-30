@@ -4,10 +4,11 @@ Created on Sep 4, 2014
 @author: Mukundan
 '''
 
-from user_interface import wgt_form2_uisettings as formCode
 from PyQt5 import QtCore, QtGui, QtWidgets
-from general import PyQt
 import sip
+
+from kmxPyQt import kmxQtCommonTools
+from user_interface import wgt_form2_uisettings as formCode
 import core.lib
 
 
@@ -28,17 +29,19 @@ class Form(object):
 
         self.mainWindow = winHandle
         self.ppjCopy = ppjCopy
-        self.tools = PyQt.Tools(self.mainWindow)
+        self.tools = kmxQtCommonTools.CommonTools(self.mainWindow)
         self.form = formCode.Ui_form()
         self.curObj = currentObj
         self.load()
 
     def populateUI(self):
         self.tools.setValue(self.form.lineEdit, self.curObj.mainWindowTitle)
+        self.tools.setValue(self.form.lineEdit_5, self.curObj.windowIcon)
         self.mainWidget.setEnabled(self.ppjCopy.general.projectType == 'pyqtwindows')
 
     def getUpdatedUIValues(self):
         self.curObj.mainWindowTitle = self.tools.getValue(self.form.lineEdit)
+        self.curObj.windowIcon = self.tools.getValue(self.form.lineEdit_5)
         return self.curObj
 
     def load(self):
