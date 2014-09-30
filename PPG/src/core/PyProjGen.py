@@ -71,6 +71,7 @@ class PyProjGen():
                     break;
 
         self.qtTools.setIconForItem(self.win, self.icons.windowIcon, isWindow=1)
+        self.qtTools.setIconForItem(self.win.label_2, '', thisImage="ppg.png")
 
     def populateScreens(self):
         self.win.treeWidget.clear()

@@ -352,9 +352,6 @@ border-color: rgb(127, 127, 127);</string>
             <property name="text">
              <string/>
             </property>
-            <property name="pixmap">
-             <pixmap>../core/ppg.png</pixmap>
-            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
