@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\win_main.ui'
 #
-# Created: Sun Sep 28 21:11:07 2014
+# Created: Tue Sep 30 06:39:03 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -125,7 +125,6 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addItem(spacerItem3, 0, 2, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.widget_3)
         self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap("../core/ppg.png"))
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout_6.addWidget(self.label_2, 0, 4, 1, 1)
