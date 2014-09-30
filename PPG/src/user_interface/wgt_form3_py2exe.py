@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\wgt_form3_py2exe.ui'
 #
-# Created: Mon Sep 22 07:22:20 2014
+# Created: Sun Sep 28 06:59:25 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,6 +22,11 @@ class Ui_Form(object):
         self.groupBox.setObjectName("groupBox")
         self.gridLayout = QtWidgets.QGridLayout(self.groupBox)
         self.gridLayout.setObjectName("gridLayout")
+        self.line = QtWidgets.QFrame(self.groupBox)
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.gridLayout.addWidget(self.line, 5, 0, 1, 1)
         self.widget_4 = QtWidgets.QWidget(self.groupBox)
         self.widget_4.setObjectName("widget_4")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.widget_4)
@@ -82,6 +87,18 @@ class Ui_Form(object):
         self.label.setObjectName("label")
         self.gridLayout_3.addWidget(self.label, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
+        self.widget_6 = QtWidgets.QWidget(self.groupBox)
+        self.widget_6.setObjectName("widget_6")
+        self.gridLayout_8 = QtWidgets.QGridLayout(self.widget_6)
+        self.gridLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_8.setObjectName("gridLayout_8")
+        self.lineEdit_6 = QtWidgets.QLineEdit(self.widget_6)
+        self.lineEdit_6.setObjectName("lineEdit_6")
+        self.gridLayout_8.addWidget(self.lineEdit_6, 1, 1, 1, 1)
+        self.label_6 = QtWidgets.QLabel(self.widget_6)
+        self.label_6.setObjectName("label_6")
+        self.gridLayout_8.addWidget(self.label_6, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.widget_6, 6, 0, 1, 1)
         self.gridLayout_2.addWidget(self.groupBox, 0, 0, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(20, 113, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.gridLayout_2.addItem(spacerItem, 1, 0, 1, 1)
@@ -98,4 +115,5 @@ class Ui_Form(object):
         self.label_5.setText(_translate("Form", "Version"))
         self.label_3.setText(_translate("Form", "Company Name"))
         self.label.setText(_translate("Form", "App Name"))
+        self.label_6.setText(_translate("Form", "App Icon"))
 
