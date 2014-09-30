@@ -17,8 +17,8 @@ class Tools(object):
         '''
         self.CallingUI = CallingUI
         
-    def getFile(self, Title='Select a file to open...',FileName='Select File',FileType='All Files (*);;Excel Files (*.xls);;Text Files (*.txt)'):
+    def getFilexx(self, Title='Select a file to open...', FileName='Select File', FileType='All Files (*);;Excel Files (*.xls);;Text Files (*.txt)'):
         fileName = QtWidgets.QFileDialog.getOpenFileName(self.CallingUI, str(Title), FileName, str(FileType))
-        if(fileName[0]==""): return ""
+        if(fileName[0] == ""): return ""
         return fileName[0]
            

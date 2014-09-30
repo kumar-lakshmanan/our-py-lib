@@ -1,10 +1,28 @@
+'''
+from kmxGeneral import kmxINIConfigReadWrite
+from kmxGeneral import kmxTools
+from kmxPyQt import kmxQtCommonTools
+
+
+        self.cfg = kmxINIConfigReadWrite.INIConfig("config.ini")
+        self.iconPath = self.cfg.getOption('UserInterface', 'IconPath')
+        self.icons = core.icons.iconSetup()
+        self.infoStyle = kmxTools.infoStyle()
+        self.infoStyle.errorLevel = 2
+        self.infoStyle.infoLevel = 0
+
+        self.tls = kmxTools.Tools(self.infoStyle)
+        self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
+
+'''
+import base64
 import configparser
 import os
-import base64
+
 
 class INIConfig():
 
-    def __init__(self, fileName='', writeOk=False):
+    def __init__(self, fileName='', writeOk=True):
         self.iniReady = False
         self.writeable = False
 
@@ -58,7 +76,6 @@ class INIConfig():
         if not self.iniReady: return 0
         if not self.writeable: return 0
         if not sectionName: return 0
-        if not Option: return 0
 
         config = configparser.ConfigParser()
         config.read(self.configINIFile)
@@ -77,7 +94,7 @@ class INIConfig():
         configfile = open(self.configINIFile, "w")
         config.write(configfile)
 
-    def getOption(self, sectionName, Option, decode=0):
+    def getOption(self, sectionName, Option, defaultValue='', decode=0):
         if not self.iniReady: return 0
         if not sectionName: return 0
         if not Option: return 0
@@ -94,17 +111,33 @@ class INIConfig():
                     print ('Error! INIB64Decoding...' + str(val))
                     ret = ''
                 return str(ret)
+            else:
+                self.update(sectionName, Option, decode, defaultValue)
+        else:
+            self.update(sectionName, Option, decode, defaultValue)
         return 0
 
-    def isOptionAvailable(self, section, Option):
+    def update(self, sectionName, Option, encode, defaultValue):
+        if(self.iniReady and self.writeable):
+            if(self.isSectionAvailable(sectionName)):
+                self.setOption(sectionName, Option, defaultValue, encode)
+            else:
+                self.setSection(sectionName)
+                self.setOption(sectionName, Option, defaultValue, encode)
+
+    def isSectionAvailable(self, section):
+        return section in self.getSectionList()
+
+
+    def isOptionAvailable(self, sectionName, Option):
         if not self.iniReady: return 0
-        if not section: return 0
+        if not sectionName: return 0
         if not Option: return 0
 
         config = configparser.ConfigParser()
         config.read(self.configINIFile)
 
-        if config.has_section(section):
-            if config.has_option(section, Option):
+        if config.has_section(sectionName):
+            if config.has_option(sectionName, Option):
                 return True
         return False
