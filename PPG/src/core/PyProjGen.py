@@ -7,14 +7,14 @@ import inspect
 import os
 import sys
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, QtPrintSupport
 
 from interface_runner.win_main import WinMain
 from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
 from kmxPyQt import kmxQtCommonTools
 from kmxPyQt import kmxQtTreeWidget
-
+from kmxPyQt.devConsole3 import DevConsolePlug
 
 import core.icons
 import core.lib
@@ -46,8 +46,13 @@ class PyProjGen():
         self.tls = kmxTools.Tools(self.infoStyle)
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
+        self.qtTools.applyStyle()
+        dv = self.qtTools.getIconString('/04/16/39.png')
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar, AsDock=True, InitalizeScripts=True, SaveLogRefreshDays=30, btnIcon=dv, addObj=self)
 
         self.loadProject("currentProj")
+        # self.win.statusBar.showMessage("READY!")
+
 
     def loadProject(self, folder):
         if(self.ppg):

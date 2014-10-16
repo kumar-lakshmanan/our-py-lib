@@ -375,6 +375,7 @@ border-color: rgb(127, 127, 127);</string>
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

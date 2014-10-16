@@ -34,7 +34,6 @@ if __name__ == '__main__':
             if os.path.exists(modulePath):
                 sys.path.append(modulePath)
 
-
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'PyProjGen.py'
 APPNAME = 'PyProjGen'
@@ -46,14 +45,14 @@ USE_ICON = True
 ICON_FILE = 'appicon.ico'
 FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'Kumaresan'
-BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 1  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip']
-EXCLUDES = []
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport']
+EXCLUDES = ['']
 DLL_EXCLUDES = []
-PACKAGES = []
+PACKAGES = ['kmxPyQt.devConsole3']
 
 """
 EXCLUDES = ["PyQt5.uic.port_v3", "PyQt5.uic.port_v3.ascii_upper", "PyQt5.uic.port_v3.load_plugin", "PyQt5.uic.port_v3.proxy_base",

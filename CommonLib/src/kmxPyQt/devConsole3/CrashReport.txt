@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug.py", line 475, in <module>
+    dc = DevConsole()
+  File "F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug.py", line 204, in __init__
+    self.treeWidget.setChecked(False)
+AttributeError: 'QTreeWidget' object has no attribute 'setChecked'

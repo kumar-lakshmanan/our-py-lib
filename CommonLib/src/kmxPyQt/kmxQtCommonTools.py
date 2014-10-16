@@ -42,7 +42,8 @@ class CommonTools(object):
         self.CallingUI = parentWindow
         self.IconPath = iconPath
         self.defaultIcon = "NoIcon.png"
-        self.ttls = kmxTools.Tools()
+        self.infoStyle = kmxTools.infoStyle()
+        self.ttls = kmxTools.Tools(self.infoStyle)
         if self.IconPath is None:
             self.cfg = kmxINIConfigReadWrite.INIConfig("config.ini", writeOk=False)
             if(self.cfg.iniReady):
@@ -158,6 +159,15 @@ class CommonTools(object):
             control.setText(str(value))
         elif (type(control) == QtWidgets.QLabel):
             control.setText(str(value))
+
+    def applyStyle(self, style='Fusion'):
+        # ['Windows', 'WindowsXP', 'WindowsVista', 'Fusion']
+        # Use this ... getStyleList()
+        QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(style))
+        QtWidgets.QApplication.setPalette(QtWidgets.QApplication.style().standardPalette())
+
+    def getStyleList(self):
+        return QtWidgets.QStyleFactory.keys()
 
     def showInputBox(self, Title='Information', Message='Information', DefaultValue=''):
         comments, ok = QtWidgets.QInputDialog.getText(self.uiMain, str(Title), str(Message), QtWidgets.QLineEdit.Normal, DefaultValue)
