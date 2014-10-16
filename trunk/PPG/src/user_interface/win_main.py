@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\PPG\src\user_interface\win_main.ui'
 #
-# Created: Tue Sep 30 06:39:03 2014
+# Created: Wed Oct  1 06:52:17 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -135,6 +135,9 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.widget_3, 1, 2, 1, 1)
         self.gridLayout.addWidget(self.widget1, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
+        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

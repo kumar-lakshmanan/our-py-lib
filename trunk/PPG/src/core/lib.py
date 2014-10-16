@@ -197,27 +197,26 @@ class ppgGenerator(object):
         self._doCopyFile(src, dst)
 
         if (self.ppg.general.projectType == 'pyqtwindows'):
-            src = os.path.join(py2exesrc, 'qt.conf')
-            dst = os.path.join(buildDir, 'qt.conf')
-            self._doCopyFile(src, dst)
+            self._doCopyAFile(py2exesrc, 'qt.conf', buildDir)
+            self._doCopyAFile(py2exesrc, 'appicon.ico', dstPath)
+            self._doCopyAFolder(py2exesrc, 'Scripts', buildDir)
+            self._doCopyAFolder(py2exesrc, 'plugins', buildDir)
 
-            src = os.path.join(py2exesrc, 'config.ini')
-            dst = os.path.join(buildDir, 'config.ini')
-            self._doCopyFile(src, dst)
+    def _doCopyAFile(self, srcLoc, fileName, dstBuildLoc):
+        src = os.path.join(srcLoc, fileName)
+        dst = os.path.join(dstBuildLoc, fileName)
+        self._doCopyFile(src, dst)
 
-            src = os.path.join(py2exesrc, 'appicon.ico')
-            dst = os.path.join(dstPath, 'appicon.ico')
-            self._doCopyFile(src, dst)
-
-            src = os.path.join(py2exesrc, 'plugins')
-            buildDir = os.path.join(buildDir, 'plugins')
-            if(not os.path.exists(buildDir)):
-                os.makedirs(buildDir)
-            for (path, dirs, files) in os.walk(src):
-                for file in files:
-                    srcFile = os.path.join(path, file)
-                    dstFile = srcFile.replace(src, buildDir)
-                    self._doCopyFile(srcFile, dstFile)
+    def _doCopyAFolder(self, srcLoc, dirName, dstBuildLoc):
+        src = os.path.join(srcLoc, dirName)
+        buildDir = os.path.join(dstBuildLoc, dirName)
+        if(not os.path.exists(buildDir)):
+            os.makedirs(buildDir)
+        for (path, dirs, files) in os.walk(src):
+            for file in files:
+                srcFile = os.path.join(path, file)
+                dstFile = srcFile.replace(src, buildDir)
+                self._doCopyFile(srcFile, dstFile)
 
     def _doReadyFileList(self, src, dst):
         for (path, dirs, files) in os.walk(src):
@@ -249,7 +248,7 @@ class ppgGenerator(object):
             os.makedirs(dstFileLoc)
         src, dst = srcFile.absoluteFilePath(), dstFile.absoluteFilePath()
         shutil.copy(src, dst)
-        self.tls.info("\n\nCopied...\n{}\nto\n{}".format(src, dst))
+        self.tls.info("\nCopied...\n{}\nto\n{}".format(src, dst))
 
         if(os.path.exists(dstFile.absoluteFilePath())):
             self._doProcessFile(dstFile.absoluteFilePath())

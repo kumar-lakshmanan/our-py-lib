@@ -46,6 +46,9 @@ class infoStyle(object):
     errorLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
     infoLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
 
+    def __init__(self):
+        pass
+
 class Tools(object):
     '''
     classdocs
@@ -64,24 +67,79 @@ class Tools(object):
     def getRandom(self, stop, start=0):
         return self.rand.randrange(start, stop)
 
+    def getCurrentPath(self):
+        return os.path.abspath(os.curdir)
+
+    def getRelativeFolder(self, folderName):
+        return os.path.join(self.getCurrentPath(), folderName)
+
+    def fileContent(self, fileName):
+        f = open(fileName, "r")
+        content = f.read()
+        f.close()
+        return content
+
+    def writeFileContent(self, fileName, data):
+        f = open(fileName, mode='w')
+        f.write(data)
+        f.close()
+
     def error(self, message):
-        if(self.infoStyle.errorLevel == 0):
+        if(self.infoStyle):
+            if(self.infoStyle.errorLevel == 0):
+                print("Error: {}".format(message))
+            elif(self.infoStyle.errorLevel == 1):
+                print("{} Error: {}".format(self._buildCallerPath(1), message))
+            elif(self.infoStyle.errorLevel == 2):
+                print("{} Error: {}".format(self._buildCallerPath(), message))
+        else:
             print("Error: {}".format(message))
-        elif(self.infoStyle.errorLevel == 1):
-            print("{} Error: {}".format(self._buildCallerPath(1), message))
-        elif(self.infoStyle.errorLevel == 2):
-            print("{} Error: {}".format(self._buildCallerPath(), message))
 
     def info(self, message):
-        if(self.infoStyle.infoLevel == 0):
-            print("{}".format(message))
-        elif(self.infoStyle.infoLevel == 1):
-            print("{} Info: {}".format(self._buildCallerPath(1), message))
-        elif(self.infoStyle.infoLevel == 2):
-            print("{} Info: {}".format(self._buildCallerPath(), message))
+        if(self.infoStyle):
+            if(self.infoStyle.infoLevel == 0):
+                print("{}".format(message))
+            elif(self.infoStyle.infoLevel == 1):
+                print("{} Info: {}".format(self._buildCallerPath(1), message))
+            elif(self.infoStyle.infoLevel == 2):
+                print("{} Info: {}".format(self._buildCallerPath(), message))
+        else:
+            print("Error: {}".format(message))
 
     def copyFile(self, src, dst):
         shutil.copy(src, dst)
+
+    def copyFolder(self, source_folder, destination_folder, latest_overwrite=1, forced_overwrite=0, verbose=1):
+        for root, dirs, files in os.walk(source_folder):
+            for item in files:
+                src_path = os.path.join(root, item)
+                dst_path = os.path.join(destination_folder, src_path.replace(source_folder, ""))
+                if os.path.exists(dst_path):
+                    if (not forced_overwrite and not latest_overwrite):
+                        if(verbose):
+                            print("Already exist, Skipping...\n" + src_path + " to " + dst_path)
+                    if (not forced_overwrite and latest_overwrite):
+                        if os.stat(src_path).st_mtime > os.stat(dst_path).st_mtime:
+                            if(verbose):
+                                print("Overwriting latest...\n" + src_path + " to " + dst_path)
+                            shutil.copy2(src_path, dst_path)
+                    if (forced_overwrite):
+                        if(verbose):
+                            print("Overwriting...\n" + src_path + " to " + dst_path)
+                        shutil.copy2(src_path, dst_path)
+                else:
+                    if(verbose):
+                        print("Copying...\n" + src_path + " to " + dst_path)
+                    shutil.copy2(src_path, dst_path)
+            for item in dirs:
+                src_path = os.path.join(root, item)
+                dst_path = os.path.join(destination_folder, src_path.replace(source_folder, ""))
+                if not os.path.exists(dst_path):
+                    if(verbose):
+                        print("Creating folder...\n" + dst_path)
+                    os.mkdir(dst_path)
+        if(verbose):
+            print("Copy process completed!")
 
     def _buildCallerPath(self, parentOnly=0):
         stack = inspect.stack()
@@ -105,10 +163,13 @@ class Tools(object):
         if(not os.path.exists(path) and path != ''):
             os.makedirs(path)
         else:
-            self.error("Unable to read " + path)
+            self.error("Unable to read (OR) Path exists " + path)
 
     def isPathOK(self, path):
         return os.path.exists(path) and path != '' and path is not None
+
+    def isPathFile(self, path):
+        return os.path.isfile(path) and path != '' and path is not None
 
     def pickleSaveObject(self, obj, file=""):
         if(obj is None):

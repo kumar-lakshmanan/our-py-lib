@@ -1,5 +1,5 @@
 '''
-Created on Sep 28, 2014 Sun - 21:08:20
+Created on Oct 16, 2014 Thu - 10:11:36
 
 @author: Kumaryes
 '''
@@ -53,9 +53,9 @@ FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'Kumaryes'
 BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
-DO_CONSOLE_SCREEN = False
+DO_CONSOLE_SCREEN = True
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip']
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport']
 EXCLUDES = []
 DLL_EXCLUDES = []
 PACKAGES = []

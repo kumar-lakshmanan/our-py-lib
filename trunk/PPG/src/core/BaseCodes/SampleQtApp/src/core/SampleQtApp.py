@@ -13,6 +13,7 @@ from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
 from kmxPyQt import kmxQtCommonTools
 from kmxPyQt import kmxQtTreeWidget
+from kmxPyQt.devConsole3 import DevConsolePlug
 import core.icons
 
 class [[PROJECTNAME]](object):
@@ -33,9 +34,9 @@ class [[PROJECTNAME]](object):
         self.icons = core.icons.iconSetup()
 
         self.tls = kmxTools.Tools(kmxTools.infoStyle())
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True, SaveLogRefreshDays=30)        
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
-
         self.setupUI()
 
     def setupUI(self):
