@@ -34,6 +34,3 @@ class CopyDevPlugs(devPluginBase.PluginBase):
         src = "F:/Kumaresan/Code/Python/CommonLib/src/kmxPyQt/devConsole3/devPlugs/"
         self.parent.ttls.copyFolder(src, dst, 0, 1, 1)
 
-# src = 'C:/Users/Mukundan/Desktop/Test/Set1/'
-# dst = 'C:/Users/Mukundan/Desktop/Test/Set2/'
-# dev.ttls.copyFolder(src,dst)
