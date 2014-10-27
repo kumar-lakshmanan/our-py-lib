@@ -49,12 +49,12 @@ USE_ICON = False
 ICON_FILE = 'AppIcon.ico'
 FOLDER_SUFFIX = 'BIN'
 RELEASE_OWNER = 'LKUMARESAN'
-BUNDLE_LEVEL = 1  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = True
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip', 'gzip', 'PyQt5.QtPrintSupport']
-PACKAGES = []
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport']
+PACKAGES = ['kmxPyQt.devConsole3']
 
 # PY2EXE PROCESS...
 appVariable = {

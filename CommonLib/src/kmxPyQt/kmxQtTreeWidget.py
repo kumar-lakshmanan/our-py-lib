@@ -1,5 +1,7 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
 import os
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class TreeWidget(object):
 
@@ -25,6 +27,15 @@ class TreeWidget(object):
 
     def addNewRoot(self, treeWidget, item):
         return treeWidget.addTopLevelItem(item)
+
+    def addChild(self, childItem, parentItem):
+        return parentItem.addChild(childItem)
+
+    def addItem(self, treeWidget, item2Add, parentItem=None):
+        if(parentItem is None):
+            return self.addNewRoot(treeWidget, item2Add)
+        else:
+            return self.addChild(item2Add, parentItem)
 
     def getSelectedItem(self, TreeName, SingleSelection=1, col=0):
         # x = QtGui.QTreeWidget()

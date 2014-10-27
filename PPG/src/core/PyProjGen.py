@@ -48,7 +48,7 @@ class PyProjGen():
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
         self.qtTools.applyStyle()
         dv = self.qtTools.getIconString('/04/16/39.png')
-        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar, AsDock=True, InitalizeScripts=True, SaveLogRefreshDays=30, btnIcon=dv, addObj=self)
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar, AsDock=True, InitalizeScripts=True, logCount=30, btnIcon=dv, addObj=self)
 
         self.loadProject("currentProj")
         # self.win.statusBar.showMessage("READY!")

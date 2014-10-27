@@ -36,7 +36,7 @@ class devPlugGenerator(object):
         self.icons = core.icons.iconSetup()
 
         self.tls = kmxTools.Tools(kmxTools.infoStyle())
-        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True, SaveLogRefreshDays=30)
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar(), AsDock=False, InitalizeScripts=True, SaveLogRefreshDays=30)
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
         self.setupUI()

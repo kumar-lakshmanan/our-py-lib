@@ -6,6 +6,14 @@ Created on Sep 6, 2014
 '''
 
 '''
+        frameWidth = self.style().pixelMetric(QStyle.PM_DefaultFrameWidth)
+        paddingRight = self._clearButton.sizeHint().width() + frameWidth + 1
+        stylesheet = "QLineEdit {{ padding-right:{0}px; }}".format(paddingRight)
+        self.setStyleSheet(stylesheet)
+'''
+
+
+'''
 from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
 from kmxPyQt import kmxQtCommonTools
