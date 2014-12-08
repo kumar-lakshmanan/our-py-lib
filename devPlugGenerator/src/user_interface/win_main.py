@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\devPlugGenerator\src\user_interface\win_main.ui'
 #
-# Created: Thu Oct 16 11:21:31 2014
+# Created: Thu Nov  6 06:30:10 2014
 #      by: PyQt5 UI code generator 5.3.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -62,10 +62,26 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 491, 18))
         self.menubar.setObjectName("menubar")
+        self.menuMyMenu = QtWidgets.QMenu(self.menubar)
+        self.menuMyMenu.setObjectName("menuMyMenu")
+        self.menuMENU_2 = QtWidgets.QMenu(self.menubar)
+        self.menuMENU_2.setObjectName("menuMENU_2")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.actionMenu_OPT1 = QtWidgets.QAction(MainWindow)
+        self.actionMenu_OPT1.setObjectName("actionMenu_OPT1")
+        self.actionOPT = QtWidgets.QAction(MainWindow)
+        self.actionOPT.setObjectName("actionOPT")
+        self.actionOPT2 = QtWidgets.QAction(MainWindow)
+        self.actionOPT2.setObjectName("actionOPT2")
+        self.menuMyMenu.addAction(self.actionMenu_OPT1)
+        self.menuMENU_2.addAction(self.actionOPT2)
+        self.menuMENU_2.addSeparator()
+        self.menuMENU_2.addAction(self.actionOPT)
+        self.menubar.addAction(self.menuMyMenu.menuAction())
+        self.menubar.addAction(self.menuMENU_2.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -78,4 +94,9 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "PlugName:"))
         self.lineEdit_6.setText(_translate("MainWindow", "F:\\Kumaresan\\Code\\Python\\devPlugGenerator\\src\\core\\devPlugGenerator_bin\\devPlugs"))
         self.label_6.setText(_translate("MainWindow", "Destination:"))
+        self.menuMyMenu.setTitle(_translate("MainWindow", "MyMenu"))
+        self.menuMENU_2.setTitle(_translate("MainWindow", "MENU 2"))
+        self.actionMenu_OPT1.setText(_translate("MainWindow", "Menu OPT1"))
+        self.actionOPT.setText(_translate("MainWindow", "OPT"))
+        self.actionOPT2.setText(_translate("MainWindow", "OPT2"))
 
