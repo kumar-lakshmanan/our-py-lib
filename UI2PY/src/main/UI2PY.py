@@ -4,12 +4,14 @@ Created on Aug 23, 2014
 @author: Mukundan
 '''
 
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from core.CompileUItoPY import CompileUItoPYCls
-from qtui.MainUI import Ui_MainWindow
-from general import PyQt
-import sys
 import os
+import sys
+
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
+
+from core.CompileUItoPY import CompileUItoPYCls
+from kmxPyQt import kmxQtCommonTools
+from qtui.MainUI import Ui_MainWindow
 
 
 class MainApplication(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -17,13 +19,13 @@ class MainApplication(QtWidgets.QMainWindow, Ui_MainWindow):
     pyFile = ""
     uiFile = ""
     cmp = ""
-    ttl = PyQt.Tools(None)
+    ttl = kmxQtCommonTools.CommonTools(None)
 
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
         self.cmp = CompileUItoPYCls()
-        self.ttl = PyQt.Tools(self)
+        self.ttl = kmxQtCommonTools.CommonTools(self)
         self.pyFile = ""
         self.uiFile = ""
 
@@ -56,7 +58,7 @@ class MainApplication(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lineEdit_2.setText(self.pyFile)
             self.addInfo ("Src: " + self.uiFile)
             self.addInfo ("Dst: " + self.pyFile)
-            self.cmp.convertCore(self.uiFile, self.pyFile) 
+            self.cmp.convertCore(self.uiFile, self.pyFile)
             if(os.path.exists(self.pyFile)):
                 self.addInfo ("PY File Created! " + self.pyFile)
         self.addInfo ("Done!")
