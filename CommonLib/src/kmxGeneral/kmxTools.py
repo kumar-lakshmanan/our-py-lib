@@ -29,6 +29,13 @@ from kmxPyQt import kmxQtCommonTools
         self.tls = kmxTools.Tools(self.infoStyle)
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
 
+
+        or
+
+        self.qtTools = kmxQtCommonTools.CommonTools(self)
+        self.ttls = kmxTools.Tools()
+
+
 '''
 
 from time import strftime
