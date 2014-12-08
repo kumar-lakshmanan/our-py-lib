@@ -170,8 +170,8 @@ class CommonTools(object):
         return QtWidgets.QStyleFactory.keys()
 
     def showInputBox(self, Title='Information', Message='Information', DefaultValue=''):
-        comments, ok = QtWidgets.QInputDialog.getText(self.uiMain, str(Title), str(Message), QtWidgets.QLineEdit.Normal, DefaultValue)
-        if ok and not comments.isEmpty():
+        comments, ok = QtWidgets.QInputDialog.getText(self.CallingUI, str(Title), str(Message), QtWidgets.QLineEdit.Normal, DefaultValue)
+        if ok:
             return comments
         else:
             return ''

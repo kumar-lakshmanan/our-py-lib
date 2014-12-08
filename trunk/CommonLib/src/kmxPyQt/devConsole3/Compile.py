@@ -18,6 +18,7 @@ from distutils.core import setup
 import os
 import shutil
 import sys
+import sys
 
 import py2exe
 
@@ -38,23 +39,27 @@ for modulePath in modulePathList:
     if modulePath not in sys.path and os.path.exists(modulePath):
         sys.path.append(modulePath)
 
+sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src')
+sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt')
+
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'DevConsolePlug.py'
-APPNAME = 'KPython'
-DESCRIPTION = 'KPython - Standalone Python Interactive Interpreter'
+APPNAME = 'HAPY'
+DESCRIPTION = 'HAPY - HAndy PYthon'
 COMPANY_NAME = 'Kumar Studios'
 COPYRIGHT = 'Kumar Studios'
 VERSION = '0.0.1'
-USE_ICON = False
-ICON_FILE = 'AppIcon.ico'
+USE_ICON = True
+ICON_FILE = 'appicon.ico'
 FOLDER_SUFFIX = 'BIN'
 RELEASE_OWNER = 'LKUMARESAN'
 BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
-DO_COMPRESS = True
+DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip', 'PyQt5.QtPrintSupport']
-PACKAGES = ['kmxPyQt.devConsole3']
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client']
+PACKAGES = ['kmxPyQt.devConsole3', 'PyQt5', 'win32com']
+EXCLUDES = []
 
 # PY2EXE PROCESS...
 appVariable = {
@@ -72,6 +77,7 @@ opVars = {
             "py2exe":{
                         "packages":PACKAGES,
                         "includes":INCLUDES,
+                        "excludes":EXCLUDES,
                         "bundle_files": BUNDLE_LEVEL,
                         "compressed": DO_COMPRESS,
                         "dist_dir":str(MAIN_SCRIPT_FILE[0:len(MAIN_SCRIPT_FILE) - 3]) + '_' + FOLDER_SUFFIX,
