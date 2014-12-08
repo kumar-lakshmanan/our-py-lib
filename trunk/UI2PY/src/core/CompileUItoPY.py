@@ -44,6 +44,8 @@ class CompileUItoPYCls(object):
         
 if __name__ == '__main__':
     inputFile = 'F:/Kumaresan/Code/Python/UI2PY/src/qtui/MainUI.ui'
+    inputFile = 'F:/Kumaresan/Code/Python/CommonLib/src/Source/kmxPyQt/devConsole3/DCwin.ui'
+    inputFile = 'f:/kumaresan/code/Python/CommonLib/src/kmxPyQt/devConsole3/DCwin.ui'
     ui2py = CompileUItoPYCls() 
     ui2py.doConvert(inputFile)
         
