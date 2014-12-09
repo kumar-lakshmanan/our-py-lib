@@ -343,6 +343,12 @@ z.show()''' % selected
         dlg.show()
 
     def execPlugin(self, *arg):
+
+        '''
+        To Refresh Plugin list
+        :param arg:
+        :return:
+        '''
         print("Loading Plugins: " + self.plugs)
         self.addToSysPath(self.plugs)
 
@@ -504,14 +510,19 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             command = str(script).replace('\r\n', '\n')
             try:
                 res = eval(command, globals(), self.inter.locals)
+                #res = exec(command, globals(), self.inter.locals)
+                #print('Done1')
             except SyntaxError:
+                # self.inter.showtraceback()
                 # exec (command, globals(), locals())
                 res = self.inter.runcode(command)
+                #print('Done2')
             QtWidgets.QApplication.processEvents()
             if res is not None:
                 print(repr(res))
         except SystemExit:
-            print (errorReport())
+            self.inter.showsyntaxerror()
+            #print (errorReport())
             crashHandle()
             sys.exit(0)
         except:
