@@ -6,14 +6,21 @@ import shutil
 # z.show()
 k = 103
 kumar = 34
+
 class abc():
 	def __init__(self):
 		self.sample
 	def obj(self):
-		self 
+		self 
+
 		
-lst = dev.qtTools.getStyleList()
-print(lst)
-
-dev.qtTools.applyStyle('Fusion')
-
+lst = dev.qtTools.getStyleList()
+
+print(lst)
+
+
+
+dev.qtTools.applyStyle('Fusion')
+
+print(dev)
+
