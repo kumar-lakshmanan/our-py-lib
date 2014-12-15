@@ -97,7 +97,7 @@ class objBrowser(devPluginBase.PluginBase):
             except:
                 args = ''
                 arginfo = ''
-                doc = ''
+                doc = obj.__doc__
                 comments = ''
 
 # #            mems=''

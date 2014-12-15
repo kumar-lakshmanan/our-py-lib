@@ -90,13 +90,13 @@ class Tools(object):
 
     def fileContent(self, fileName):
         f = open(fileName, "r")
-        content = f.read()
+        content = str(f.read())
         f.close()
         return content
 
     def writeFileContent(self, fileName, data):
-        f = open(fileName, mode='w')
-        f.write(data)
+        f = open(fileName, 'w')
+        f.write(str(data))
         f.close()
 
     def error(self, message):

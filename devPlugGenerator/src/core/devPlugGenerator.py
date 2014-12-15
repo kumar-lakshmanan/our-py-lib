@@ -6,7 +6,7 @@ Created on Oct 16, 2014 Thu - 08:26:26
 from test.test_finalization import SelfCycleBase
 import os
 import sys
-
+sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src')
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from interface_runner.win_main import WinMain

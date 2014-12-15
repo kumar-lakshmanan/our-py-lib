@@ -1,4 +1,5 @@
 from code import InteractiveInterpreter
+import code
 from importlib.abc import InspectLoader
 # from test.test_finalization import SelfCycleBase
 from threading import Thread
@@ -12,6 +13,7 @@ import re
 import shutil
 import traceback
 import urllib
+from PyQt5.uic.Compiler.qtproxies import QtWidgets
 
 """
 In UI File REPLACE below line
@@ -138,6 +140,25 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 self.setupUi(base)
                 self.win.setWidget(base)
                 self.parent.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.win)
+
+                # print ('Creating dock based console!')
+                # self.dck = QtWidgets.QDockWidget(self.parent)
+                #
+                # dlg = QtWidgets.QWidget()
+                #
+                # self.win = QtWidgets.QMainWindow()
+                # lyt = QtWidgets.QVBoxLayout()
+                # lyt.addWidget(self.win)
+                # wdgt = QtWidgets.QWidget(self.dck)
+                # self.setupUi(wdgt)
+                # self.win.setCentralWidget(wdgt)
+                #
+                # dlg.setLayout(lyt)
+                #
+                # self.dck.setWidget(dlg)
+                # self.parent.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dck)
+
+
             else:
                 print ('Unsupported Parent for creating dock based console! ' + str(self.parent))
                 print ('Connecting console to given parent as a dialog...' + str(self.parent))
@@ -148,7 +169,10 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             self.win = QtWidgets.QDialog(self.parent)
             self.setupUi(self.win)
 
-        print("Outputs Redirected to HPSE. Check HPSE console log for furthur system messages.")
+        # toolbar = QtWidgets.QToolBar()
+        # self.win.addToolBar(toolbar)
+
+        print("Outputs Redirected to HaPy. Check HaPy console log for furthur system messages.")
         if ShowPrint: sys.stdout = self
         if ShowError: sys.stderr = self
 
@@ -157,45 +181,30 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.inter.locals['self'] = self.parent
         self.inter.locals['addObj'] = self.addObj
         self.inter.locals['qtTools'] = self.qtTools
+        globals()['dev'] = self
 
         self.win.setWindowIcon(self.parent.windowIcon())
-        self.win.setWindowTitle('HPSE')
+        self.win.setWindowTitle('HaPy')
 
         self.PLX = Qsci.QsciLexerPython(self)
         self.ABS = Qsci.QsciAPIs(self.PLX)
         # self.PLX.setAPIs(self.ABS)
         self.ABS.prepare()
 
-        self.sciInput.setAutoCompletionSource(Qsci.QsciScintilla.AcsAll)
-        self.sciInput.setLexer(self.PLX)
-        self.sciInput.setAutoCompletionThreshold(1)
-        self.sciInput.setAutoIndent(True)
-        self.sciInput.setAutoCompletionFillupsEnabled(True)
-        self.sciInput.setBraceMatching(Qsci.QsciScintilla.StrictBraceMatch)
-        self.sciInput.setMarginLineNumbers(1, 1)
-        self.sciInput.setMarginWidth(1, 45)
-
         self.sciOutput.setReadOnly(1)
-        self.sciOutput.setAutoCompletionSource(Qsci.QsciScintilla.AcsAll)
-        self.sciOutput.setLexer(self.PLX)
-        self.sciOutput.setAutoCompletionThreshold(1)
-        self.sciOutput.setAutoIndent(True)
-        self.sciOutput.setAutoCompletionFillupsEnabled(True)
-        self.sciOutput.setBraceMatching(Qsci.QsciScintilla.StrictBraceMatch)
-        self.sciOutput.setMarginLineNumbers(1, 1)
-        self.sciOutput.setMarginWidth(1, 45)
+        self._setQSci(self.sciOutput)
 
         # Connections
-        self.btnClearInput.clicked.connect(self.btnRedirector)
-        self.btnClearOutput.clicked.connect(self.btnRedirector)
+        self.tabWidget.tabCloseRequested.connect(self.tabClose)
         self.btnExecute.clicked.connect(self.btnRedirector)
-        self.btnExecute_2.clicked.connect(self.btnRedirector)
+        #self.btnExecute_2.clicked.connect(self.btnRedirector)
         self.btnLoadScript.clicked.connect(self.btnRedirector)
         self.btnSaveScript.clicked.connect(self.btnRedirector)
-        self.btnQuickSave.clicked.connect(self.btnRedirector)
+        self.btnNewScript.clicked.connect(self.btnRedirector)
+        self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
+
         self.cline.returnPressed.connect(self.commandLineExecute)
         self.cline.__class__.keyReleaseEvent = self.commandLineKeyPress
-        self.toolButton.clicked.connect(self.btnRedirector)
 
         if StatusBar:
             self.stsBtnDebugger = QtWidgets.QToolButton(self.parent)
@@ -221,11 +230,12 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.treeWidget.headerItem().setText(0, "DevPlugins")
         self.treeWidget.itemDoubleClicked.connect(self.pluginSelected)
 
-        self.toolButton.setChecked(False)
         self.treeWidget.setVisible(False)
 
-        print ('Handy Python Scripting Environment-')
-        print ('--------------------------------')
+        print ('HaPy')
+        print ('---------------------------------------')
+        print ('Handy Python - Interactive Interpreter')
+        print ('---------------------------------------')
         print ('Initiated!')
 
         print ('\nLog Start Time: ' + str(strftime("%Y/%m/%d %H:%M:%S")))
@@ -238,7 +248,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         print ('FileSys encodeing: ' + str(sys.getfilesystemencoding()))
 
         drline = "\n---------------------------------------\n"
-        self.credit = drline + '\nAbout HPSE:\nHandy Python Scripting Environment - Python Interactive Interpreter \nAn expreimental project developed by \nKumaresan Lakshmanan\nFor Quick Windows Automation. Date: Jan 12 2013\n' + drline
+        self.credit = drline + '\nAbout HaPy:\nHandy Python - Interactive Interpreter/Scripting Environment \nAn expreimental project developed by \nKumaresan Lakshmanan\nFor Quick Windows Automation. Date: Jan 12 2013\n' + drline
         print(self.credit)
 
         self.InitalizeScripts = InitalizeScripts
@@ -255,11 +265,9 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         else:
             print ('Invalid plug scripts path!')
 
-
         try:
             if self.ttls.isPathOK(self.plugs):
                 self.execPlugin()
-                self.toolButton.setChecked(True)
                 self.treeWidget.setVisible(True)
         except:
             print (errorReport())
@@ -267,11 +275,26 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         try:
             if self.InitalizeScripts:
                 self.execStartUp()
+            else:
+                self.addEmptyTab()
         except:
             print (errorReport())
 
-    def setStandAloneModeFeatures(self):
+    def getUpdatedLocals(self):
+        try:
+            raise None
+        except:
+            frame = sys.exc_info()[2].tb_frame.f_back
+        # evaluate commands in current namespace
+        namespace = frame.f_globals.copy()
+        namespace.update(frame.f_locals)
+        return namespace
 
+    def setStandAloneModeFeatures(self):
+        """
+        Standalone Mode
+        :return:
+        """
         # Ready Menu Bar
         self.menubar = self.qtMenu.createMenuBar(self.win)
         self.mnuFile = self.qtMenu.createMenu(self.menubar, "File")
@@ -287,12 +310,12 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.mnuEditClearOutput = self.qtMenu.createMenuItem(self.win, self.mnuEdit, "Clear Outputs", self.btnRedirector)
         self.mnuEditClearInput = self.qtMenu.createMenuItem(self.win, self.mnuEdit, "Clear Inputs", self.btnRedirector)
 
-        self.mnuRunExecuteNoClear = self.qtMenu.createMenuItem(self.win, self.mnuRun, "Execute Script + No Clear", self.execute_Clicked_NoClear)
-        self.mnuRunExecuteNoClear.setShortcut("Ctrl+Enter")
-        self.mnuRunExecute = self.qtMenu.createMenuItem(self.win, self.mnuRun, "Execute Script", self.execute_Clicked)
-        self.mnuRunExecute.setShortcut("Ctrl+Alt+Enter")
+#        self.mnuRunExecuteNoClear = self.qtMenu.createMenuItem(self.win, self.mnuRun, "Execute Script + No Clear", self.execute_Clicked_NoClear)
+#        self.mnuRunExecuteNoClear.setShortcut("Ctrl+Enter")
+        self.mnuRunExecute = self.qtMenu.createMenuItem(self.win, self.mnuRun, "Execute Script", self.doExecute)
+        self.mnuRunExecute.setShortcut("Ctrl+Enter")
 
-        self.mnuAboutHPSE = self.qtMenu.createMenuItem(self.win, self.mnuAbout, "About HPSE", self.btnRedirector)
+        self.mnuAboutHPSE = self.qtMenu.createMenuItem(self.win, self.mnuAbout, "About HaPy", self.btnRedirector)
 
         '''
         # Remove other buttons
@@ -403,8 +426,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.userSetup = self.userSetup if os.path.exists(self.userSetup) else ''
             if self.userSetup and os.path.exists(self.userSetup):
                 data = self.ttls.fileContent(self.userSetup)
-                self.sciInput.clear()
-                self.sciInput.setText(data)
+                self.loadScriptCore(self.userSetup)
                 print ('Parsing startup scripts...')
                 self.runScript(data)
             else:
@@ -432,56 +454,124 @@ if path2Add not in sys.path and os.path.exists(path2Add):
     def setCommand(self, command):
         self.cline.setText(command)
 
-    def doQuickSave(self):
-        if (self.loadedFile):
-            fileName = self.loadedFileName
-            data = str(self.sciInput.text()).replace('\r\n', '\n', 1000000000)
-            self.ttls.writeFileContent(fileName, data)
+    def tabClose(self,tabIndex):
+        cnt = self.tabWidget.count()
+        if(cnt>1):
+            #proceed closing the tab
+            self.tabWidget.removeTab(tabIndex)
+
+    def addEmptyTab(self):
+        newTab = QtWidgets.QWidget()
+        self.tabWidget.addTab(newTab, 'New Script')
+        newTab.setToolTip('New Script')
+        self.tabWidget.setCurrentWidget(newTab)
+
+        tabGrid = QtWidgets.QGridLayout(newTab)
+        tabGrid.setContentsMargins(2, 2, 2, 2)
+        newSciInput = QsciScintilla(newTab)
+        newSciInput.setFrameShape(QtWidgets.QFrame.Box)
+        tabGrid.addWidget(newSciInput, 0, 0, 1, 1)
+        self._setQSci(newSciInput)
+        newSciInput.setText('')
+
+    def addNewTab(self,scriptFile):
+        fileName = os.path.basename(scriptFile)
+
+        newTab = QtWidgets.QWidget()
+        self.tabWidget.addTab(newTab, fileName)
+        newTab.setToolTip(scriptFile)
+        self.tabWidget.setCurrentWidget(newTab)
+
+        tabGrid = QtWidgets.QGridLayout(newTab)
+        tabGrid.setContentsMargins(2, 2, 2, 2)
+        newSciInput = QsciScintilla(newTab)
+        newSciInput.setFrameShape(QtWidgets.QFrame.Box)
+        tabGrid.addWidget(newSciInput, 0, 0, 1, 1)
+        self._setQSci(newSciInput)
+        data = str(self.ttls.fileContent(scriptFile))
+        newSciInput.setText(data)
+
+    def _setQSci(self, newSciInput):
+        newSciInput.setEolMode(Qsci.QsciScintilla.EolUnix)
+        newSciInput.setAutoCompletionSource(Qsci.QsciScintilla.AcsAll)
+        newSciInput.setLexer(self.PLX)
+        newSciInput.setAutoCompletionThreshold(1)
+        newSciInput.setAutoIndent(True)
+        newSciInput.setIndentationsUseTabs(True)
+        newSciInput.setAutoCompletionFillupsEnabled(True)
+        newSciInput.setBraceMatching(Qsci.QsciScintilla.StrictBraceMatch)
+        newSciInput.setMarginLineNumbers(1, 1)
+        newSciInput.setMarginWidth(1, 45)
+        newSciInput.setUtf8(True)
+        newSciInput.setEolVisibility(False)
+        #newSciInput.setWrapMode(Qsci.QsciScintilla.WrapMode(Qsci.QsciScintillaBase.SC_WRAP_WORD))
+        #newSciInput.setWrapVisualFlags(Qsci.QsciScintilla.WrapVisualFlag(Qsci.QsciScintilla.WrapFlagByBorder), Qsci.QsciScintilla.WrapVisualFlag(Qsci.QsciScintilla.WrapFlagNone), 0)
+
+    def quickSave(self):
+        (qsci,scriptName) = self.getCurrentEditor()
+        if (scriptName!='New Script'):
+            self.saveQSCItoFile(qsci,scriptName)
             self.qtTools.showInfoBox('Quick Save', 'File Saved!')
+        else:
+            self.saveScriptAs()
+
+    def saveScriptAs(self):
+        scpt = self.scriptPath
+        scpt = scpt if os.path.exists(scpt) else 'D:'
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self.parent, 'Save python script file...', scpt, 'Python(*.py);;All Files (*)')
+        if (fileName and fileName[0] != ''):
+            fileName = fileName[0]
+            self.saveScriptCore(fileName)
+            #Close and Reload Tab
+            cin = self.tabWidget.currentIndex()
+            self.tabClose(cin)
+            self.loadScriptCore(fileName)
+
+    def saveScriptCore(self,fileName):
+        (qsci,scriptName) = self.getCurrentEditor()
+        self.saveQSCItoFile(qsci,fileName)
+
+    def saveQSCItoFile(self,qsci,fileName):
+        self.ttls.writeFileContent(fileName, qsci.text())
+
+    def loadScript(self):
+        scpt = self.scriptPath
+        scpt = scpt if os.path.exists(scpt) else 'D:'
+        fileName = QtWidgets.QFileDialog.getOpenFileName(self.parent, 'Open python script file...', scpt, 'Python(*.py);;All Files (*)')
+        if fileName and fileName[0] != '' and os.path.exists(fileName[0]):
+            fileName = fileName[0]
+            self.loadScriptCore(fileName)
+
+    def loadScriptCore(self,fileName):
+        self.addNewTab(fileName)
 
     def btnRedirector(self):
-
         actingButton = self.parent.sender()
         scpt = self.scriptPath
         scpt = scpt if os.path.exists(scpt) else 'D:'
 
-        if actingButton == self.toolButton:
-            self.treeWidget.setVisible(self.toolButton.isChecked())
-        elif actingButton == self.stsBtnDebugger:
+        #if actingButton == self.toolButton:
+        #    self.treeWidget.setVisible(self.toolButton.isChecked())
+        if actingButton == self.stsBtnDebugger:
             if self.win.isVisible():
                 self.win.hide()
             else:
                 self.win.show()
-        elif actingButton == self.btnQuickSave:
-            self.doQuickSave()
-        elif (actingButton == self.btnClearInput or (self.standalone and actingButton == self.mnuEditClearInput)):
-            self.sciInput.clear()
-        elif (actingButton == self.btnClearOutput or (self.standalone and actingButton == self.mnuEditClearOutput)):
-            self.sciOutput.clear()
-            self.loadedFileName = ''
-            self.loadedFile = False
-            self.lblFileLoadInfo.setText('No File Loaded!')
+        elif (actingButton == self.btnNewScript):
+            self.addEmptyTab()
+        elif (actingButton == self.btnQuickSaveScript):
+            self.quickSave()
+        # elif (actingButton == self.btnClearOutput or (self.standalone and actingButton == self.mnuEditClearOutput)):
+        #     self.sciOutput.clear()
+        #     self.loadedFileName = ''
+        #     self.loadedFile = False
+        #     self.lblFileLoadInfo.setText('No File Loaded!')
         elif (actingButton == self.btnExecute):
-            self.execute_Clicked()
-        elif (actingButton == self.btnExecute_2):
-            self.execute_Clicked_NoClear()
+            self.doExecute()
         elif (actingButton == self.btnLoadScript or (self.standalone and actingButton == self.mnuFileLoadScript)):
-            fileName = QtWidgets.QFileDialog.getOpenFileName(self.parent, 'Open python script file...', scpt, 'Python(*.py);;All Files (*)')
-            if fileName and fileName[0] != '' and os.path.exists(fileName[0]):
-                fileName = fileName[0]
-                self.loadedFileName = fileName
-                self.loadedFile = True
-                self.lblFileLoadInfo.setText(self.loadedFileName)
-                data = str(self.ttls.fileContent(fileName))
-                self.sciInput.clear()
-                # data = QtGui.QStaticText(data)
-                self.sciInput.setText(data)
+            self.loadScript()
         elif (actingButton == self.btnSaveScript or (self.standalone and actingButton == self.mnuFileSaveScript)):
-            fileName = QtWidgets.QFileDialog.getSaveFileName(self.parent, 'Open python script file...', scpt, 'Python(*.py);;All Files (*)')
-            if (fileName and fileName[0] != ''):
-                fileName = fileName[0]
-                data = str(self.sciInput.text()).replace('\r\n', '\n', 1000000000)
-                self.ttls.writeFileContent(fileName, data)
+            self.saveScriptAs()
         elif (self.standalone and actingButton == self.mnuAboutHPSE):
             print (self.credit)
         elif (self.standalone and actingButton == self.mnuFileQuit):
@@ -489,40 +579,66 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         else:
             print ('Unkown button' + str(actingButton))
 
-    def execute_Clicked(self):
-        self.doExecute()
-        self.sciInput.setText('')
-
-    def execute_Clicked_NoClear(self):
-        self.doExecute()
+    def getCurrentEditor(self):
+        cwidget = self.tabWidget.currentWidget()
+        lst = cwidget.children()
+        if(len(lst)>1):
+            qsci = lst[1]
+            scriptName = cwidget.toolTip()
+            return (qsci,scriptName)
 
     def doExecute(self):
-        if not str(self.sciInput.text()) == '':
-            inputs = str(self.sciInput.text()).rstrip()
+        (qsci,scriptName) = self.getCurrentEditor()
+        if (scriptName!=""):
+            print("Executing..."+scriptName)
+        if not str(qsci.text()) == '':
+            inputs = str(qsci.text()).rstrip()
             self.appendPlainOutput(inputs)
             self.appendLineOutput()
             self.ABS.add(inputs)
             self.ABS.prepare()
             self.runScript(inputs)
-
+    """
+    '''    def runScript(self, script):
+            try:
+                command = str(script).replace('\r\n', '\n')
+                try:
+                    #self.inter.compile(commands)
+                    res = eval(command, globals(), self.inter.locals)
+                    #res = exec(command, globals(), self.inter.locals)
+                    #print('Done1')
+                except SyntaxError:
+                    # self.inter.showtraceback()
+                    # exec (command, globals(), locals())
+                    res = self.inter.runcode(command)
+                    #print('Done2')
+                QtWidgets.QApplication.processEvents()
+                if res is not None:
+                    print(repr(res))
+            except SystemExit:
+                self.inter.showsyntaxerror()
+                crashHandle()
+                sys.exit(0)
+            except:
+                print (errorReport())
+    '''
+    """
     def runScript(self, script):
         try:
             command = str(script).replace('\r\n', '\n')
+            locals = self.getUpdatedLocals()
+            self.inter.locals.update(locals)
             try:
-                res = eval(command, globals(), self.inter.locals)
-                #res = exec(command, globals(), self.inter.locals)
-                #print('Done1')
-            except SyntaxError:
-                # self.inter.showtraceback()
-                # exec (command, globals(), locals())
                 res = self.inter.runcode(command)
-                #print('Done2')
+            except SyntaxError:
+                print ('\n---------------------------------------\n')
+                self.inter.showsyntaxerror()
+                print ('\n---------------------------------------\n')
             QtWidgets.QApplication.processEvents()
             if res is not None:
                 print(repr(res))
         except SystemExit:
             self.inter.showsyntaxerror()
-            #print (errorReport())
             crashHandle()
             sys.exit(0)
         except:
@@ -572,6 +688,10 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.win.show()
 
     def writeToLog(self):
+        """
+        Write info
+        :return:
+        """
         curdir = os.getcwd()
         logdir = curdir + '/ConsoleLog'
         if not os.path.exists(logdir):
@@ -586,8 +706,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         print ('\nLog End Time: ' + str(strftime("%Y/%m/%d %H:%M:%S")))
         fileName = 'DC' + strftime("%Y%m%d%H%M%S") + '.log'
         logFileName = logdir + '/' + fileName
-        data = str(self.sciOutput.text()).replace('\r\n', '\n', 1000000000)
-        self.ttls.writeFileContent(logFileName, data)
+        self.saveQSCItoFile(self.sciOutput,logFileName)
 
     def getHistory(self):
         return self.history
