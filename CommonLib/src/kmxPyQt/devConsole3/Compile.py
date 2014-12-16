@@ -44,8 +44,8 @@ sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt')
 
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'DevConsolePlug.py'
-APPNAME = 'HAPY'
-DESCRIPTION = 'HAPY - HAndy PYthon'
+APPNAME = 'HaPy'
+DESCRIPTION = 'HaPy - HAndy PYthon'
 COMPANY_NAME = 'Kumar Studios'
 COPYRIGHT = 'Kumar Studios'
 VERSION = '0.0.1'

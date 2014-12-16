@@ -192,3 +192,220 @@ class CommonTools(object):
 
     def showInfoBox(self, Title='Information', Message='Information'):
         QtWidgets.QMessageBox.information(self.CallingUI, Title, Message)
+
+    def connectToRightClick(self, Widget, FunctionToInvoke):
+        self.enableRightClick(Widget)
+        #self.CallingUI.connect(Widget, QtCore.SIGNAL('customContextMenuRequested(QPoint)'), FunctionToInvoke)
+        Widget.customContextMenuRequested.connect(FunctionToInvoke)
+        #QtWidgets
+
+    def enableRightClick(self, Widget):
+        Widget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
+
+    def popUpMenu(self, menuRequestingtObject, PopupPoint, menuListString, funcToInvoke, additionalArguments='', iconList = []):
+
+        """
+        self.CallingUI - where the menuRequestingtObject is placed, usaully self
+        menuRequestingtObject - Into which menu will be generated
+        PopupPoint - QPoint where menu should popout
+        menuListString - Array of menu items
+        funcToInvoke - Function to be invoked on menu item clicked
+        additionalArguments - argument to that function
+
+            Inside funcToInvoke() you will receive a tuple with three items
+            1 - Menu Label
+            2 - Menu Label Index
+            3 - added_arg
+
+            eg:
+            myutils().popUpMenu(self,self.textEdit,PopupPoint,["KUMAR","TEST"],self.funs,["myarg1","myarg2"])
+
+            def funs(self,t)
+                    print "Label Clicked is: " + str(t[0])
+                    print "Label Index is: " + str(t[1])
+                    print "Added Argument: " + str(t[2])
+
+        """
+        if menuListString == []:
+            return 0;
+        Rmnu = QtWidgets.QMenu(self.CallingUI)
+        for i, itm in enumerate(menuListString):
+
+            newmenuitem = QtWidgets.QAction(itm, self.CallingUI)
+            #newmenuitem
+
+            if len(itm)>1 and itm[0]=='|':
+                itm = itm[1:len(itm)]
+                newmenuitem.setEnabled(False)
+                newmenuitem.setText(itm)
+                #var = QtCore.QVariant()
+
+
+
+            if itm != '':
+                if len(iconList)>1 and len(iconList)>i:
+                    if iconList[i]!=None:
+                        icon = QtGui.QIcon()
+                        icon.addPixmap(QtGui.QPixmap(iconList[i]), QtGui.QIcon.Normal, QtGui.QIcon.On)
+                        newmenuitem.setIcon(icon)
+
+            #self.CallingUI.connect(newmenuitem, QtCore.SIGNAL("triggered()"), lambda passarg=(itm,i,additionalArguments,newmenuitem): funcToInvoke(passarg))
+            newmenuitem.triggered.connect(lambda passarg=([itm,i,additionalArguments,newmenuitem]): funcToInvoke(passarg))
+            newmenuitem.setData(PopupPoint)
+
+            if itm=='':
+                Rmnu.addSeparator()
+            else:
+                Rmnu.addAction(newmenuitem)
+
+
+        PopupPoint.setY(PopupPoint.y() + 30)
+        PopupPoint.setX(PopupPoint.x() + 5)
+        Rmnu.exec_(menuRequestingtObject.mapToGlobal(PopupPoint))
+        del(Rmnu)
+
+
+
+    def popUpMenuAdv(self, MenuList, MenuRequestingObject, MenuStartPoint, FunctionToBeInvoked, AdditionalArgument=[], popupOffset=QtCore.QPoint(0,0)):
+
+        """
+
+        popup a menu for a given object and point
+
+        menu = [{'m1':'iconPath'},{'m2':''},[{'m3':''},{'m31':''},[{'m32':''},{'m321':''},{'m322':''}],{'m33':''}],{'m4':''},{'m5':''},[{'m6':''},{'m61':''},{'m62':''}],'m7']
+        or
+        menu = ['m1','m2',['m3','m31',['m32','m321','m322'],'m33'],'m4','m5',['m6','m61','m62'],'m7']
+
+        m1
+        m2
+        m3-->m31
+        m4   m32-->m321
+        m5   m33   m322
+        m6
+        m7
+
+        eg:
+
+        self.uic = QtUiSupport.uiComman(self)
+        self.uif = QtUiSupport.visualFormat('//tech/share/PULSE_SANDBOX/GLOBAL_SETTINGS/BASEICONS/splIcons')
+
+        ic1 = self.uif.getIconForLabel('photo-album.png')
+        ic2 = self.uif.getIconForLabel('shortcut.png')
+
+        menu = [{'m1':ic1},{'m2':ic2},[{'m3':ic3},{'m31':ic4},[{'m32':ic5},{'m321':ic6},{'m322':ic7}],{'m33':ic8}],{'m4':ic9},{'m5':ic0},[{'m6':ic11},{'m61':ic12},{'m62':ic13}],{'m7':ic14}]
+
+        self.uic.popUpMenuAdv(menu,self.pushButton,qpoint,self.myOptFun,'addedArgument')
+
+        Your Function will be invoked and following values will be passed through the single argument.
+
+            RETURN VALUE (Single Tuple):
+            ('MENULABEL', 1, 2, 0, 'addedArgument', <PyQt4.QtGui.QAction object at 0x045B9030>)
+
+            MENULABEL = Menu Label
+            1 = Menu Level No (0 - Main Menu, 1 - First Level Submenu, 2 - Second Level Submenu....)
+            2 = Parent ID - Index of the parent item, In parent's level
+            0 = ItemIndex - Index of item, In its level
+            addedArgument = Addition Arguments which was added on menu creation.
+            QACTION - Action is the item sending the signal.
+
+        See UISUPPORT.menuCreator function for additional info!
+
+        """
+
+        if type(MenuStartPoint)==type(QtCore.QPoint()):
+            PopupPoint = MenuStartPoint
+        else:
+            PopupPoint = QtCore.QPoint(-3,-5)
+
+        Rmnu = self.menuCreator(MenuList, self.CallingUI, AdditionalArgument, FunctionToBeInvoked)
+        PopupPoint.setY(PopupPoint.y() + popupOffset.y())
+        PopupPoint.setX(PopupPoint.x() + popupOffset.x())
+        Rmnu.exec_(MenuRequestingObject.mapToGlobal(PopupPoint))
+        del(Rmnu)
+
+    def menuCreator(self, listOfItem, CallingUI, AdditionalArgument, FunctionToInvoke, ParentID=0, Level=0):
+
+        '''
+        Do you want menu?
+        Give me listOfMenuItem and function to be invoked, and additional args that are to be passed to that functoin... .
+
+        Results a menu which can be used
+            * for popup as context menu
+            * ui main menu
+            * toolbutton popup menu
+
+        Your Function will be invoked and following values will be passed through the single argument.
+
+            RETURN VALUE (Single Tuple):
+            ('MENULABEL', 1, 2, 0, 'addedArgument', <PyQt4.QtGui.QAction object at 0x045B9030>)
+
+            MENULABEL = Menu Label
+            1 = Menu Level No (0 - Main Menu, 1 - First Level Submenu, 2 - Second Level Submenu....)
+            2 = Parent ID - Index of the parent item, In parent's level
+            0 = ItemIndex - Index of item, In its level
+            addedArgument = Addition Arguments which was added on menu creation.
+            QACTION - Action is the item sending the signal.
+
+
+        Eg:
+
+        ic1 = 'D:\DD\DD\DOWNICON.png'
+        ic2 = 'D:\DD\DD\DOWNICON.png'
+        .
+        .
+        .
+
+        menu = [{'mx1':ic1},{'mxx2':ic2},{'kzzzz':ic4},[{'mcccccc3z':ic3},{'mzxczxczcx31':ic4},[{'xzczcm32':ic5},{'sdfsdfm321':ic6},{'m3ffffs22':ic7}],{'msdfsdf33':ic8}],{'mxcvxcv4':ic9},{'ewrwerwerm5':ic0},[{'mrrrwe6':ic11},{'m61':ic12},{'m62':ic13}],{'m7':ic14}]
+        mnu = UISUPPORT.menuCreator(menu, self, 'ADDEDARG', self.mySplMenuFunction)
+
+        self.toolButton.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+        self.toolButton.setMenu(mnu)
+
+
+
+        See UISUPPORT.popUpMenuAdv function for additional info!
+
+        '''
+
+        Rmnu =  QtWidgets.QMenu(self.CallingUI)
+
+        Rmnu.setTearOffEnabled(False)
+
+        for cnt, eachItem in enumerate(listOfItem):
+            if type(eachItem)==type([]):
+                Menu = self.menuCreator(eachItem[1:], self.CallingUI, AdditionalArgument, FunctionToInvoke, cnt, Level+1)
+                if type(eachItem[0])==type({}):
+                    Menu.setTitle(eachItem[0].keys()[0])
+                else:
+                    Menu.setTitle(str(eachItem[0]))
+                Rmnu.addMenu(Menu)
+            else:
+                itemDict = eachItem
+
+                if type(itemDict)==type({}):
+                    Label = itemDict.keys()[0]
+                    IconPath = itemDict.values()[0]
+                else:
+                    Label = str(itemDict)
+                    IconPath = ''
+
+                newmenuitem = QtWidgets.QAction(Label, self.CallingUI)
+                if len(eachItem)>1 and Label[0]=='|':
+                    Label = Label[1:len(Label)]
+                    newmenuitem.setEnabled(False)
+                    newmenuitem.setText(Label)
+
+                if IconPath:
+                    icon = QtGui.QIcon()
+                    icon.addPixmap(QtGui.QPixmap(IconPath), QtGui.QIcon.Normal, QtGui.QIcon.On)
+                    newmenuitem.setIcon(icon)
+
+                newmenuitem.triggered.connect(lambda passarg=(Label,Level,ParentID,cnt,AdditionalArgument,newmenuitem): FunctionToInvoke(passarg))
+
+                if Label=='':
+                    Rmnu.addSeparator()
+
+                else:
+                    Rmnu.addAction(newmenuitem)
+        return Rmnu
