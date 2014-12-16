@@ -1,4 +1,10 @@
 Traceback (most recent call last):
-  File "F:/Kumaresan/Code/Python/CommonLib/src/kmxPyQt/devConsole3/DevConsolePlug.py", line 719, in <module>
-    sys.exit(app.exec_())
-SystemExit: 0
+  File "F:/Kumaresan/Code/Python/CommonLib/src/kmxPyQt/devConsole3/DevConsolePlug.py", line 746, in <module>
+    dc = DevConsole()
+  File "F:/Kumaresan/Code/Python/CommonLib/src/kmxPyQt/devConsole3/DevConsolePlug.py", line 213, in __init__
+    self.qtTools.popUpMenuAdv(menu,self.treeWidget,QtCore.QPoint(),self.myOptFun,'addedArgument')
+  File "F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt\kmxQtCommonTools.py", line 314, in popUpMenuAdv
+    Rmnu = self.menuCreator(MenuList, self.CallingUI, AdditionalArgument, FunctionToBeInvoked)
+  File "F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt\kmxQtCommonTools.py", line 364, in menuCreator
+    Rmnu =  QtGui.QMenu(self.CallingUI)
+AttributeError: 'module' object has no attribute 'QMenu'

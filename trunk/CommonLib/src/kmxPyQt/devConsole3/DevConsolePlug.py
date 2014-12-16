@@ -59,6 +59,9 @@ try:
     from kmxPyQt import kmxQtTreeWidget
     from kmxPyQt import kmxQtCommonTools
     from kmxGeneral import kmxTools
+
+    import http.server
+
 except:
     crashHandle()
 
@@ -202,6 +205,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.btnSaveScript.clicked.connect(self.btnRedirector)
         self.btnNewScript.clicked.connect(self.btnRedirector)
         self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
+        self.qtTools.connectToRightClick(self.treeWidget,self.pluginRightClick)
 
         self.cline.returnPressed.connect(self.commandLineExecute)
         self.cline.__class__.keyReleaseEvent = self.commandLineKeyPress
@@ -280,6 +284,8 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         except:
             print (errorReport())
 
+
+
     def getUpdatedLocals(self):
         try:
             raise None
@@ -340,6 +346,27 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.label_2.setText("Workspace:")
         self.label_3.setText("Quick Commands:")
         '''
+
+    def pluginRightClick(self, point):
+        #menu = ['m1','m2',['m3','m31',['m32','m321','m322'],'m33'],'m4','m5',['m6','m61','m62'],'m7']
+        #self.qtTools.popUpMenuAdv(menu,self.treeWidget,point,self.pluginRightClickSelected,'addedArgument')
+        self.qtTools.popUpMenu(self.treeWidget,point,["Edit PY","Edit UI"],self.pluginRightClickSelected,["myarg1","myarg2"])
+
+    def pluginRightClickSelected(self,*arg):
+        act = self.parent.sender()
+        menuOption = act.text()
+        item = self.treeWidget.itemAt(act.data())
+        itemSelected = item.text(0)
+        if(menuOption=="Edit PY"):
+            pyFile = (item.data(0,QtCore.Qt.UserRole))
+            self.addNewTab(pyFile)
+        if(menuOption=="Edit UI"):
+            pyFile = (item.data(0,QtCore.Qt.UserRole))
+            uiFile = pyFile.replace(".py",".ui")
+            uiFile = uiFile.replace(".PY",".ui")
+            self.addNewTab(uiFile)
+
+        #print(actingButton)
 
     def pluginSelected(self, *eve):
         selectedItem = eve[0]
@@ -403,6 +430,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             else:
                 plugTreeItem = self.qtTree.addChild(item, parentTreeItem)
             print("Loading Plugin Module... " + modName)
+            #item.setData(0,plugFile)
+            #plugTreeItem.setData(0, QtCore.Qt.UserRole, QtCore.QVariant(str(plugFile)))
         else:
             print ("Expected Class Header '%s' not found in '%s' module !" % (expecting, modName))
             plugTreeItem = None
@@ -544,6 +573,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 
     def loadScriptCore(self,fileName):
         self.addNewTab(fileName)
+
 
     def btnRedirector(self):
         actingButton = self.parent.sender()
