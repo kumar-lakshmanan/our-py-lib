@@ -1,0 +1,2 @@
+opl is a generic collection of python library, I would like to share with you peoples.
+You could use your SVN pull my lib. And use it as you like it. If you want to share yours too. You can, just get yourself the editor access. And commit your codes too.
