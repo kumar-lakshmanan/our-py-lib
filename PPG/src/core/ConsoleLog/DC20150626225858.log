@@ -1,0 +1,216 @@
+HaPy
+---------------------------------------
+Handy Python - Interactive Interpreter
+---------------------------------------
+Initiated!
+
+Log Start Time: 2015/06/26 22:56:46
+
+---------------------------------------
+
+*** Python 3.4.1 (v3.4.1:c0e311e010fc, May 18 2014, 10:38:22) [MSC v.1600 32 bit (Intel)] on win32.***
+Copyright (c) 2001-2014 Python Software Foundation.
+All Rights Reserved.
+
+Copyright (c) 2000 BeOpen.com.
+All Rights Reserved.
+
+Copyright (c) 1995-2001 Corporation for National Research Initiatives.
+All Rights Reserved.
+
+Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.
+All Rights Reserved.
+
+Platform: win32
+Version: sys.getwindowsversion(major=6, minor=1, build=7601, platform=2, service_pack='Service Pack 1')
+FileSys encodeing: mbcs
+
+---------------------------------------
+
+About HaPy:
+Handy Python - Interactive Interpreter/Scripting Environment 
+An expreimental project developed by 
+Kumaresan Lakshmanan
+For Quick Windows Automation. Date: Jan 12 2013
+
+---------------------------------------
+
+Error: Unable to read (OR) Path exists J:\our-py-lib\PPG\src\core\devPlugs
+Loading Plugins: J:\our-py-lib\PPG\src\core\devPlugs
+Adding path to system... J:\our-py-lib\PPG\src\core\devPlugs
+Expected Class Header 'class CopyDevPlugs(devPluginBase.PluginBase):' not found in 'CopyDevPlugs' module !
+Loading Plugin Module... PlugMe1
+Traceback (most recent call last):
+  File "<string>", line 8, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Loading Plugin Module... plugTemplate
+Traceback (most recent call last):
+  File "<string>", line 8, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Loading Plugin Module... QuickTools
+Traceback (most recent call last):
+  File "<string>", line 11, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Loading Plugin Module... ShowInfo
+Traceback (most recent call last):
+  File "<string>", line 8, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Loading Plugin Module... sysPaths
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Loading Plugin Module... template
+Traceback (most recent call last):
+  File "<string>", line 8, in <module>
+AttributeError: 'module' object has no attribute 'PluginBase'
+Expected Class Header 'class xsc(devPluginBase.PluginBase):' not found in 'xsc' module !
+Adding path to system... J:\our-py-lib\PPG\src\core
+Adding path to system... J:\our-py-lib\PPG\src\core\Scripts
+Adding path to system... J:\our-py-lib\PPG\src\core\Scripts
+Accessing startup script folder... Scripts/
+Parsing startup scripts...
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General obj: General
+Error! No Icon found for: /02/16/49.png
+Error! No Icon found for: /04/16/30.png
+Error! No Icon found for: /03/16/46.png
+Error! No Icon found for: /02/16/49.png
+Saved!General-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General obj: General
+Saved!General-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings obj: UISettings
+Saved!UISettings-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\Py2Exe obj: Py2Exe
+Saved!Py2Exe-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\Py2Exe
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings obj: UISettings
+Saved!UISettings-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings obj: UISettings
+Saved!UISettings-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\UISettings
+File read and obj returned J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General obj: General
+Saved!General-J:\our-py-lib\PPG\src\core\currentProj\_ppg_\General
+Error! No Icon found for: /02/16/49.png
+Error! No Icon found for: /04/16/30.png
+Error! No Icon found for: /03/16/46.png
+Error! No Icon found for: /02/16/49.png
+Saved!General-J:\our-py-lib\pepper\_ppg_\General
+File read and obj returned J:\our-py-lib\pepper\_ppg_\General obj: General
+Saved!General-J:\our-py-lib\pepper\_ppg_\General
+Saved!UISettings-J:\our-py-lib\pepper\_ppg_\UISettings
+Saved!Py2Exe-J:\our-py-lib\pepper\_ppg_\Py2Exe
+File read and obj returned J:\our-py-lib\pepper\_ppg_\UISettings obj: UISettings
+Saved!UISettings-J:\our-py-lib\pepper\_ppg_\UISettings
+File read and obj returned J:\our-py-lib\pepper\_ppg_\Py2Exe obj: Py2Exe
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'QuickTools' is not defined
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'QuickTools' is not defined
+Saved!Py2Exe-J:\our-py-lib\pepper\_ppg_\Py2Exe
+File read and obj returned J:\our-py-lib\pepper\_ppg_\General obj: General
+File read and obj returned J:\our-py-lib\pepper\_ppg_\UISettings obj: UISettings
+File read and obj returned J:\our-py-lib\pepper\_ppg_\Py2Exe obj: Py2Exe
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/.project
+to
+J:/our-py-lib/pepper/.project
+Updated J:/our-py-lib/pepper/.project
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/.pydevproject
+to
+J:/our-py-lib/pepper/.pydevproject
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/core/config.ini
+to
+J:/our-py-lib/pepper/src/core/config.ini
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/core/icons.py
+to
+J:/our-py-lib/pepper/src/core/icons.py
+Updated J:/our-py-lib/pepper/src/core/icons.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/core/SampleQtApp.py
+to
+J:/our-py-lib/pepper/src/core/SampleQtApp.py
+Updated J:/our-py-lib/pepper/src/core/SampleQtApp.py
+Updated J:/our-py-lib/pepper/src/core/SampleQtApp.py
+Updated J:/our-py-lib/pepper/src/core/SampleQtApp.py
+Rename: J:/our-py-lib/pepper/src/core\pepper.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/core/__init__.py
+to
+J:/our-py-lib/pepper/src/core/__init__.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/core/Scripts/userSetup.py
+to
+J:/our-py-lib/pepper/src/core/Scripts/userSetup.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/interface_runner/win_main.py
+to
+J:/our-py-lib/pepper/src/interface_runner/win_main.py
+Updated J:/our-py-lib/pepper/src/interface_runner/win_main.py
+Updated J:/our-py-lib/pepper/src/interface_runner/win_main.py
+Updated J:/our-py-lib/pepper/src/interface_runner/win_main.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/interface_runner/__init__.py
+to
+J:/our-py-lib/pepper/src/interface_runner/__init__.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/user_interface/win_main.py
+to
+J:/our-py-lib/pepper/src/user_interface/win_main.py
+Updated J:/our-py-lib/pepper/src/user_interface/win_main.py
+Updated J:/our-py-lib/pepper/src/user_interface/win_main.py
+Updated J:/our-py-lib/pepper/src/user_interface/win_main.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/user_interface/win_main.ui
+to
+J:/our-py-lib/pepper/src/user_interface/win_main.ui
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/SampleQtApp/src/user_interface/__init__.py
+to
+J:/our-py-lib/pepper/src/user_interface/__init__.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/py2exeTemplate/py2exeTemplate.py
+to
+J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+Updated J:/our-py-lib/pepper/src/core/build_pepper.py
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/py2exeTemplate/qt.conf
+to
+J:/our-py-lib/pepper/src/core/pepper_bin/qt.conf
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/py2exeTemplate/appicon.ico
+to
+J:/our-py-lib/pepper/src/core/appicon.ico
+
+Copied...
+J:/our-py-lib/PPG/src/core/BaseCodes/py2exeTemplate/Scripts/userSetup.py
+to
+J:/our-py-lib/pepper/src/core/pepper_bin/Scripts/userSetup.py
+Completed!
+
+Log End Time: 2015/06/26 22:58:58
