@@ -25,6 +25,7 @@ from PyQt5.Qsci import QsciScintilla
 from PyQt5.uic import loadUi
 import win32com
 import win32com.client
+from kmxPyQt.qne import qneblock
 
 from kmxPyQt import kmxQtMenuBuilder
 
@@ -604,6 +605,11 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.saveScriptAs()
         elif (self.standalone and actingButton == self.mnuAboutHPSE):
             print (self.credit)
+        elif (actingButton == self.mnuEditClearOutput):
+            self.sciOutput.clear()  
+        elif (actingButton == self.mnuEditClearInput):
+            (qsci,scriptName) = self.getCurrentEditor()
+            qsci.clear()            
         elif (self.standalone and actingButton == self.mnuFileQuit):
             sys.exit(0)
         else:

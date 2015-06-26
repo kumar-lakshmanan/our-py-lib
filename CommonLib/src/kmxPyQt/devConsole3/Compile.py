@@ -14,6 +14,7 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
+from glob import glob
 from distutils.core import setup
 import os
 import shutil
@@ -39,8 +40,16 @@ for modulePath in modulePathList:
     if modulePath not in sys.path and os.path.exists(modulePath):
         sys.path.append(modulePath)
 
-sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src')
-sys.path.append('F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt')
+sys.path.append('J:\Python\CommonLib\src')
+sys.path.append('J:\Python\CommonLib\src\kmxPyQt')
+
+dllpath = r'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4148_none_5090ab56bcba71c2'
+
+sys.path.append(dllpath)
+data_files = [
+    ## Instruct setup to copy the needed DLL files into the build directory
+    ("Microsoft.VC90.CRT", glob(dllpath + r'\*.*')),
+]
 
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'DevConsolePlug.py'
@@ -57,7 +66,7 @@ BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client']
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client','numpy','pyqtgraph']
 PACKAGES = ['kmxPyQt.devConsole3', 'PyQt5', 'win32com']
 EXCLUDES = []
 
