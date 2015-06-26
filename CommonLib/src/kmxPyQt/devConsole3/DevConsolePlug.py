@@ -25,7 +25,7 @@ from PyQt5.Qsci import QsciScintilla
 from PyQt5.uic import loadUi
 import win32com
 import win32com.client
-from kmxPyQt.qne import qneblock
+
 
 from kmxPyQt import kmxQtMenuBuilder
 
@@ -57,6 +57,7 @@ except:
 # Safly Import Custom Modules
 try:
     from kmxPyQt.devConsole3.DCwin import Ui_devConsole
+    from kmxPyQt.qne import qneblock
     from kmxPyQt import kmxQtTreeWidget
     from kmxPyQt import kmxQtCommonTools
     from kmxGeneral import kmxTools
