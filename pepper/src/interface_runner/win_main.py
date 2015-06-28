@@ -8,7 +8,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from user_interface.win_main import Ui_MainWindow
 import sys
 import os
-
+#from kmxPyQt.qne import qnodeseditor
+from kmxPyQt.qne.qnodeseditor import QNodesEditor
 
 class WinMain(QtWidgets.QMainWindow, Ui_MainWindow):
     '''
@@ -23,9 +24,24 @@ class WinMain(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.parent = parent
         self.connectSignalSlots()
+        self.createScene()
 
     def connectSignalSlots(self):
-        self.pushButton.clicked.connect(self.parent.btnClickHere)
+        self.btnPropApply.clicked.connect(self.parent.btnClickHere)
+        
+    def createScene(self):
+        self.scene = QtWidgets.QGraphicsScene(self)
+        bgcolor = QtWidgets.QApplication.palette().color(QtGui.QPalette.Window)
+        self.scene.setBackgroundBrush(QtGui.QBrush(bgcolor, QtCore.Qt.SolidPattern))
+
+        self.graphicsView.setScene(self.scene)
+        self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.graphicsView.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        self.setCentralWidget(self.graphicsView)
+
+        self.nodesEditor = QNodesEditor(self)
+        self.nodesEditor.install(self.scene)
+
 
 
 if __name__ == '__main__':
