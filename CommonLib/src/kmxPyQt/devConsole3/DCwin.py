@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'F:\Kumaresan\Code\Python\CommonLib\src\kmxPyQt\devConsole3\DCwin.ui'
+# Form implementation generated from reading ui file 'J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\/DCwin.ui'
 #
-# Created: Sat Dec 13 07:33:04 2014
-#      by: PyQt5 UI code generator 5.3.2
+# Created by: PyQt5 UI code generator 5.4.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -31,7 +30,7 @@ class Ui_devConsole(object):
         self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
         self.splitter_2.setOpaqueResize(False)
         self.splitter_2.setObjectName("splitter_2")
-        self.sciOutput = QsciScintilla(self.splitter_2)
+        self.sciOutput = Qsci.QsciScintilla(self.splitter_2)
         self.sciOutput.setToolTip("")
         self.sciOutput.setWhatsThis("")
         self.sciOutput.setFrameShape(QtWidgets.QFrame.Box)

@@ -19,7 +19,6 @@ from kmxPyQt.devConsole3 import DevConsolePlug
 import core.icons
 import core.lib
 
-
 class PyProjGen():
     '''
     classdocs
