@@ -1,4 +1,4 @@
 Traceback (most recent call last):
-  File "J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug.py", line 777, in <module>
+  File "J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug.py", line 780, in <module>
     sys.exit(app.exec_())
 SystemExit: 0
