@@ -50,7 +50,6 @@ class pepper(object):
         self.qtTools.dragDrop(self.win.trNodes, self.dragDropNode)
         self.qtTools.dragDrop(self.win.graphicsView, self.dragDropNode)
        
-
     def btnClickHere(self):
         input = self.qtTools.getValue(self.win.lineEdit)
         self.qtTools.setValue(self.win.label_3, "Your input is... " + input)

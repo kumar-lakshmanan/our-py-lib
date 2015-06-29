@@ -131,4 +131,4 @@ class Ui_devConsole(object):
         self.btnQuickSaveScript.setText(_translate("devConsole", "Save Script"))
         self.btnExecute.setText(_translate("devConsole", "Execute"))
 
-from PyQt5.Qsci import QsciScintilla
+from PyQt5 import Qsci

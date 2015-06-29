@@ -1,0 +1,4 @@
+
+File: "D:\REPO\SOURCE\SCRIPTS\PYTHON\UI_DB_lib\devConsole3\DevConsolePlug.py", line 376, in <module>
+File: "D:\REPO\SOURCE\SCRIPTS\PYTHON\UI_DB_lib\devConsole3\DevConsolePlug.py", line 191, in __init__
+File: "<type 'exceptions.AttributeError'>", line 0, in scriptPath

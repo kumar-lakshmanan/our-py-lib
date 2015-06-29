@@ -25,7 +25,7 @@ from kmxPyQt import kmxQtCommonTools
 
 import os
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 
 from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
@@ -202,6 +202,10 @@ class CommonTools(object):
     def enableRightClick(self, Widget):
         Widget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
+    def dragDrop(self, Widget, FunctionToInvoke):
+        #self.CallingUI.connect(Widget, QtCore.pyqtSignal('dropEvent()'),FunctionToInvoke)
+        Widget.__dropEvent__ = FunctionToInvoke
+        #Widget.dropEvent(FunctionToInvoke)
 
     def popUpMenu(self, menuRequestingtObject, PopupPoint, menuListString, funcToInvoke, additionalArguments='', iconList = []):
 
