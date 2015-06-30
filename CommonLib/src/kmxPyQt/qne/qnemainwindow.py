@@ -36,6 +36,11 @@ from kmxPyQt.qne.qneblock import QNEBlock
 from kmxPyQt.qne.qneport import QNEPort
 from kmxPyQt.qne.qneconnection import QNEConnection
 
+import os
+import sys
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 class QNEMainWindow(QMainWindow):
     def __init__(self, parent):
         super(QNEMainWindow, self).__init__(parent)
@@ -127,9 +132,12 @@ class QNEMainWindow(QMainWindow):
     
     
     
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    widget = QNEMainWindow(None)
+    widget.show()
 
-widget = QNEMainWindow(None)
-widget.show()
+    sys.exit(app.exec_())
 
 
 

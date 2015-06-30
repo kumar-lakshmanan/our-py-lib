@@ -1,0 +1,6 @@
+.metadata/
+*.pyc
+*.log
+*.pydevsysteminfo
+pepper/.settings/org.eclipse.core.resources.prefs
+*.pyc

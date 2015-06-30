@@ -27,7 +27,8 @@ class WinMain(QtWidgets.QMainWindow, Ui_MainWindow):
         self.createScene()
 
     def connectSignalSlots(self):
-        self.btnPropApply.clicked.connect(self.parent.btnClickHere)
+        #self.btnPropApply.clicked.connect(self.parent.btnClickHere)
+        pass
         
     def createScene(self):
         self.scene = QtWidgets.QGraphicsScene(self)
@@ -35,9 +36,6 @@ class WinMain(QtWidgets.QMainWindow, Ui_MainWindow):
         self.scene.setBackgroundBrush(QtGui.QBrush(bgcolor, QtCore.Qt.SolidPattern))
 
         self.graphicsView.setScene(self.scene)
-        self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.graphicsView.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
-        self.setCentralWidget(self.graphicsView)
 
         self.nodesEditor = QNodesEditor(self)
         self.nodesEditor.install(self.scene)

@@ -2,12 +2,12 @@ import sys
 import os
 
 ##Remove cached custom modules from memory except preloaded IDE modules
-if __name__ == '__main__':
-    if globals().has_key('InitialModules'):
-         for CustomModule in [Module for Module in sys.modules.keys() if Module not in InitialModules]:
-            del(sys.modules[CustomModule])
-    else:
-        InitialModules = sys.modules.keys()
+# if __name__ == '__main__':
+#     if globals().has_key('InitialModules'):
+#          for CustomModule in [Module for Module in sys.modules.keys() if Module not in InitialModules]:
+#             del(sys.modules[CustomModule])
+#     else:
+#         InitialModules = sys.modules.keys()
 
 
 #######Appending Module Search Path########

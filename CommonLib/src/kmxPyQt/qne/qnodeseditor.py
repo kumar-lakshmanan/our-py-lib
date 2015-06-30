@@ -27,110 +27,118 @@
 
 from PyQt5.QtCore import (Qt, QObject, QEvent, QSizeF, QRectF, QPointF)
 from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsSceneMouseEvent)
+from PyQt5 import QtGui
 
 from kmxPyQt.qne.qneblock import QNEBlock
+from kmxPyQt.qne.qnesysblock import QNESysBlock
+
 from kmxPyQt.qne.qneport import QNEPort
 from kmxPyQt.qne.qneconnection import QNEConnection
 
 class QNodesEditor(QObject):
-    def __init__(self, parent):
-        super(QNodesEditor, self).__init__(parent)
 
-        self.selBlock = None
-        self.connection = None
+	def __init__(self, parent):
+		super(QNodesEditor, self).__init__(parent)
+		
+		self.selBlock = None
+		self.connection = None
+		self.callBack = None
+	
+	
+	def install(self, scene):
+		self.scene = scene
+		self.scene.installEventFilter(self)
+	
+	
+	def itemAt(self, position):
+		items = self.scene.items(QRectF( position - QPointF(1,1) , QSizeF(3,3) ))
+		
+		for item in items:
+		    if item.type() > QGraphicsItem.UserType:
+		        return item
+		
+		return None;
+		
+		
+	def eventFilter(self, object, event):
 
+		if event.type()==166:
+			self.callBack(event)
+		if event.type() == QEvent.GraphicsSceneMousePress:
+			if event.button() == Qt.LeftButton:
+				item = self.itemAt(event.scenePos())
+				if item and item.type() == QNEPort.Type:
+				    self.connection = QNEConnection(None)
+				    self.scene.addItem(self.connection)
+				
+				    self.connection.setPort1(item)
+				    self.connection.setPos1(item.scenePos())
+				    self.connection.setPos2(event.scenePos())
+				    self.connection.updatePath()
+				
+				    return True
+				
+				elif item and item.type() == QNEBlock.Type:
+				    if self.selBlock:
+				        self.selBlock.setZValue(0)
+				
+				    item.setZValue(1)
+				    self.selBlock = item
+				
+				else:
+				    self.selBlock = None
+		
+			elif event.button() == Qt.RightButton:
+				item = self.itemAt(event.scenePos())
+				if item and item.type()==QNESysBlock.Type:				
+					p1 = item.ports()[0]
+					if (p1.portName()=="Start" or p1.portName()=="End"): return True					
+				if item and (item.type() == QNEConnection.Type or item.type() == QNEBlock.Type):
+					if self.selBlock == item:
+						self.selBlock = None
+				if item and item.type() == QNEConnection.Type:
+					item.port1().removeConnection(item)
+					item.port2().removeConnection(item)
+				elif item and item.type() == QNEBlock.Type:
+					for port in set(item.ports()):
+						for connection in set(port.connections()):
+							connection.port1().removeConnection(connection)
+							connection.port2().removeConnection(connection)
+							self.scene.removeItem(connection)
+						self.scene.removeItem(port)
 
-    def install(self, scene):
-        self.scene = scene
-        self.scene.installEventFilter(self)
-
-
-    def itemAt(self, position):
-        items = self.scene.items(QRectF( position - QPointF(1,1) , QSizeF(3,3) ))
-
-        for item in items:
-            if item.type() > QGraphicsItem.UserType:
-                return item
-
-        return None;
-
-
-    def eventFilter(self, object, event):
-        if event.type() == QEvent.GraphicsSceneMousePress:
-
-            if event.button() == Qt.LeftButton:
-                item = self.itemAt(event.scenePos())
-                if item and item.type() == QNEPort.Type:
-                    self.connection = QNEConnection(None)
-                    self.scene.addItem(self.connection)
-
-                    self.connection.setPort1(item)
-                    self.connection.setPos1(item.scenePos())
-                    self.connection.setPos2(event.scenePos())
-                    self.connection.updatePath()
-
-                    return True
-
-                elif item and item.type() == QNEBlock.Type:
-                    if self.selBlock:
-                        self.selBlock.setZValue(0)
-
-                    item.setZValue(1)
-                    self.selBlock = item
-
-                else:
-                    self.selBlock = None
-
-            elif event.button() == Qt.RightButton:
-                item = self.itemAt(event.scenePos())
-
-                if item and (item.type() == QNEConnection.Type or item.type() == QNEBlock.Type):
-                    if self.selBlock == item:
-                        self.selBlock = None
-
-                    if item.type() == QNEConnection.Type:
-                        item.port1().removeConnection(item)
-                        item.port2().removeConnection(item)
-                    elif item.type() == QNEBlock.Type:
-                        for port in set(item.ports()):
-                            for connection in set(port.connections()):
-                                connection.port1().removeConnection(connection)
-                                connection.port2().removeConnection(connection)
-                                self.scene.removeItem(connection)
-                            self.scene.removeItem(port)
-
-                    self.scene.removeItem(item)
-                    return True
-
-
-        elif event.type() == QEvent.GraphicsSceneMouseMove:
-            if self.connection:
-                self.connection.setPos2(event.scenePos())
-                self.connection.updatePath()
-
-                return True
-
-
-        elif event.type() == QEvent.GraphicsSceneMouseRelease:
-            if self.connection and event.button() == Qt.LeftButton:
-                item = self.itemAt(event.scenePos())
-                if item and item.type() == QNEPort.Type:
-                    port1 = self.connection.port1()
-                    port2 = item
-
-                    if port1.block() != port2.block() and port1.isOutput() != port2.isOutput() and not port1.isConnected(port2):
-
-                        self.connection.setPos2(port2.scenePos())
-                        self.connection.setPort2(port2)
-                        self.connection.updatePath()
-                        self.connection = None
-
-                        return True
-
-                self.connection.port1().removeConnection(self.connection)
-                self.scene.removeItem(self.connection)
-                self.connection = None
-                return True
-
-        return super(QNodesEditor, self).eventFilter(object, event)
+				self.scene.removeItem(item)
+				return True
+		
+		
+		elif event.type() == QEvent.GraphicsSceneMouseMove:
+		    if self.connection:
+		        self.connection.setPos2(event.scenePos())
+		        self.connection.updatePath()
+		
+		        return True
+		
+		
+		elif event.type() == QEvent.GraphicsSceneMouseRelease:
+		    if self.connection and event.button() == Qt.LeftButton:
+		        item = self.itemAt(event.scenePos())
+		        if item and item.type() == QNEPort.Type:
+		            port1 = self.connection.port1()
+		            port2 = item
+		
+		            if port1.block() != port2.block() and port1.isOutput() != port2.isOutput() and not port1.isConnected(port2):
+		
+		                self.connection.setPos2(port2.scenePos())
+		                self.connection.setPort2(port2)
+		                self.connection.updatePath()
+		                self.connection = None
+		
+		                return True
+		
+		        self.connection.port1().removeConnection(self.connection)
+		        self.scene.removeItem(self.connection)
+		        self.connection = None
+		        return True
+		
+		return super(QNodesEditor, self).eventFilter(object, event)
 

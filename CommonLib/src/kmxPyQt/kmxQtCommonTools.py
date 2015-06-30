@@ -29,7 +29,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 
 from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
-
+import pickle
 
 class CommonTools(object):
     '''
@@ -202,10 +202,77 @@ class CommonTools(object):
     def enableRightClick(self, Widget):
         Widget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
-    def dragDrop(self, Widget, FunctionToInvoke):
-        #self.CallingUI.connect(Widget, QtCore.pyqtSignal('dropEvent()'),FunctionToInvoke)
-        Widget.__dropEvent__ = FunctionToInvoke
-        #Widget.dropEvent(FunctionToInvoke)
+    def quickSave(self, data, fileName):
+        with open(fileName, 'wb') as handle:
+            pickle.dump(data, handle)        
+
+    def quickLoad(self, fileName):
+        if os.path.exists(fileName):
+            with open(fileName, 'rb') as handle:
+                lst=pickle.load(handle)
+            return lst  
+        
+    def uiLayoutSave(self, layoutFile='layout.lyt', additionalObjToSaveStates=None):
+        dirname = os.path.dirname(layoutFile)
+        if dirname!='' and not os.path.exists(dirname):
+            os.makedirs(dirname)
+
+        win={}
+        win['state']=self.CallingUI.saveState()
+        win['size']=self.CallingUI.size()
+        win['pos']=self.CallingUI.pos()
+
+        #Docks Objects
+        dcks=[]     
+        for each in self.CallingUI.children():
+            if isinstance(each,QtWidgets.QDockWidget):
+                dck={}
+                dck['size']=each.size()
+                dck['pos']=each.pos()
+                dcks.append(dck)
+                
+        additionalObjs=[]
+        for each in additionalObjToSaveStates:
+            splt={}
+            splt['state']=each.saveState()
+            additionalObjs.append(splt)
+
+        data={}
+        data['win']=win
+        data['dcks']=dcks
+        data['added']=additionalObjs
+        
+        with open(layoutFile, 'wb') as handle:
+            pickle.dump(data, handle)
+
+
+    def uiLayoutRestore(self,layoutFile='layout.lyt',additionalObjToRestoreStates=None):
+        if os.path.exists(layoutFile):
+            with open(layoutFile, 'rb') as handle:
+                data=pickle.load(handle)            
+                
+            win=data['win']               
+            self.CallingUI.restoreState(win['state'])
+            self.CallingUI.resize(win['size'])
+            self.CallingUI.move(win['pos'])
+
+            dcksObj = []
+            sptsObj = []
+            for each in self.CallingUI.children():
+                if isinstance(each,QtWidgets.QDockWidget):
+                    dcksObj.append(each)
+                elif isinstance(each,QtWidgets.QSplitter):
+                    sptsObj.append(each)
+            
+            dcks=data['dcks']
+            for cnt, each in enumerate(range(0,len(dcksObj))):
+                dcksObj[cnt].resize(dcks[cnt]['size'])
+                dcksObj[cnt].move(dcks[cnt]['pos'])
+
+            added=data['added']
+            for cnt, each in enumerate(range(0,len(additionalObjToRestoreStates))):
+                additionalObjToRestoreStates[cnt].restoreState(added[cnt]['state'])
+
 
     def popUpMenu(self, menuRequestingtObject, PopupPoint, menuListString, funcToInvoke, additionalArguments='', iconList = []):
 
