@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem, QGraphicsTextItem
 
 class QNEPort(QGraphicsPathItem):
 	(NamePort, TypePort) = (1, 2)
-	(Type) = (QGraphicsItem.UserType + 1)
+	(Type) = (QGraphicsItem.UserType +1)
 
 	def __init__(self, parent):
 		super(QNEPort, self).__init__(parent)

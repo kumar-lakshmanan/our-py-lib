@@ -15,14 +15,17 @@ from kmxPyQt import kmxQtCommonTools
 from kmxPyQt import kmxQtTreeWidget
 from kmxPyQt import kmxQtConnections
 from kmxPyQt.qne.qnodeseditor import QNodesEditor
+from kmxPyQt.qne.qnesaveload import QNESaveLoadScene
 from kmxPyQt.qne.qnesysblock import QNESysBlock
 from kmxPyQt.qne.qneblock import QNEBlock
+from kmxPyQt.qne.qnebasicblock import QNEBasicBlock
 from kmxPyQt.qne.qneport import QNEPort
 import inspect
 
 from kmxPyQt.devConsole3 import DevConsolePlug
 import core.icons
 from core.Scripts import nodes
+ 
 
 class pepper(object):
     '''
@@ -53,16 +56,19 @@ class pepper(object):
         self.qtTools.uiLayoutSave('layout.lyt',[self.win.splitter])
         
     def setupUI(self):
+        #self.qtConn.connectToClick(self.win.bt, FunctionToInvoke)
+        self.win.actionLoad_Scene.triggered['bool'].connect(self.loadScene)
+        self.win.actionSave_Scene.triggered['bool'].connect(self.saveScene)
         self.qtConn.connectToClose(self.win,self.meClose)
         self.qtConn.connectToDragDrop(self.win.graphicsView, self.dragDropNode)
         self.qtTools.setIconForItem(self.win, self.icons.windowIcon, isWindow=1)
         self.parseModules()
         
         #Start Node
-        self.s=QNESysBlock(None)
-        self.win.scene.addItem(self.s)
-        self.s.addPort('Start', 0, QNEPort.NamePort)        
-        self.s.addOutputPort('');
+#         self.s=QNESysBlock(None)
+#         self.win.scene.addItem(self.s)
+#         self.s.addPort('Start', 0, QNEPort.NamePort)        
+#         self.s.addOutputPort('');
         #self.s.setPos(self.win.graphicsView.width()/2-100,self.win.graphicsView.height()/2)
 
         #End Node
@@ -71,6 +77,10 @@ class pepper(object):
         self.e.addPort('End', 0, QNEPort.NamePort)        
         self.e.addInputPort('');
         self.e.setPos(160,0)  
+        
+        bb = QNEBasicBlock(self.win.scene, "Kumsr")
+        self.win.scene.addItem(bb)
+        
        
     def parseModules(self):
         members = inspect.getmembers(nodes)
@@ -91,7 +101,7 @@ class pepper(object):
         sourceWidget = eve.source()
         sourceItems = sourceWidget.selectedItems()[0]    
         obj = getattr(sourceItems, 'dx')
-        p=self.win.graphicsView.sceneRect().center().toPoint()
+        p=self.win.graphicsView.mapToScene(eve.pos())
         self.addFnBlock(obj, p.x(), p.y())
 
     def addFnBlock(self, fn, xpos=10, ypos=10):
@@ -110,7 +120,17 @@ class pepper(object):
         matter = self.win.textBrowser.toPlainText()
         matter = matter + info + "\n"
         self.win.textBrowser.setText(matter)
-
+        vsb = self.win.textBrowser.verticalScrollBar()
+        vsb.setValue(vsb.maximum())        
+    
+    def loadScene(self):
+        qs = QNESaveLoadScene(self.win.scene)
+        qs.loadScene("myscene.txt")
+            
+    def saveScene(self):
+        qs = QNESaveLoadScene(self.win.scene)
+        qs.saveScene("myscene.txt")
+        
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     m = pepper()

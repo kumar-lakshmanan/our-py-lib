@@ -29,20 +29,19 @@ from PyQt5.QtCore import (Qt)
 from PyQt5.QtGui import (QBrush, QColor, QPainter, QPainterPath, QPen,
     QFontMetrics)
 from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem)
-
 from kmxPyQt.qne.qneport import QNEPort
 
-class QNESysBlock(QGraphicsPathItem):
+class QNEBasicBlock(QGraphicsPathItem):
     (Type) = (QGraphicsItem.UserType +3)
 
-    def __init__(self, parent):
-        super(QNESysBlock, self).__init__(parent)
+    def __init__(self, name, tag):
+        super(QNEBasicBlock, self).__init__(None)
 
         path = QPainterPath()
         path.addRoundedRect(-50, -15, 100, 30, 5, 5);
         self.setPath(path)
-        self.setPen(QPen(Qt.green))
-        self.setBrush(Qt.blue)
+        self.setPen(QPen(Qt.darkGreen))
+        self.setBrush(Qt.green)
         self.setOpacity(0.9)
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
@@ -71,7 +70,7 @@ class QNESysBlock(QGraphicsPathItem):
             painter.setBrush(Qt.yellow)
         else:
             painter.setPen(QPen(Qt.darkGreen))
-            painter.setBrush(Qt.blue)
+            painter.setBrush(Qt.green)
 
         painter.drawPath(self.path())
 
@@ -110,22 +109,25 @@ class QNESysBlock(QGraphicsPathItem):
 
 
     def addInputPort(self, name):
-        self.addPort(name, False)
+        return self.addPort(name, False)
 
 
     def addOutputPort(self, name):
-        self.addPort(name, True)
+        return self.addPort(name, True)
 
 
     def addInputPorts(self, names):
+        ports=[]
         for name in names:
-            self.addInputPort(name)
+            ports.append(self.addInputPort(name))
+        return ports
 
 
     def addOutputPorts(self, names):
+        ports=[]
         for name in names:
-            self.addOutputPort(name)
-
+            ports.append(self.addOutputPort(name))
+        return ports
 
     def ports(self):
         result = []

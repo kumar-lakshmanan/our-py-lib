@@ -26,34 +26,81 @@
 
 
 from PyQt5.QtCore import (Qt)
-from PyQt5.QtGui import (QBrush, QColor, QPainter, QPainterPath, QPen,
-    QFontMetrics)
-from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem)
+from PyQt5.QtGui import (QBrush, QColor, QPainter, QPainterPath, QPen, QFontMetrics)
+from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem, QGraphicsTextItem)
 
 from kmxPyQt.qne.qneport import QNEPort
+from kmxPyQt.qne.qneblockconnector import QNEBlockConnector
 
-class QNESysBlock(QGraphicsPathItem):
-    (Type) = (QGraphicsItem.UserType +3)
 
-    def __init__(self, parent):
-        super(QNESysBlock, self).__init__(parent)
+class QNEBasicBlock(QGraphicsPathItem):
 
-        path = QPainterPath()
-        path.addRoundedRect(-50, -15, 100, 30, 5, 5);
-        self.setPath(path)
-        self.setPen(QPen(Qt.green))
-        self.setBrush(Qt.blue)
-        self.setOpacity(0.9)
+    def __init__(self, Scene, Name):
+        super(QNEBasicBlock, self).__init__(None)
+        
+        self.Name=Name
+
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemDoesntPropagateOpacityToChildren)
+        
+        self._color=Qt.green
+        self._outlineColor=Qt.darkGreen
+        self._textColor=Qt.black
+        self._connectorColor=Qt.gray
+        self._connectorOutlineColor=Qt.black
+        self._selectedColor=Qt.yellow
+        self._selectedOutlineColor=Qt.darkYellow
+        self._selectedTextColor=Qt.darkRed   
+
+        path = QPainterPath()
+        path.addRoundedRect(-50, -15, 100, 30, 5, 5);
+                        
+        self.setPath(path)
+        self.setPen(QPen(self._outlineColor))
+        self.setBrush(self._color)
+        self.setOpacity(0.9)
 
         self.horzMargin = 20
         self.vertMargin = 5
         self.width = self.horzMargin
         self.height = self.vertMargin
+        
+        self.label = QGraphicsTextItem(self)
+        self.label.setPlainText(self.Name)             
+        self.label.setDefaultTextColor(self._textColor)  
+        self.label.setPos(-4-3-self.label.boundingRect().width(), -self.label.boundingRect().height()/2);
+        
+        self.inputConnector = QNEBlockConnector(self)
+        self.inputConnector.setIsOutput(False)
+        self.inputConnector.setNEBlock(self)
 
+        fontmetrics = QFontMetrics(Scene.font());
+        width = fontmetrics.width(self.Name)
+        height = fontmetrics.height()
+        if width > self.width - self.horzMargin:
+            self.width = width + self.horzMargin
+        self.height += height
 
+#         path = QPainterPath()
+#         path.addRoundedRect(-self.width/2, -self.height/2, self.width, self.height, 5, 5)
+#         self.setPath(path)
+
+        y = -self.height / 2 + self.vertMargin + self.inputConnector.radius()
+        self.inputConnector.setPos(self.width/2 + self.inputConnector.radius(), y)
+        
+        
+    def paint(self, painter, option, widget):
+        if self.isSelected():
+            painter.setPen(QPen(self._selectedOutlineColor))
+            painter.setBrush(self._selectedColor)
+        else:
+            painter.setPen(QPen(self._color))
+            painter.setBrush(self._outlineColor)
+
+        painter.drawPath(self.path())
+        
+        
     def __del__(self):
         #print("Del QNEBlock")
 
@@ -63,17 +110,6 @@ class QNESysBlock(QGraphicsPathItem):
                 connection.port2().removeConnection(connection)
                 self.scene().removeItem(connection)
             self.scene().removeItem(port)
-
-
-    def paint(self, painter, option, widget):
-        if self.isSelected():
-            painter.setPen(QPen(Qt.darkYellow))
-            painter.setBrush(Qt.yellow)
-        else:
-            painter.setPen(QPen(Qt.darkGreen))
-            painter.setBrush(Qt.blue)
-
-        painter.drawPath(self.path())
 
 
     def addPort(self, name, isOutput = False, flags = 0, ptr = None):
@@ -110,22 +146,25 @@ class QNESysBlock(QGraphicsPathItem):
 
 
     def addInputPort(self, name):
-        self.addPort(name, False)
+        return self.addPort(name, False)
 
 
     def addOutputPort(self, name):
-        self.addPort(name, True)
+        return self.addPort(name, True)
 
 
     def addInputPorts(self, names):
+        ports=[]
         for name in names:
-            self.addInputPort(name)
+            ports.append(self.addInputPort(name))
+        return ports
 
 
     def addOutputPorts(self, names):
+        ports=[]
         for name in names:
-            self.addOutputPort(name)
-
+            ports.append(self.addOutputPort(name))
+        return ports
 
     def ports(self):
         result = []
@@ -134,6 +173,3 @@ class QNESysBlock(QGraphicsPathItem):
                 result.append(port_)
 
         return result
-
-    def type(self):
-        return self.Type
