@@ -1,18 +1,19 @@
+#For DevConsole
 import inspect
 import os
 
 from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtWidgets import QDialog
+from PyQt5.uic import loadUi
 
-import devPluginBase
-
-
-class objBrowser(devPluginBase.PluginBase):
+class objBrowser(QDialog):
 
     def __init__(self, parent=None):
 
         self.parent = parent
         self.uiName = "objBrowser.ui"
-        super(objBrowser, self).__init__(parent, self.uiName)
+        super(objBrowser, self).__init__(parent)
+#        super(objBrowser, self).__init__(parent, self.uiName)
         print ("Loaded!")
 
 #         self.lineEdit.returnPressed.connect(self.inputReturn)
@@ -20,8 +21,17 @@ class objBrowser(devPluginBase.PluginBase):
 #         self.treeWidget.itemDoubleClicked.connect(self.itemDblClicked)
 
         self.cwd = os.getcwd()
+        self.setupUI(self.uiName)
         self.scriptContent = self.readScript('objInspSupport.py')
         print(self.scriptContent)
+        self.show()
+
+    def setupUI(self, uiFile):
+        prepath = os.path.abspath(os.curdir)
+        prepath = os.path.join(prepath, "devPlugs")
+        uiFile = os.path.join(prepath, uiFile)
+        loadUi(uiFile, self)
+        self.setWindowTitle(self.__class__.__name__)
 
     def uiPreparation(self):
         pass

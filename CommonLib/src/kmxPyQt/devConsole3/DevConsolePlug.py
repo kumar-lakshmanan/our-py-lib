@@ -63,6 +63,7 @@ try:
     from kmxPyQt import kmxQtTreeWidget
     from kmxPyQt import kmxQtCommonTools
     from kmxGeneral import kmxTools
+    from kmxPyQt import kmxQtConnections
 
     import http.server
 
@@ -115,7 +116,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         StatusBar - Attach DevC Invoke button to this status bar else You should invoke DevC explicitly
         AsDock - If True creates DevC as a dock else as a dialog window
         '''
-
+        last_update_date='July 02 2015' # July 02 2015 , Jan 12 2013 
         self.addObj = addObj
         self.parent = parent
         self.asDock = AsDock
@@ -128,6 +129,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.ttls = kmxTools.Tools()
         self.qtTree = kmxQtTreeWidget.TreeWidget()
         self.qtMenu = kmxQtMenuBuilder.MenuBuilder()
+        self.qtConn = kmxQtConnections.QtConnections(self)
 
         self.standalone = 0 if self.parent else 1
 
@@ -209,11 +211,12 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.btnSaveScript.clicked.connect(self.btnRedirector)
         self.btnNewScript.clicked.connect(self.btnRedirector)
         self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
+        
         self.qtTools.connectToRightClick(self.treeWidget,self.pluginRightClick)
 
         self.cline.returnPressed.connect(self.commandLineExecute)
         self.cline.__class__.keyReleaseEvent = self.commandLineKeyPress
-
+        
         if StatusBar:
             self.stsBtnDebugger = QtWidgets.QToolButton(self.parent)
             self.stsBtnDebugger.setText(btnText)
@@ -235,14 +238,14 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.loadedFileName = ''
 
         # Plugin Lister
-        self.treeWidget.headerItem().setText(0, "DevPlugins")
+        self.treeWidget.headerItem().setText(0, "Tools")
         self.treeWidget.itemDoubleClicked.connect(self.pluginSelected)
 
         self.treeWidget.setVisible(False)
 
-        print ('HaPy')
         print ('---------------------------------------')
-        print ('Handy Python - Interactive Interpreter')
+        print ('HaPy - Handy Python') 
+        print ('Interactive Interpreter')
         print ('---------------------------------------')
         print ('Initiated!')
 
@@ -256,7 +259,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         print ('FileSys encodeing: ' + str(sys.getfilesystemencoding()))
 
         drline = "\n---------------------------------------\n"
-        self.credit = drline + '\nAbout HaPy:\nHandy Python - Interactive Interpreter/Scripting Environment \nAn expreimental project developed by \nKumaresan Lakshmanan\nFor Quick Windows Automation. Date: Jan 12 2013\n' + drline
+        self.credit = drline + 'About HaPy:\nHandy Python - Interactive Interpreter/Scripting Environment \nAn expreimental project developed by \nKumaresan Lakshmanan\nFor Quick Windows Automation. \nDate: ' + last_update_date + drline
         print(self.credit)
 
         self.InitalizeScripts = InitalizeScripts
@@ -269,7 +272,8 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
 
         self.plugs = os.path.join(os.path.abspath(os.curdir), "devPlugs")
         if self.plugs:
-            self.ttls.makePath(self.plugs)
+            if not self.ttls.isPathOK(self.plugs):
+                self.ttls.makePath(self.plugs)
         else:
             print ('Invalid plug scripts path!')
 
@@ -287,9 +291,42 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 self.addEmptyTab()
         except:
             print (errorReport())
+            
+        if self.standalone:
+            self.qtConn.connectToClose(self.win, self.onClose)
+            if (os.path.exists('layout.lyt')):  
+                self.qtTools.uiLayoutRestore('layout.lyt',[self.splitter,self.splitter_2])
+            self.loadTabs()            
 
+    def onClose(self,*arg):
+        print("Test")
+        self.qtTools.uiLayoutSave('layout.lyt',[self.splitter,self.splitter_2])
+        self.saveTabs()
 
-
+    def saveTabs(self):
+        lst=[]
+        for cnt in range(0, self.tabWidget.count()):
+            wdgt = self.tabWidget.widget(cnt)
+            #'userSetup.py'
+            lst.append(wdgt.toolTip())
+            
+        current = self.tabWidget.currentIndex()
+        lst.append(current)
+        self.qtTools.quickSave(lst, "tabs.tbs")
+        
+    def loadTabs(self):
+        if (os.path.exists('tabs.tbs')):
+            lst = self.qtTools.quickLoad("tabs.tbs")
+            for cnt in range(0, len(lst)-1):
+                if 'New Script' in lst[cnt]:
+                    self.addEmptyTab()
+                elif 'userSetup.py' in lst[cnt]:
+                    continue
+                else:
+                    self.addNewTab(lst[cnt])
+            index = lst[len(lst)-1]
+            self.tabWidget.setCurrentIndex(index)
+                
     def getUpdatedLocals(self):
         try:
             raise None
@@ -368,15 +405,17 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             pyFile = (item.data(0,QtCore.Qt.UserRole))
             uiFile = pyFile.replace(".py",".ui")
             uiFile = uiFile.replace(".PY",".ui")
-            self.addNewTab(uiFile)
+            if self.ttls.isPathFile(uiFile) and os.path.exists(uiFile):
+                self.addNewTab(uiFile)
+            else:
+                print("Unable to open - " + uiFile)
 
         #print(actingButton)
 
     def pluginSelected(self, *eve):
         selectedItem = eve[0]
         selected = selectedItem.text(0)
-        script = '''z=%s(dev)
-z.show()''' % selected
+        script = '''%s(dev)''' % selected
         self.runScript(script)
 
     def showAttrs(self, obj):
@@ -403,7 +442,7 @@ z.show()''' % selected
         :param arg:
         :return:
         '''
-        print("Loading Plugins: " + self.plugs)
+        print("Loading Plugins: " + self.plugs+"\n")
         self.addToSysPath(self.plugs)
 
         plugFiles = os.listdir(self.plugs)
@@ -412,7 +451,8 @@ z.show()''' % selected
             exts = os.path.splitext(plugFile)
             if(str(exts[1]).upper() == ".PY") and self.ttls.isPathFile(plugFile) and eachFile != 'devPluginBase.py' and not '_' in eachFile:
                 self.loadPlugin(plugFile)
-
+        print("Plugins Loaded!\n")
+        
     def addToSysPath(self, path):
         path = os.path.abspath(path)
         print ("Adding path to system... " + path)
@@ -426,18 +466,18 @@ if path2Add not in sys.path and os.path.exists(path2Add):
     def loadPlugin(self, plugFile, parentTreeItem=None):
         modName = os.path.basename(plugFile).replace(os.path.splitext(plugFile)[1], '')
         content = self.ttls.fileContent(plugFile)
-        expecting = "class %s(devPluginBase.PluginBase):" % modName
+        expecting = "For DevConsole" 
         if(expecting in content):
             item = self.qtTree.createItem(modName, plugFile)
             if(parentTreeItem is None):
                 plugTreeItem = self.qtTree.addNewRoot(self.treeWidget, item)
             else:
                 plugTreeItem = self.qtTree.addChild(item, parentTreeItem)
-            print("Loading Plugin Module... " + modName)
+            print("Reading script - " + modName + " - Added to the tool list!")
             #item.setData(0,plugFile)
             #plugTreeItem.setData(0, QtCore.Qt.UserRole, QtCore.QVariant(str(plugFile)))
         else:
-            print ("Expected Class Header '%s' not found in '%s' module !" % (expecting, modName))
+            print("Reading script - " + modName + " - Skipped, Add tag 'For DevConsole' to include in the tool list!")
             plugTreeItem = None
         self.runScript(content)
 
@@ -447,20 +487,18 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 
         spath = os.getcwd()
         spath1 = self.scriptPath
-        spath2 = os.path.join(spath, spath1)
         self.addToSysPath(spath)
         self.addToSysPath(spath1)
-        self.addToSysPath(spath2)
 
-        print ('Accessing startup script folder... %s' % self.scriptPath)
+        print ('\nAccessing startup script folder... %s' % self.scriptPath)
         if self.scriptPath:
             self.userSetup = os.path.join(self.scriptPath, 'userSetup.py')
             self.userSetup = self.userSetup if os.path.exists(self.userSetup) else os.path.join(self.scriptPath, 'userSetup.pyc')
             self.userSetup = self.userSetup if os.path.exists(self.userSetup) else ''
             if self.userSetup and os.path.exists(self.userSetup):
+                print ('Executing... %s' % self.userSetup)
                 data = self.ttls.fileContent(self.userSetup)
                 self.loadScriptCore(self.userSetup)
-                print ('Parsing startup scripts...')
                 self.runScript(data)
             else:
                 print ('No Startup script file! ' + self.userSetup)
@@ -530,7 +568,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         newSciInput.setLexer(self.PLX)
         newSciInput.setAutoCompletionThreshold(1)
         newSciInput.setAutoIndent(True)
-        newSciInput.setIndentationsUseTabs(True)
+        newSciInput.setIndentationsUseTabs(False)
         newSciInput.setAutoCompletionFillupsEnabled(True)
         newSciInput.setBraceMatching(Qsci.QsciScintilla.StrictBraceMatch)
         newSciInput.setMarginLineNumbers(1, 1)
@@ -609,10 +647,10 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         elif (self.standalone and actingButton == self.mnuAboutHPSE):
             print (self.credit)
         elif (actingButton == self.mnuEditClearOutput):
-            self.sciOutput.clear()  
+            self.sciOutput.clear()
         elif (actingButton == self.mnuEditClearInput):
             (qsci,scriptName) = self.getCurrentEditor()
-            qsci.clear()            
+            qsci.clear()
         elif (self.standalone and actingButton == self.mnuFileQuit):
             sys.exit(0)
         else:
