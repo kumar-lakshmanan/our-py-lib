@@ -34,12 +34,7 @@ class WinMain(QtWidgets.QMainWindow, Ui_MainWindow):
         self.scene = QtWidgets.QGraphicsScene(self)
         bgcolor = QtWidgets.QApplication.palette().color(QtGui.QPalette.Window)
         self.scene.setBackgroundBrush(QtGui.QBrush(bgcolor, QtCore.Qt.SolidPattern))
-
         self.graphicsView.setScene(self.scene)
-
-        self.nodesEditor = QNodesEditor(self)
-        self.nodesEditor.install(self.scene)
-
 
 
 if __name__ == '__main__':

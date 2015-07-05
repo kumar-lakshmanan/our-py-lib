@@ -31,10 +31,11 @@ from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem, QGraphicsTextItem
 
 class QNEPort(QGraphicsPathItem):
 	(NamePort, TypePort) = (1, 2)
-	(Type) = (QGraphicsItem.UserType + 1)
+	(Type) = (QGraphicsItem.UserType +1)
 
 	def __init__(self, parent):
 		super(QNEPort, self).__init__(parent)
+		self.textColor = Qt.black
 		
 		self.label = QGraphicsTextItem(self)
 		self.radius_ = 4
@@ -67,11 +68,8 @@ class QNEPort(QGraphicsPathItem):
 	def setName(self, name):
 		self.name = name
 		self.label.setPlainText(name)
-		self.label.setDefaultTextColor(Qt.gray)
-		if self.name=='':
-			self.setBrush(Qt.gray)
-		else:
-			self.setBrush(Qt.red)
+		self.label.setDefaultTextColor(self.textColor)
+		self.setBrush(Qt.red)
 
 
 	def setIsOutput(self, isOutput):

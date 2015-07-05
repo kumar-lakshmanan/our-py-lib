@@ -30,7 +30,10 @@ from PyQt5.QtGui import (QBrush, QColor, QPainter, QPainterPath, QPen,
     QFontMetrics)
 from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem)
 
-from kmxPyQt.qne.qneport import QNEPort
+
+from kmxPyQt.qne import qneport
+from kmxPyQt.kmxNodeGraph.kmxNodeBlock import kmxNodeBlock
+
 
 class QNEBlock(QGraphicsPathItem):
     (Type) = (QGraphicsItem.UserType +3)
@@ -40,18 +43,30 @@ class QNEBlock(QGraphicsPathItem):
 
         path = QPainterPath()
         path.addRoundedRect(-50, -15, 100, 30, 5, 5);
+        #path.addRoundedRect(-50, -15, 100, 30, 5, 5);
+
+        self.kmxNodeBlock = kmxNodeBlock()
+        
+        self.nodeColor = Qt.green
+        self.nodeTextColor = Qt.blue
+        
+        self.nodeSelectedColor = Qt.yellow
+        self.nodeSelectedTextColor = Qt.blue    
+        
+        
         self.setPath(path)
         self.setPen(QPen(Qt.darkGreen))
-        self.setBrush(Qt.green)
+        self.setBrush(self.nodeColor)
         self.setOpacity(0.9)
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemDoesntPropagateOpacityToChildren)
 
-        self.horzMargin = 20
-        self.vertMargin = 5
+        self.horzMargin = 60
+        self.vertMargin = 25
         self.width = self.horzMargin
         self.height = self.vertMargin
+        
 
 
     def __del__(self):
@@ -67,44 +82,58 @@ class QNEBlock(QGraphicsPathItem):
 
     def paint(self, painter, option, widget):
         if self.isSelected():
-            painter.setPen(QPen(Qt.darkYellow))
-            painter.setBrush(Qt.yellow)
+            painter.setPen(QPen(Qt.darkGreen))
+            painter.setBrush(self.nodeSelectedColor)
+            for each in self.ports():
+                if (each.portName()):
+                    each.label.setDefaultTextColor(self.nodeSelectedTextColor)
         else:
             painter.setPen(QPen(Qt.darkGreen))
-            painter.setBrush(Qt.green)
-
+            painter.setBrush(self.nodeColor)
+            for each in self.ports():
+                if (each.portName()):
+                    each.label.setDefaultTextColor(self.nodeTextColor)
+                                                   
         painter.drawPath(self.path())
 
 
     def addPort(self, name, isOutput = False, flags = 0, ptr = None):
-        port = QNEPort(self)
+        port = qneport.QNEPort(self)
+        port.textColor=self.nodeTextColor
         port.setName(name)
         port.setIsOutput(isOutput)
         port.setNEBlock(self)
         port.setPortFlags(flags)
         port.setPtr(ptr)
-
+        
         fontmetrics = QFontMetrics(self.scene().font());
         width = fontmetrics.width(name)
         height = fontmetrics.height()
         if width > self.width - self.horzMargin:
             self.width = width + self.horzMargin
-        self.height += height
+        if(flags):
+            self.height += height
 
         path = QPainterPath()
-        path.addRoundedRect(-self.width/2, -self.height/2, self.width, self.height, 5, 5)
+        path.addRoundedRect(-self.width/2, -8, self.width, self.height, 5, 5)        
         self.setPath(path)
 
         y = -self.height / 2 + self.vertMargin + port.radius()
         for port_ in self.childItems():
-            if port_.type() != QNEPort.Type:
+            if port_.type() != qneport.QNEPort.Type:
                 continue
 
             if port_.isOutput():
                 port_.setPos(self.width/2 + port.radius(), y)
             else:
-                port_.setPos(-self.width/2 - port.radius(), y)
-            y += height;
+                if(port_.portName()):
+                    width = fontmetrics.width(port_.portName())                     
+                    port_.setPos(-((self.width/4)+(width/4)), y)
+                else:
+                    port_.setPos(-self.width/2 - port.radius(), y)
+                    
+            if(flags):                    
+                y += height;
 
         return port
 
@@ -144,7 +173,7 @@ class QNEBlock(QGraphicsPathItem):
     def ports(self):
         result = []
         for port_ in self.childItems():
-            if port_.type() == QNEPort.Type:
+            if port_.type() == qneport.QNEPort.Type:
                 result.append(port_)
 
         return result

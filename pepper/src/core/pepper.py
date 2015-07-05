@@ -14,15 +14,10 @@ from kmxGeneral import kmxTools
 from kmxPyQt import kmxQtCommonTools
 from kmxPyQt import kmxQtTreeWidget
 from kmxPyQt import kmxQtConnections
-from kmxPyQt.qne.qnodeseditor import QNodesEditor
-from kmxPyQt.qne.qnesaveload import QNESaveLoadScene
-from kmxPyQt.qne.qnesysblock import QNESysBlock
-from kmxPyQt.qne.qneblock import QNEBlock
-from kmxPyQt.qne.qnebasicblock import QNEBasicBlock
-from kmxPyQt.qne.qneport import QNEPort
 import inspect
 
 from kmxPyQt.devConsole3 import DevConsolePlug
+from kmxPyQt.kmxNodeGraph import kmxNodeGraphSystem as kgs
 import core.icons
 from core.Scripts import nodes
  
@@ -64,23 +59,8 @@ class pepper(object):
         self.qtTools.setIconForItem(self.win, self.icons.windowIcon, isWindow=1)
         self.parseModules()
         
-        #Start Node
-#         self.s=QNESysBlock(None)
-#         self.win.scene.addItem(self.s)
-#         self.s.addPort('Start', 0, QNEPort.NamePort)        
-#         self.s.addOutputPort('');
-        #self.s.setPos(self.win.graphicsView.width()/2-100,self.win.graphicsView.height()/2)
-
-        #End Node
-        self.e=QNESysBlock(None)
-        self.win.scene.addItem(self.e)
-        self.e.addPort('End', 0, QNEPort.NamePort)        
-        self.e.addInputPort('');
-        self.e.setPos(160,0)  
-        
-        bb = QNEBasicBlock(self.win.scene, "Kumsr")
-        self.win.scene.addItem(bb)
-        
+        self.kgs=kgs.KMXNodeGraphSystem(self.win, self.win.graphicsView, self.win.scene)
+        self.kgs.readyTheScene()
        
     def parseModules(self):
         members = inspect.getmembers(nodes)
@@ -105,15 +85,8 @@ class pepper(object):
         self.addFnBlock(obj, p.x(), p.y())
 
     def addFnBlock(self, fn, xpos=10, ypos=10):
-        args=self.getArguments(fn)
-        block = QNEBlock(None)
-        self.win.scene.addItem(block)
-        block.addPort(fn.__name__, 0, QNEPort.NamePort)
-        block.addInputPort("")
-        for eachArg in args:
-            block.addInputPort(eachArg)
-        block.addOutputPort("return");
-        block.setPos(xpos,ypos)
+        kmxNode = self.kgs.addNodeFn(fn.__name__)
+        kmxNode.Node.setPos(xpos,ypos)
         self.tell(fn.__name__ + "Added!")                                        
 
     def tell(self, info):
@@ -124,12 +97,10 @@ class pepper(object):
         vsb.setValue(vsb.maximum())        
     
     def loadScene(self):
-        qs = QNESaveLoadScene(self.win.scene)
-        qs.loadScene("myscene.txt")
+        self.kgs.loadScene("filea")    
             
     def saveScene(self):
-        qs = QNESaveLoadScene(self.win.scene)
-        qs.saveScene("myscene.txt")
+        self.kgs.saveScene("filea")    
         
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

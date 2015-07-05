@@ -125,6 +125,9 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         super(DevConsole, self).__init__(self.parent)
         atexit.register(self.writeToLog)
 
+        #Flags
+        
+
         self.qtTools = kmxQtCommonTools.CommonTools(self)
         self.ttls = kmxTools.Tools()
         self.qtTree = kmxQtTreeWidget.TreeWidget()
@@ -187,9 +190,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
 
         self.inter = InteractiveInterpreter()
         self.inter.locals['dev'] = self
-        self.inter.locals['self'] = self.parent
-        self.inter.locals['addObj'] = self.addObj
-        self.inter.locals['qtTools'] = self.qtTools
+
         globals()['dev'] = self
 
         self.win.setWindowIcon(self.parent.windowIcon())
@@ -299,7 +300,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             self.loadTabs()            
 
     def onClose(self,*arg):
-        print("Test")
         self.qtTools.uiLayoutSave('layout.lyt',[self.splitter,self.splitter_2])
         self.saveTabs()
 
@@ -323,7 +323,8 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 elif 'userSetup.py' in lst[cnt]:
                     continue
                 else:
-                    self.addNewTab(lst[cnt])
+                    if (os.path.exists(lst[cnt])):
+                        self.addNewTab(lst[cnt])
             index = lst[len(lst)-1]
             self.tabWidget.setCurrentIndex(index)
                 
@@ -582,7 +583,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         (qsci,scriptName) = self.getCurrentEditor()
         if (scriptName!='New Script'):
             self.saveQSCItoFile(qsci,scriptName)
-            self.qtTools.showInfoBox('Quick Save', 'File Saved!')
+            #self.qtTools.showInfoBox('Quick Save', 'File Saved!')
+            print("Quick Saved! - " +str(scriptName))
         else:
             self.saveScriptAs()
 

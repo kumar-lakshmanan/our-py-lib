@@ -30,8 +30,6 @@ from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsSceneMouseEvent)
 from PyQt5 import QtGui
 
 from kmxPyQt.qne.qneblock import QNEBlock
-from kmxPyQt.qne.qnesysblock import QNESysBlock
-
 from kmxPyQt.qne.qneport import QNEPort
 from kmxPyQt.qne.qneconnection import QNEConnection
 
@@ -42,7 +40,13 @@ class QNodesEditor(QObject):
 		
 		self.selBlock = None
 		self.connection = None
+		
+		self.callBackConnAdded = None
+		self.callBackConnRemoved = None
 
+		self.callBackBlockRemoved = None
+		self.callBackBlockSelected = None
+		self.callBackBlockDeSelected = None
 	
 	def install(self, scene):
 		self.scene = scene
@@ -81,21 +85,30 @@ class QNodesEditor(QObject):
 				
 				    item.setZValue(1)
 				    self.selBlock = item
+				    
+				    if self.callBackBlockSelected:
+				    	self.callBackBlockSelected(self.selBlock)
 				
 				else:
-				    self.selBlock = None
+					self.selBlock = None
+					if self.callBackBlockDeSelected:
+						self.callBackBlockDeSelected()
 		
 			elif event.button() == Qt.RightButton:
 				item = self.itemAt(event.scenePos())
-				if item and item.type()==QNESysBlock.Type:				
+				if item and item.type()==QNEBlock.Type:				
 					p1 = item.ports()[0]
 					if (p1.portName()=="Start" or p1.portName()=="End"): return True					
 				if item and (item.type() == QNEConnection.Type or item.type() == QNEBlock.Type):
 					if self.selBlock == item:
 						self.selBlock = None
+						if self.callBackBlockDeSelected:
+							self.callBackBlockDeSelected()						
 				if item and item.type() == QNEConnection.Type:
 					item.port1().removeConnection(item)
 					item.port2().removeConnection(item)
+					if self.callBackConnRemoved:
+						self.callBackConnRemoved(item)
 				elif item and item.type() == QNEBlock.Type:
 					for port in set(item.ports()):
 						for connection in set(port.connections()):
@@ -103,6 +116,8 @@ class QNodesEditor(QObject):
 							connection.port2().removeConnection(connection)
 							self.scene.removeItem(connection)
 						self.scene.removeItem(port)
+					if self.callBackBlockRemoved:
+						self.callBackBlockRemoved(item)
 
 				self.scene.removeItem(item)
 				return True
@@ -129,6 +144,8 @@ class QNodesEditor(QObject):
 		                self.connection.setPort2(port2)
 		                self.connection.updatePath()
 		                self.connection = None
+	                	if self.callBackConnAdded:
+                			self.callBackConnAdded(self.connection)		                
 		
 		                return True
 		
