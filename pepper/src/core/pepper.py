@@ -19,7 +19,7 @@ import inspect
 from kmxPyQt.devConsole3 import DevConsolePlug
 from kmxPyQt.kmxNodeGraph import kmxNodeGraphSystem as kgs
 import core.icons
-from core.Scripts import nodes
+from core.devPlugs import nodes
  
 
 class pepper(object):
@@ -39,7 +39,7 @@ class pepper(object):
         self.icons = core.icons.iconSetup()
 
         self.tls = kmxTools.Tools(kmxTools.infoStyle())        
-        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=False, ShowError=False, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True)        
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True)        
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
         self.qtConn = kmxQtConnections.QtConnections(self.win)
