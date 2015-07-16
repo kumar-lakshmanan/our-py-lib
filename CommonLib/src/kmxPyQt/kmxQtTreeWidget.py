@@ -26,7 +26,8 @@ class TreeWidget(object):
         return items
 
     def addNewRoot(self, treeWidget, item):
-        return treeWidget.addTopLevelItem(item)
+        treeWidget.addTopLevelItem(item)
+        return item
 
     def addChild(self, childItem, parentItem):
         return parentItem.addChild(childItem)

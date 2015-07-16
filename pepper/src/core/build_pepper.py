@@ -7,7 +7,7 @@ Created on Jun 26, 2015 Fri - 22:58:49
 from distutils.core import setup
 import os
 import sys
-
+from glob import glob
 import py2exe
 
 
@@ -39,6 +39,16 @@ if __name__ == '__main__':
             if os.path.exists(modulePath):
                 sys.path.append(modulePath)
 
+sys.path.append('J:\Python\CommonLib\src')
+sys.path.append('J:\Python\CommonLib\src\kmxPyQt')
+
+dllpath = r'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4148_none_5090ab56bcba71c2'
+
+sys.path.append(dllpath)
+data_files = [
+    ## Instruct setup to copy the needed DLL files into the build directory
+    ("Microsoft.VC90.CRT", glob(dllpath + r'\*.*')),
+]
 
 # PY2EXE CONFIGURATION
 MAIN_SCRIPT_FILE = 'pepper.py'
@@ -51,14 +61,14 @@ USE_ICON = True
 ICON_FILE = 'appicon.ico'
 FOLDER_SUFFIX = 'bin'
 RELEASE_OWNER = 'LKumaresan'
-BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip', 'PyQt5.QtPrintSupport']
 EXCLUDES = []
 DLL_EXCLUDES = []
-PACKAGES = []
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client','numpy']
+PACKAGES = ['kmxPyQt.devConsole3', 'PyQt5', 'win32com']
 
 """
 EXCLUDES = ["PyQt5.uic.port_v3", "PyQt5.uic.port_v3.ascii_upper", "PyQt5.uic.port_v3.load_plugin", "PyQt5.uic.port_v3.proxy_base",

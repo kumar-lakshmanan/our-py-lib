@@ -25,7 +25,7 @@
 #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-from PyQt5.QtCore import (Qt)
+from PyQt5.QtCore import (Qt,QVariant)
 from PyQt5.QtGui import (QBrush, QColor, QPainter, QPainterPath, QPen,
     QFontMetrics)
 from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem)
@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (QGraphicsItem, QGraphicsPathItem)
 
 from kmxPyQt.qne import qneport
 from kmxPyQt.kmxNodeGraph.kmxNodeBlock import kmxNodeBlock
-
+import sip
 
 class QNEBlock(QGraphicsPathItem):
     (Type) = (QGraphicsItem.UserType +3)
@@ -66,9 +66,18 @@ class QNEBlock(QGraphicsPathItem):
         self.vertMargin = 25
         self.width = self.horzMargin
         self.height = self.vertMargin
+
+    def setVariables(self,data):
+        #print(str(self) + "--" + data))
+        self.setData(260, QVariant(data))
+
+    def getVariables(self):
+        l = self.data(260)
+        if l:
+            return list(l)
+        else:
+            return [] 
         
-
-
     def __del__(self):
         #print("Del QNEBlock")
 
@@ -172,6 +181,7 @@ class QNEBlock(QGraphicsPathItem):
 
     def ports(self):
         result = []
+        #if sip.isdeleted(self.childItems): return []
         for port_ in self.childItems():
             if port_.type() == qneport.QNEPort.Type:
                 result.append(port_)

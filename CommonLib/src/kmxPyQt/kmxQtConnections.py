@@ -38,10 +38,12 @@ class QtConnections():
         dck.blockSignals(0)
         act.blockSignals(0)
 
-    def connectToClick(self, widget, FunctionToInvoke):
-        widget.__class__.mousePressEvent = lambda widget, event: widget.emit(QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), event)
-        self.uiMain.connect(widget, QtCore.SIGNAL('mousePressEvent(QMouseEvent)'), FunctionToInvoke)
-
+    def connectToClick(self,Widget, FunctionToInvoke):
+        Widget.clicked.connect(FunctionToInvoke)
+        
+    def connectToDblClick(self,Widget, FunctionToInvoke):
+        Widget.doubleClicked.connect(FunctionToInvoke)
+        
     def connectToDragDrop(self,Widget, FunctionToInvoke):
         Widget.setAcceptDrops(1)
         Widget.__class__.dragEnterEvent = self.__DragEnterEvent

@@ -32,6 +32,7 @@ from PyQt5 import QtGui
 from kmxPyQt.qne.qneblock import QNEBlock
 from kmxPyQt.qne.qneport import QNEPort
 from kmxPyQt.qne.qneconnection import QNEConnection
+import sip
 
 class QNodesEditor(QObject):
 
@@ -80,7 +81,7 @@ class QNodesEditor(QObject):
 				    return True
 				
 				elif item and item.type() == QNEBlock.Type:
-				    if self.selBlock:
+				    if self.selBlock and not sip.isdeleted(self.selBlock):
 				        self.selBlock.setZValue(0)
 				
 				    item.setZValue(1)
@@ -109,6 +110,7 @@ class QNodesEditor(QObject):
 					item.port2().removeConnection(item)
 					if self.callBackConnRemoved:
 						self.callBackConnRemoved(item)
+					self.scene.removeItem(item)
 				elif item and item.type() == QNEBlock.Type:
 					for port in set(item.ports()):
 						for connection in set(port.connections()):
@@ -119,7 +121,7 @@ class QNodesEditor(QObject):
 					if self.callBackBlockRemoved:
 						self.callBackBlockRemoved(item)
 
-				self.scene.removeItem(item)
+					self.scene.removeItem(item)
 				return True
 		
 		

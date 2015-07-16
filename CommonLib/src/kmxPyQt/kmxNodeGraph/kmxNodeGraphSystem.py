@@ -34,9 +34,9 @@ class KMXNodeGraphSystem():
 		self.sysNodeSelectedColor = Qt.yellow
 		self.sysNodeSelectedTextColor = Qt.red
 				
-		self.scene.clear()		
-					
-	def saveScene(self,fileName):
+		self.scene.clear()
+	
+	def sceneData(self):
 		nodeBlock = kmxNodeBlock()	
 			
 		blocks=[]
@@ -47,9 +47,11 @@ class KMXNodeGraphSystem():
 				nodeBlock = eachItem.kmxNodeBlock
 				nodeTag = nodeBlock.nodeTag
 				nodeName = nodeBlock.Name
+				nodeModule = nodeBlock.Module
 				xpos = nodeBlock.Node.pos().x()			
 				ypos = nodeBlock.Node.pos().y()
-				blocks.append((nodeTag, nodeName, xpos, ypos))
+				variables = eachItem.getVariables()
+				blocks.append((nodeTag, nodeName, nodeModule, xpos, ypos,variables))
 			if eachItem.type() == qneconnection.QNEConnection.Type:				
 				#print("Connection: "+str(eachItem)) 
 				port1 = eachItem.port1()				
@@ -69,7 +71,12 @@ class KMXNodeGraphSystem():
 						
 		data={}
 		data['blocks']=blocks
-		data['conn']=conn			
+		data['conn']=conn
+		data['counter']=self.nodesCounter			
+		return data
+					
+	def saveScene(self,fileName):
+		data=self.sceneData()
 		with open(fileName, 'wb') as handle:
 			pickle.dump(data, handle)		
 
@@ -79,27 +86,34 @@ class KMXNodeGraphSystem():
 					
 		blocks=data['blocks']
 		conn=data['conn']
-		
+		counter=data['counter']
 		self.restScene()
+
 
 		for eachBlock in blocks:
 			nodeTag=eachBlock[0]
 			nodeName=eachBlock[1]
-			xpos=eachBlock[2]
-			ypos=eachBlock[3]
+			nodeModule=eachBlock[2]
+			xpos=eachBlock[3]
+			ypos=eachBlock[4]
+			variableLst=eachBlock[5]
 			if (nodeName=='Start'):
 				self._addNodeStart()
 				self.startNode.setPos(xpos,ypos)
 				self.startNode.kmxNodeBlock.additionalTags=nodeTag
+				#self.startNode.setVariables(variableLst)
 			elif (nodeName=='End'):
 				self._addNodeEnd()
 				self.endNode.setPos(xpos,ypos)
 				self.endNode.kmxNodeBlock.additionalTags=nodeTag
+				#self.startNode.setVariables(variableLst)
 			else:
-				nd = self.addNodeFn(nodeName)
+				nd = self.addNodeFn(nodeName,nodeModule,variableLst)
+				nd.nodeTag=nodeTag
 				nd.additionalTags=nodeTag
 				nd.Node.setPos(xpos,ypos)
-							
+				
+		self.nodesCounter=counter							
 		for eachConn in conn:
 			node1AdditionalTag = eachConn[0]
 			node2AdditionalTag = eachConn[1]
@@ -112,7 +126,10 @@ class KMXNodeGraphSystem():
 				
 	def _getnodeTag(self):
 		self.nodesCounter+=1
-		return "node" + str(self.nodesCounter).zfill(5)
+		return self._getNodeTagCore(self.nodesCounter)
+	
+	def _getNodeTagCore(self, number):
+		return "node" + str(number).zfill(5)
 		
 	def readyTheScene(self):
 		#Graph handler
@@ -121,17 +138,32 @@ class KMXNodeGraphSystem():
 		self.ne = QNodesEditor(self.win)
 		self.ne.install(self.scene)	
 		
-		print(self.ne.callBackBlockSelected)
-		self.ne.callBackConnAdded = self.connectionAdded
-		self.ne.callBackConnRemoved = self.connectionRemoved
+# 		print(self.ne.callBackBlockSelected)
+# 		self.ne.callBackConnAdded = self.connectionAdded
+# 		self.ne.callBackConnRemoved = self.connectionRemoved
 
-		self.ne.callBackBlockRemoved = self.blockRemoved
-		self.ne.callBackBlockSelected = self.blockSelected
-		self.ne.callBackBlockDeSelected = self.blockDeSelected			
-		
+# 		self.ne.callBackBlockRemoved = self.blockRemoved
+# 		self.ne.callBackBlockSelected = self.blockSelected
+# 		self.ne.callBackBlockDeSelected = self.blockDeSelected			
+
 		self._addNodeStart()
 		self._addNodeEnd()
-		
+
+	def connectFnConnectionAdded(self, fn):
+ 		self.ne.callBackConnAdded = fn
+
+	def connectFnConnectionRemoved(self, fn):
+ 		self.ne.callBackConnRemoved = fn 		
+ 			
+	def connectFnNodeSelected(self, fn):
+ 		self.ne.callBackBlockSelected = fn
+
+	def connectFnNodeDeSelected(self, fn):
+ 		self.ne.callBackBlockDeSelected = fn
+ 		 		
+	def connectFnNodeRemoved(self, fn):
+ 		self.ne.callBackBlockRemoved = fn
+
 	def _addNodeStart(self):
 		self.startNode=qneblock.QNEBlock(None)
 		self.startNode.nodeColor =  self.sysNodeColor
@@ -145,7 +177,7 @@ class KMXNodeGraphSystem():
 		self.startNodePort = port 
 		
 		newNode = kmxNodeBlock()
-		newNode.nodeTag = self._getnodeTag()
+		newNode.nodeTag = 'Start'
 		newNode.Name = 'Start'
 		newNode.Node = self.startNode
 		newNode.inPort = None
@@ -169,7 +201,7 @@ class KMXNodeGraphSystem():
 		self.endNodePort = port	
 		
 		newNode = kmxNodeBlock()
-		newNode.nodeTag = self._getnodeTag()
+		newNode.nodeTag = 'End'
 		newNode.Name = 'End'
 		newNode.Node = self.endNode
 		newNode.inPort = self.endNodePort
@@ -179,14 +211,16 @@ class KMXNodeGraphSystem():
 		self.nodes.append(newNode)
 		return newNode			
 		
-	def addNodeFn(self,name):
+	def addNodeFn(self,name, module='', variableLst=[]):
 		
 		if (name=="Start" or name=="End"):
 			print("You can't have your nodes with name - Start or End")
 			return
 		
 		nodeTag = self._getnodeTag()
+		
 		node = qneblock.QNEBlock(None)
+		node.setVariables(variableLst)
 
 		node.nodeColor =  self.nodeColor
 		node.nodeTextColor =  self.nodeTextColor
@@ -207,10 +241,17 @@ class KMXNodeGraphSystem():
 		newNode.inPort = inPort
 		newNode.outPort = outPort
 		newNode.additionalTags=''
+		newNode.Module = module
+		newNode.setVariables(variableLst)
 		node.kmxNodeBlock=newNode
 		self.nodes.append(newNode)
 		return newNode
-
+		
+	def getNodeByTag(self, tag):
+		for each in self.nodes:
+			if(tag == each.nodeTag):
+				return each
+			
 	def getNodeByName(self, name):
 		for each in self.nodes:
 			if(name == each.Name):
@@ -262,7 +303,7 @@ class KMXNodeGraphSystem():
 	def blockRemoved(self, *args):
 		print("removBlock"+ str(args))
 		
-	def blockSelected(self, *args):
+	def blockSelected(self, *args):		
 		print("selected " + str(args))	
 		
 	def blockDeSelected(self, *args):
