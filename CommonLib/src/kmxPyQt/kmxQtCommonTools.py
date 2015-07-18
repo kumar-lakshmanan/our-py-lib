@@ -181,6 +181,11 @@ class CommonTools(object):
         if(fileName[0] == ""): return ""
         return fileName[0]
 
+    def getFileToSave(self, Title='Select a file to save...', FileName='Select File', FileType='All Files (*);;Excel Files (*.xls);;Text Files (*.txt)'):
+        fileName = QtWidgets.QFileDialog.getSaveFileName(self.CallingUI, str(Title), FileName, str(FileType))
+        if(fileName[0] == ""): return ""
+        return fileName[0]
+    
     def getFolder(self, Title='Select a directory...'):
         folder = QtWidgets.QFileDialog.getExistingDirectory(self.CallingUI, str(Title))
         if(folder == ""): return ""

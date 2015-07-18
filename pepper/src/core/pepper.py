@@ -50,13 +50,13 @@ class pepper(object):
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
         self.qtConn = kmxQtConnections.QtConnections(self.win)
         self.setupUI()
-        self.qtTools.uiLayoutRestore('layout.lyt',[self.win.splitter])
+        self.qtTools.uiLayoutRestore('layout.lyt',[self.win.splitter_2])
         self.tell("Ready!")
         self.currentNode = None
         self.selectedInputVariable = None
                         
     def meClose(self,arg):
-        self.qtTools.uiLayoutSave('layout.lyt',[self.win.splitter])
+        self.qtTools.uiLayoutSave('layout.lyt',[self.win.splitter_2])
         
     def setupUI(self):
         #self.qtConn.connectToClick(self.win.bt, FunctionToInvoke)
@@ -64,6 +64,7 @@ class pepper(object):
         self.win.actionSave_Scene.triggered['bool'].connect(self.saveScene)
         self.win.actionNew_Scene.triggered.connect(self.newScene)
         self.qtConn.connectToClick(self.win.trInput, self.trInputClicked)
+        self.qtConn.connectToClick(self.win.pushButton, self.parseModules)
         self.qtConn.connectToDblClick(self.win.trOutput, self.trOutputsDblClicked)
         self.qtConn.connectToClick(self.win.btnApplyInputs, self.applyInputs)
         #self.qtConn.connectToKeyPress(self.win.txtInputOutput, self.applyInputs)
@@ -91,8 +92,9 @@ class pepper(object):
                     vars.remove(each)
             vars.append(newSet) 
             self.currentNode.setVariables(vars) 
-            self.tell("Variables Updated!")              
-        
+            self.tell("Variables Updated!")
+                          
+       
     def trInputClicked(self, itm):
         self.win.txtInputOutput.setHtml("")
         item = self.win.trInput.itemFromIndex(itm)
@@ -224,11 +226,13 @@ class pepper(object):
         self.tell(cls + " added from " + mod)
 
     def tell(self, info):
-        matter = self.win.textBrowser.toPlainText()
-        matter = matter + info + "\n"
-        self.win.textBrowser.setText(matter)
-        vsb = self.win.textBrowser.verticalScrollBar()
-        vsb.setValue(vsb.maximum())        
+        print(info)
+#         matter = self.win.textBrowser.toPlainText()
+#         matter = matter + info + "\n"
+#         self.win.textBrowser.setText(matter)
+#         
+#         vsb = self.win.textBrowser.verticalScrollBar()
+#         vsb.setValue(vsb.maximum())        
     
     def doExecute(self):
         data = self.kgs.sceneData()
@@ -238,10 +242,12 @@ class pepper(object):
         print (k)
        
     def loadScene(self):
-        self.kgs.loadScene("filea")    
+        f = self.qtTools.getFile('Load file', '', '*.scene')
+        if(f): self.kgs.loadScene(f)    
             
     def saveScene(self):
-        self.kgs.saveScene("filea")
+        f = self.qtTools.getFileToSave('Save file', '', '*.scene')
+        if(f): self.kgs.saveScene(f+".scene" if (not f.endsWith('.scene')) else f)
             
     def newScene(self):
         self.kgs.readyTheScene()

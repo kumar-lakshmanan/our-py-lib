@@ -1,10 +1,10 @@
 '''
 Created on Jul 9, 2015
-#For DevConsole
+
 @author: MUKUND
 '''
 
-class Printer(object):
+class Multiply(object):
     '''
     classdocs
     '''
@@ -17,9 +17,11 @@ class Printer(object):
         self.inInput2=2
         self.inInput3=3
         self.inInput4=4
+        
+        self.outOutput1=1
+        self.outOutput2=2
     
     def action(self):
-        print("\nInput 1: "+str(self.inInput1))
-        print("\nInput 2: "+str(self.inInput2))
-        print("\nInput 3: "+str(self.inInput3))
-        print("\nInput 4: "+str(self.inInput4))
+        self.outOutput1 = self.inInput1 * self.inInput2
+        self.outOutput2 = self.inInput3 * self.inInput4
+        
