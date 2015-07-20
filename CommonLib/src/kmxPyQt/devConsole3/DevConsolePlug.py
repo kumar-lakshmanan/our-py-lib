@@ -13,11 +13,17 @@ import re
 import shutil
 import traceback
 import urllib
+import requests
+from bs4 import BeautifulSoup
+import json
+import urllib3
+
+
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 #from PyQt5.uic import pyuic5
 import pkgutil
 import inspect
-
+os.environ["REQUESTS_CA_BUNDLE"] = os.path.join(os.getcwd(), "cacert.pem")
 
 """
 In UI File REPLACE below line
@@ -32,6 +38,17 @@ import win32com.client
 import pprint
 
 from kmxPyQt import kmxQtMenuBuilder
+
+import ssl
+from functools import wraps
+def sslwrap(func):
+    @wraps(func)
+    def bar(*args, **kw):
+        kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+        return func(*args, **kw)
+    return bar
+
+ssl.wrap_socket = sslwrap(ssl.wrap_socket)
 
 def errorReport():
     # Show/Return Error Report
@@ -846,7 +863,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 if __name__ == '__main__':
     try:
         app = QtWidgets.QApplication(sys.argv)
-        dc = DevConsole(ShowPrint=False, ShowError=False)
+        dc = DevConsole(ShowPrint=True, ShowError=True)
         dc.showEditor()
         sys.exit(app.exec_())
     except:

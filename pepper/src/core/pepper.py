@@ -247,7 +247,7 @@ class pepper(object):
             
     def saveScene(self):
         f = self.qtTools.getFileToSave('Save file', '', '*.scene')
-        if(f): self.kgs.saveScene(f+".scene" if (not f.endsWith('.scene')) else f)
+        if(f): self.kgs.saveScene(f+".scene" if (not f.endswith('.scene')) else f)
             
     def newScene(self):
         self.kgs.readyTheScene()
