@@ -17,6 +17,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import urllib3
+import xmlutils
 
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
