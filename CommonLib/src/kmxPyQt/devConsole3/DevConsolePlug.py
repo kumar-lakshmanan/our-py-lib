@@ -19,7 +19,6 @@ import json
 import urllib3
 import xmlutils
 
-
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 #from PyQt5.uic import pyuic5
 import pkgutil
