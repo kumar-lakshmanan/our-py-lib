@@ -2,7 +2,6 @@ import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class TreeWidget(object):
 
     def __init__(self):
