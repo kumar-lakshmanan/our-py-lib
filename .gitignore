@@ -5,3 +5,4 @@
 pepper/.settings/org.eclipse.core.resources.prefs
 *.pyc
 *.pyc
+CommonLib/src/kmxPyQt/devConsole3/ToTransfer/*

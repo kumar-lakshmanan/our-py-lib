@@ -1,0 +1,20 @@
+
+JSON:
+{'exchangeRate': {'PayoutCurrency': {'currencyCode': 'INR', 'countryCode': 'in', 'currencyName': 'Indian Rupee'}, 'Rate': {'exchangeRate': '46.4806'}, 'SendCurrency': {'currencyCode': 'AUD', 'countryCode': 'au', 'currencyName': 'Australian Dollar'}}}
+
+XML:
+<exchangeRate>
+  <PayoutCurrency>
+    <countryCode>in</countryCode>
+    <currencyCode>INR</currencyCode>
+    <currencyName>Indian Rupee</currencyName>
+  </PayoutCurrency>
+  <Rate>
+    <exchangeRate>46.4806</exchangeRate>
+  </Rate>
+  <SendCurrency>
+    <countryCode>au</countryCode>
+    <currencyCode>AUD</currencyCode>
+    <currencyName>Australian Dollar</currencyName>
+  </SendCurrency>
+</exchangeRate>

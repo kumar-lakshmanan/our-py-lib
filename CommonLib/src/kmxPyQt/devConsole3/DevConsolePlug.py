@@ -18,7 +18,8 @@ from bs4 import BeautifulSoup
 import json
 import urllib3
 import xmlutils
-
+import logging
+import lxml
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 #from PyQt5.uic import pyuic5
@@ -451,9 +452,11 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         itemInfo = self.qtTree.getItemLabel(selectedItem)
         name = itemInfo['Label']
         path = itemInfo['Data']
-        print("Executing: " + str((path,name)))
+        print("\nExecuting: " + str((path,name)))
         if not ("devPlugs\\nodes" in path):
-            script = '''%s(dev)''' % name
+            script = '''%s(dev)''' % (name)
+            #script = '''print(type(%s))''' % (name)
+            #print(script)
             self.runScript(script)
         else:
             self.addNewTab(path)

@@ -70,8 +70,8 @@ BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
-INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client','numpy','bs4','requests','json','urllib3','xmlutils']
-PACKAGES = ['kmxPyQt.devConsole3', 'PyQt5', 'win32com','requests']
+INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'win32com.client','numpy','bs4','requests','json','urllib3','xmlutils','lxml','simplejson','dict2xml']
+PACKAGES = ['kmxPyQt.devConsole3', 'PyQt5', 'win32com','requests','lxml','simplejson','dict2xml']
 EXCLUDES = []
 
 # PY2EXE PROCESS...
@@ -112,3 +112,5 @@ else:
         setup(windows=[appVariable], options=opVars, data_files=DATAS)
 
 print ("\n\nEvery thing is fine!")
+
+
