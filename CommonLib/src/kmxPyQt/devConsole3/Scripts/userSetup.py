@@ -4,23 +4,18 @@ import shutil
 #
 # z = PlugMe1(self)
 # z.show()
-k = 103
-kumar = 34
+#k = 103
+#kumar = 34
 
 class abc():
 	def __init__(self):
 		self.sample
 	def obj(self):
 		self 
-
 		
-lst = dev.qtTools.getStyleList()
-
+lst = parent.qtTools.getStyleList()
 print(lst)
 
-
-
-dev.qtTools.applyStyle('Fusion')
-
-print(dev)
+parent.qtTools.applyStyle('Fusion')
+#print(parent)
 

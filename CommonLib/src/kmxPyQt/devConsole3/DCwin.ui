@@ -108,7 +108,7 @@
           </attribute>
           <column>
            <property name="text">
-            <string notr="true">DevPlugins</string>
+            <string notr="true">Plugs</string>
            </property>
           </column>
          </widget>

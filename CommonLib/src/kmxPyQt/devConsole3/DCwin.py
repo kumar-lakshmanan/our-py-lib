@@ -46,7 +46,7 @@ class Ui_devConsole(object):
         self.treeWidget.setUniformRowHeights(True)
         self.treeWidget.setAnimated(True)
         self.treeWidget.setObjectName("treeWidget")
-        self.treeWidget.headerItem().setText(0, "DevPlugins")
+        self.treeWidget.headerItem().setText(0, "Plugs")
         self.treeWidget.header().setVisible(True)
         self.gridLayout_2.addWidget(self.splitter_2, 0, 0, 1, 2)
         self.widget = QtWidgets.QWidget(self.splitter)

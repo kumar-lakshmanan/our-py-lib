@@ -217,7 +217,7 @@ class CommonTools(object):
                 lst=pickle.load(handle)
             return lst  
         
-    def uiLayoutSave(self, layoutFile='layout.lyt', additionalObjToSaveStates=None):
+    def uiLayoutSave(self, layoutFile='layout.lyt', additionalObjToSaveStates=None, saveThisList=[]):
         dirname = os.path.dirname(layoutFile)
         if dirname!='' and not os.path.exists(dirname):
             os.makedirs(dirname)
@@ -226,6 +226,7 @@ class CommonTools(object):
         win['state']=self.CallingUI.saveState()
         win['size']=self.CallingUI.size()
         win['pos']=self.CallingUI.pos()
+        
 
         #Docks Objects
         dcks=[]     
@@ -246,6 +247,7 @@ class CommonTools(object):
         data['win']=win
         data['dcks']=dcks
         data['added']=additionalObjs
+        data['mylist']=saveThisList
         
         with open(layoutFile, 'wb') as handle:
             pickle.dump(data, handle)
@@ -260,7 +262,7 @@ class CommonTools(object):
             self.CallingUI.restoreState(win['state'])
             self.CallingUI.resize(win['size'])
             self.CallingUI.move(win['pos'])
-
+            
             dcksObj = []
             sptsObj = []
             for each in self.CallingUI.children():
@@ -277,7 +279,8 @@ class CommonTools(object):
             added=data['added']
             for cnt, each in enumerate(range(0,len(additionalObjToRestoreStates))):
                 additionalObjToRestoreStates[cnt].restoreState(added[cnt]['state'])
-
+        
+        return data['mylist']
 
     def popUpMenu(self, menuRequestingtObject, PopupPoint, menuListString, funcToInvoke, additionalArguments='', iconList = []):
 

@@ -6,23 +6,44 @@ from PyQt5 import QtCore, QtGui, Qsci, QtWidgets
 from urllib.parse import urlparse
 import json
 import importlib
+import sys
+import traceback
+sys.path.append('J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\Scripts')
 
 hostName = "localhost"
 hostPort = 9000
 
+
+def errorReport():
+    # Show/Return Error Report
+    traceback_lines = traceback.format_exc().split('\n')
+    data = '\n'.join(traceback_lines)
+    print(data)
+    return data
+
+def crashHandle():
+        # Prepare Report
+        data = errorReport()
+        f = open('ServerCrashReport.txt', 'w')
+        f.write(str(data))
+        f.close()
+        sys.exit(0)
+        
 class MyServer(SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
         try:
-                import simpleApps
+                import simpleAppsc
                 importlib.reload(simpleApps)
                 self.myApp = simpleApps.myApplicationModule()
                 self.inputs = self.getInputs()
                 self.response = self.myApp.doProcessing(self.inputs)                
                 self.wfile.write(bytes(str(self.response),'utf-8'))
         except:
+                errorReport()
+                crashHandle()
                 self.wfile.write(bytes('Some error' ,'utf-8'))
         
     def getInputs(self):
@@ -44,6 +65,7 @@ if __name__ == '__main__':
         self.x.start()
         print("Started HTTP Server")
         print("Try the url...")
-        print(time.asctime(), "Server Starts - %s:%s" % (hostName, hostPort))            
-        #self.x.stop()
+        print(time.asctime(), "Server Starts - %s:%s" % (hostName, hostPort))   
+        #ans = input()         
+        #x.stop()
         
