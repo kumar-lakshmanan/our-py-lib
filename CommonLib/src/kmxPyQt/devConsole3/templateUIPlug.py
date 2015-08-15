@@ -16,6 +16,7 @@ class myUIPlugCls(QtWidgets.QMainWindow):
             self.label.setText(input)
             print(input)
                 
+                
 if (__name__=="__main__"):
         parent.myUIPlugClsObj = myUIPlugCls(parent)
         parent.myUIPlugClsObj.show()
