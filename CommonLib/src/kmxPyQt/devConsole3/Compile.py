@@ -32,9 +32,6 @@ parentFolder = os.path.dirname(currentFolder)
 modulePathList = [
                   parentFolder,
                   currentFolder,
-                  parentFolder + '/UI_DB_lib',
-                  parentFolder + '/UI_DB_lib/DevConsole3',
-                  parentFolder + '/UI_DB_lib/controls',
                   parentFolder + '/Common',
                     ]
 for modulePath in modulePathList:
