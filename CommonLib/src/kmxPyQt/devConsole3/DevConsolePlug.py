@@ -850,6 +850,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         text = str(self.sciOutput.text())
         vsb = self.sciOutput.verticalScrollBar()
         vsb.setValue(vsb.maximum())
+        hsb = self.sciOutput.horizontalScrollBar()
+        hsb.setValue(0)
 
     def appendLineOutput(self):
         text = str(self.sciOutput.text())

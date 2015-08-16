@@ -193,20 +193,27 @@
    </item>
    <item row="0" column="2">
     <widget class="QToolButton" name="btnLoadScript">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>75</width>
        <height>16777215</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Edit Script</string>
+     </property>
      <property name="text">
       <string>Load Script</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc">
+       <normaloff>:/fatcow/32x32/page_edit.png</normaloff>:/fatcow/32x32/page_edit.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
      <property name="autoRaise">
       <bool>true</bool>
@@ -215,20 +222,27 @@
    </item>
    <item row="0" column="4">
     <widget class="QToolButton" name="btnSaveScript">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>75</width>
        <height>16777215</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Save Script As</string>
+     </property>
      <property name="text">
       <string>Save Script As</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc">
+       <normaloff>:/fatcow/32x32/page_red.png</normaloff>:/fatcow/32x32/page_red.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
      <property name="autoRaise">
       <bool>true</bool>
@@ -257,20 +271,27 @@
    </item>
    <item row="0" column="1">
     <widget class="QToolButton" name="btnNewScript">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>75</width>
-       <height>16777215</height>
-      </size>
+     <property name="toolTip">
+      <string>New Script</string>
      </property>
      <property name="text">
       <string>New Script</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc">
+       <normaloff>:/fatcow/32x32/page.png</normaloff>:/fatcow/32x32/page.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+N</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonIconOnly</enum>
      </property>
      <property name="autoRaise">
       <bool>true</bool>
@@ -279,20 +300,27 @@
    </item>
    <item row="0" column="3">
     <widget class="QToolButton" name="btnQuickSaveScript">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>75</width>
        <height>16777215</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Save Script</string>
+     </property>
      <property name="text">
       <string>Save Script</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc">
+       <normaloff>:/fatcow/32x32/page_save.png</normaloff>:/fatcow/32x32/page_save.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
      <property name="autoRaise">
       <bool>true</bool>
@@ -301,20 +329,27 @@
    </item>
    <item row="0" column="9">
     <widget class="QToolButton" name="btnExecute">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="maximumSize">
       <size>
        <width>75</width>
        <height>16777215</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Execute Script</string>
+     </property>
      <property name="text">
       <string>Execute</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc">
+       <normaloff>:/fatcow/32x32/page_lightning.png</normaloff>:/fatcow/32x32/page_lightning.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
      <property name="autoRaise">
       <bool>true</bool>
@@ -337,7 +372,9 @@
    <header>Qsci/qsciscintilla.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../../../Resource/icons/fatcow-hosting-icons-3000/fatcow.qrc"/>
+ </resources>
  <connections/>
  <slots>
   <slot>execute_Clicked()</slot>

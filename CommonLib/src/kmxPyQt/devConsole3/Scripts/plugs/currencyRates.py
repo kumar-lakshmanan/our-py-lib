@@ -43,7 +43,6 @@ def iciciExchangeRate():
                     return str(nxt.td.find_all_next()[0].contents[0].encode('ascii','ignore').decode('utf-8'))
                         
 if __name__ == '__main__':
-        print ("Testing....")
         #print (currentExchangeRate())        
         print (orbitExchangeRate())
         #print (rafflesExchangeRate())
