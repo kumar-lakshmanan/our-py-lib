@@ -1,6 +1,4 @@
-# our-py-lib
-Automatically exported from code.google.com/p/our-py-lib
-
 Our-Py-Lib
 
-Generic Tools
+Generic python library for python based developement. Uses Python 3.4, PyQt5, Win32com.
+Helps in rapid PYQT based windows tool development. Lib is open to all. You can fork it and use it.
