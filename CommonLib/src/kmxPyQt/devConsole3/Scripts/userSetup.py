@@ -1,21 +1,16 @@
 import os
-import shutil
-# #print shutil.copy('D:/FILEIDMAGEX.PNG' , 'D:/KK.png')
-#
-# z = PlugMe1(self)
-# z.show()
-#k = 103
-#kumar = 34
-
-class abc():
-	def __init__(self):
-		self.sample
-	def obj(self):
-		self 
-		
-lst = parent.qtTools.getStyleList()
-print(lst)
-
+import socket
 parent.qtTools.applyStyle('Fusion')
-#print(parent)
+parent.pyDesigner = "C:\Python34\Lib\site-packages\PyQt5\designer.exe"
 
+print("\n\n")
+print("-----Auto start-----")
+
+print("Style list: " + str(parent.qtTools.getStyleList()))
+print("Applying style: Fusion")
+print("Hostname: " + socket.gethostname())
+print("Timestamp: " + parent.ttls.getDateTime())
+print("Working Dir: " + os.getcwd())
+print("PyDesigner: " + parent.pyDesigner)
+
+print("-----End-----")

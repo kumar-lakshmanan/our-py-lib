@@ -19,6 +19,7 @@ import urllib3
 import xmlutils
 import logging
 import lxml
+import subprocess
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 #from PyQt5.uic import pyuic5
@@ -174,6 +175,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         # Load File
         self.loadedFile = False
         self.loadedFileName = ''
+        self.pyDesigner = 'C:\Python34\Lib\site-packages\PyQt5\designer.exe'
                 
         #Flags
         
@@ -451,7 +453,11 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         if(item):
             name = item.text(0)
             if (name!="[Nodes]"):
-                self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                uiFile = item.data(0,QtCore.Qt.UserRole).replace('.py','.ui')
+                if (os.path.exists(uiFile)):
+                    self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Edit UI","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                else:
+                    self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
             else:
                 self.qtTools.popUpMenu(self.treeWidget,point,["New Node"],self.pluginRightClickSelected,["myarg1","myarg2"])
         else:
@@ -499,6 +505,11 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         if(menuOption=="Edit"):
             pyFile = (item.data(0,QtCore.Qt.UserRole))
             self.addNewTab(pyFile)
+        if(menuOption=="Edit UI"):
+            uiFile = item.data(0,QtCore.Qt.UserRole).replace('.py','.ui')
+            args = '"' + self.pyDesigner + '"' + " " + '"' + uiFile + '"'
+            print("Execute: (" + args + ")")
+            subprocess.call(args)                        
         if(menuOption=="Delete"):
             pyFile = item.data(0,QtCore.Qt.UserRole)
             uiFile = pyFile.replace('.py','.ui')
@@ -580,11 +591,11 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
     def addToSysPath(self, path):
         path = os.path.abspath(path)
         print ("Adding path to system... " + path)
-        code = '''import sys,os
+        code = r'''import sys,os
 path2Add="%s"
 if path2Add not in sys.path and os.path.exists(path2Add):
     sys.path.append(path2Add)
-''' % (path)
+''' % (path).replace(os.path.sep,'/')
         self.runScript(code)
 
     def loadPlugin(self, plugFile, parentTreeItem=None):        

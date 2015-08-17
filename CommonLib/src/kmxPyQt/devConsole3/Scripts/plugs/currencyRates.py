@@ -47,4 +47,3 @@ if __name__ == '__main__':
         print (orbitExchangeRate())
         #print (rafflesExchangeRate())
         #print (iciciExchangeRate())
-        
