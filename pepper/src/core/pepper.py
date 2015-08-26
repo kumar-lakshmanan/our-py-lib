@@ -45,12 +45,13 @@ class pepper(object):
         self.icons = core.icons.iconSetup()
 
         self.tls = kmxTools.Tools(kmxTools.infoStyle())        
-        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=True, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True)        
+        self.qtConsole = DevConsolePlug.DevConsole(self.win, ShowPrint=True, ShowError=False, StatusBar=self.win.statusBar(), AsDock=True, InitalizeScripts=True)        
         self.qtTrees = kmxQtTreeWidget.TreeWidget()
         self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
         self.qtConn = kmxQtConnections.QtConnections(self.win)
         self.setupUI()
-        self.qtTools.uiLayoutRestore('layout.lyt',[self.win.splitter_2])
+        if(os.path.exists('layout.lyt')):
+            self.qtTools.uiLayoutRestore('layout.lyt',[self.win.splitter_2])
         self.tell("Ready!")
         self.currentNode = None
         self.selectedInputVariable = None

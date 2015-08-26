@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>409</width>
-    <height>233</height>
+    <width>359</width>
+    <height>265</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>QuickWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>140</y>
+      <x>180</x>
+      <y>160</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -30,8 +30,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>35</y>
+      <x>100</x>
+      <y>55</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>80</y>
+      <x>100</x>
+      <y>100</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -63,7 +63,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>409</width>
+     <width>359</width>
      <height>18</height>
     </rect>
    </property>

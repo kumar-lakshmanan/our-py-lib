@@ -20,6 +20,8 @@ import xmlutils
 import logging
 import lxml
 import subprocess
+import xml.etree.ElementTree as ET
+import pythoncom, logging
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 #from PyQt5.uic import pyuic5
@@ -38,7 +40,7 @@ from PyQt5.uic import loadUi
 import win32com
 import win32com.client
 import pprint
-
+from PyQt5 import Qsci
 from kmxPyQt import kmxQtMenuBuilder
 
 import ssl
@@ -116,7 +118,6 @@ except:
 
 
 class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
-
     '''
     DevConsole
     self.qtTools = kmxQtCommonTools.CommonTools(self.win, self.iconPath)
@@ -169,7 +170,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         super(DevConsole, self).__init__(self.parent)
         atexit.register(self.writeToLog)
 
-        self.plugsDirName = 'plugs'
         self.nodesDirName = 'nodes'
 
         # Load File
@@ -321,20 +321,10 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         else:
             print ('Invalid script path!')
 
-        self.plugsPath = os.path.join(os.path.abspath(os.curdir), self.scriptsPath, self.plugsDirName)
-        self.plugsPath = os.path.abspath(self.plugsPath)
-        print("Checking plugs path..."+self.plugsPath)
-        if self.plugsPath:
-            if not self.ttls.isPathOK(self.plugsPath):
-                self.ttls.makePath(self.plugsPath)
-        else:
-            print ('Invalid plug scripts path!')
-
         #Start loading the scripts...
         try:
-            if self.ttls.isPathOK(self.plugsPath):
-                self.execPlugin()
-                self.treeWidget.setVisible(True)
+            self.execPlugin()
+            self.treeWidget.setVisible(True)
         except:
             print (errorReport())
 
@@ -450,31 +440,50 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         #menu = ['m1','m2',['m3','m31',['m32','m321','m322'],'m33'],'m4','m5',['m6','m61','m62'],'m7']
         #self.qtTools.popUpMenuAdv(menu,self.treeWidget,point,self.pluginRightClickSelected,'addedArgument')
         item = self.treeWidget.itemAt(point)
+        
         if(item):
             name = item.text(0)
-            if (name!="[Nodes]"):
-                uiFile = item.data(0,QtCore.Qt.UserRole).replace('.py','.ui')
-                if (os.path.exists(uiFile)):
-                    self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Edit UI","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
+            path = item.data(0,QtCore.Qt.UserRole)
+            if (os.path.exists(path)):
+                if (os.path.isfile(path)):
+                    #Edit - File (If UI File there, Edit them) 
+                    uiFile = item.data(0,QtCore.Qt.UserRole).replace('.py','.ui')            
+                    if (os.path.exists(uiFile)):
+                        self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Edit UI","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                    else:
+                        self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
                 else:
-                    self.qtTools.popUpMenu(self.treeWidget,point,["Edit","Delete"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                    #Directories - Nodes or Other dir
+                    if (name == "nodes"):
+                        self.qtTools.popUpMenu(self.treeWidget,point,["New Node"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                    else:
+                        self.qtTools.popUpMenu(self.treeWidget,point,["New Simple Plug","New UI Plug","New Folder","Refresh"],self.pluginRightClickSelected,["myarg1","myarg2"])
             else:
-                self.qtTools.popUpMenu(self.treeWidget,point,["New Node"],self.pluginRightClickSelected,["myarg1","myarg2"])
+                #Empty area - right clicked or unknown path.
+                self.qtTools.popUpMenu(self.treeWidget,point,["New Simple Plug","New UI Plug","New Folder","Refresh"],self.pluginRightClickSelected,["myarg1","myarg2"])
         else:
-            self.qtTools.popUpMenu(self.treeWidget,point,["New Simple Plug","New UI Plug"],self.pluginRightClickSelected,["myarg1","myarg2"])
-                
+            self.qtTools.popUpMenu(self.treeWidget,point,["New Simple Plug","New UI Plug","New Folder","Refresh"],self.pluginRightClickSelected,["myarg1","myarg2"])
             
     def pluginRightClickSelected(self,*arg):
         act = self.parent.sender()
         menuOption = act.text()
         item = self.treeWidget.itemAt(act.data())
-        itemSelected = item.text(0) if item else None        
+        itemSelected = item.text(0) if item else None
+        path = item.data(0,QtCore.Qt.UserRole) if item else self.scriptsPath
+        if(menuOption=="Refresh"):
+            self.execPlugin()
+        if(menuOption=="New Folder"):
+            nFolderName = self.qtTools.showInputBox("ScriptFolderName","Enter the new folder name", "folderName")
+            if (nFolderName):
+                newPath = os.path.join(path,nFolderName)
+                os.makedirs(newPath, exist_ok=True)
+                self.execPlugin()
         if(menuOption=="New Node"):
             nFileName = self.qtTools.showInputBox("ScriptName","Enter the new Node name", "newNode")
             if (nFileName):               
                 data = self.ttls.fileContent('templateNode.py')
                 data = data.replace('Add', nFileName.capitalize())
-                f = os.path.join(self.nodesPath, nFileName+".py")
+                f = os.path.join(path, nFileName+".py")
                 self.ttls.writeFileContent(f, data)
                 self.execPlugin()
                 self.addNewTab(f)
@@ -483,15 +492,15 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             if (nFileName):            
                 data = self.ttls.fileContent('templatePlug.py')
                 data = data.replace('myClass', nFileName.capitalize())
-                f = os.path.join(self.plugsPath, nFileName+".py")
+                f = os.path.join(path, nFileName+".py")
                 self.ttls.writeFileContent(f, data)
                 self.execPlugin()
                 self.addNewTab(f)
         if(menuOption=="New UI Plug"):
             nFileName = self.qtTools.showInputBox("PlugName","Enter the new UI Plug name", "newUIPlug")
             if (nFileName):
-                pyf = os.path.join(self.plugsPath, nFileName+".py")
-                uif = os.path.join(self.scriptsDirName, self.plugsDirName, nFileName+".ui")                
+                pyf = os.path.join(path, nFileName+".py")
+                uif = os.path.join(path, nFileName+".ui")                
                 data = self.ttls.fileContent('templateUIPlug.py')
                 data = data.replace('UI_myUIPlug.ui', uif)                
                 data = data.replace('myUIPlug', nFileName.capitalize())                
@@ -529,12 +538,13 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         itemInfo = self.qtTree.getItemLabel(selectedItem)
         name = itemInfo['Label']
         path = itemInfo['Data']
-        print("\nExecuting: " + path)
-        if not (self.nodesDirName in path):
-            content = self.ttls.fileContent(path)
-            self.runScript(content)
-        else:
-            self.addNewTab(path)
+        if(os.path.isfile(path)):
+            print("\nExecuting: " + path)
+            if not (self.nodesDirName in path):
+                content = self.ttls.fileContent(path)
+                self.runScript(content)
+            else:
+                self.addNewTab(path)
 
     def showAttrs(self, obj):
         dlg = QtWidgets.QDialog(self.win)
@@ -554,39 +564,43 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         dlg.show()
 
     def execPlugin(self, *arg):
-        '''
-        To Refresh Plugin list
-        :param arg:
-        :return:
-        '''
+        self.populatePlugins()
+        
+    def populatePlugins(self):
         self.treeWidget.clear()
+        
         print("Loading Plugins... ")
-
         spath = os.getcwd()
         self.addToSysPath(spath)
+        self.addToSysPath(self.scriptsPath)
                 
-        nodes=False
-        nodeRootItem=None
-        self.nodesPath=''        
-        for eachDir in [x[0] for x in os.walk(self.scriptsPath)]:
-            if (not "__" in eachDir):
-                self.addToSysPath(eachDir)
-            if (eachDir.endswith(self.nodesDirName)):
-                self.nodesPath=eachDir
-                nodes=True
-                   
-        allPlugFiles = [os.path.join(dp, f) for dp, dn, filenames in os.walk(self.plugsPath) for f in filenames]
-        if (nodes): 
-            nodeRootItem = self.qtTree.createItem('[Nodes]')
-            self.qtTree.addNewRoot(self.treeWidget, nodeRootItem)
-        for plugFile in allPlugFiles:
-            if ((not "__" in plugFile) and (plugFile.endswith('.py')  or plugFile.endswith('.PY'))):   
-                if (self.nodesDirName in plugFile):
-                    self.loadPlugin(plugFile,nodeRootItem)
+        for eachItem in os.listdir(self.scriptsPath):
+            currentDirName = eachItem
+            currentDirPath = os.path.join(self.scriptsPath,currentDirName)
+            
+            if (not "__" in currentDirPath):
+                if os.path.isdir(currentDirPath):
+                    rItem = self.qtTree.createItem(currentDirName, currentDirPath)
+                    self.qtTree.addNewRoot(self.treeWidget, rItem)
+                    self.populatePluginsCore(rItem, currentDirPath)
                 else:
-                    self.loadPlugin(plugFile)
-
+                    self.loadPlugin(currentDirPath)
+        
         print("Plugins Loaded!")
+                                                
+    def populatePluginsCore(self, parentItem, searchPath):                
+        self.addToSysPath(searchPath)
+        
+        for eachItem in os.listdir(searchPath):
+            currentDirName = eachItem
+            currentDirPath = os.path.join(searchPath,currentDirName)    
+            if (not "__" in currentDirPath):
+                if os.path.isdir(currentDirPath):                
+                    rItem = self.qtTree.createItem(currentDirName,currentDirPath)
+                    self.qtTree.addChild(rItem, parentItem)
+                    self.populatePluginsCore(rItem, currentDirPath)
+                else:
+                    self.loadPlugin(currentDirPath, parentItem)                
         
     def addToSysPath(self, path):
         path = os.path.abspath(path)
@@ -598,7 +612,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 ''' % (path).replace(os.path.sep,'/')
         self.runScript(code)
 
-    def loadPlugin(self, plugFile, parentTreeItem=None):        
+    def loadPlugin(self, plugFile, parentTreeItem=None):   
         modName = os.path.basename(plugFile).replace(os.path.splitext(plugFile)[1], '')
         content = self.ttls.fileContent(plugFile)
         expecting = "For DevConsole" 
@@ -945,10 +959,14 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                 return self.history[self.history_index]
         return ''
 
+import socket
 if __name__ == '__main__':
     try:
         app = QtWidgets.QApplication(sys.argv)
-        dc = DevConsole(ShowPrint=True, ShowError=True)
+        if(socket.gethostname()=='MUKUND-PC'):
+            dc = DevConsole(ShowPrint=True, ShowError=True, ScriptsPath='J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug_BIN\Scripts')
+        else:
+            dc = DevConsole(ShowPrint=True, ShowError=True)
         dc.showEditor()
         sys.exit(app.exec_())
     except:

@@ -8,3 +8,4 @@ pepper/.settings/org.eclipse.core.resources.prefs
 CommonLib/src/kmxPyQt/devConsole3/ToTransfer/*
 *.lyt
 *.tbs
+*.pyc
