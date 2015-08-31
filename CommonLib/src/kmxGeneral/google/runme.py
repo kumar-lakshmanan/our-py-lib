@@ -6,6 +6,9 @@ Created on Aug 21, 2015
 
 import os
 print(os.getcwd())
+
+import sqlite3
+
 # 
 # flow = client.flow_from_clientsecrets(
 #      'kmxserver.json',
@@ -26,7 +29,7 @@ print(os.getcwd())
 #service = build('api_name', 'api_version', ...)
 
 
-import pywin32
+#import pywin32
  
 
 rootDir = '..'

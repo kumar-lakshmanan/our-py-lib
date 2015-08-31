@@ -31,6 +31,50 @@ from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
 import pickle
 
+class iconSetup():
+    
+    def __init__(self, parent, isRCBased=1, iconBasePath='', iconPrefix=':/fatcow/32x32/'):
+        '''
+        iconStyle = 1 - Imported RC based icons
+        iconStyle = 0 - Absolute Path based icons        
+        '''
+        self.parent = parent
+        self.isRCBased = isRCBased
+        self.iconBasePath = iconBasePath
+        self.iconPrefix = iconPrefix
+        
+    def getIconString(self, iconName):
+        if self.isRCBased:
+            ret = self.iconPrefix + iconName
+        else:
+            ret = self.iconBasePath + iconName
+        return ret
+    
+    def setIcon(self, item, iconName, size=32):
+        itemType = type(item)
+        icon = self._getIcon(iconName, size)        
+        if itemType == type(QtWidgets.QAction(None)):
+            item.setIcon(icon)
+            #item.setIconSize(self.getSize(size))
+    def getIcon(self,iconName,size=32):
+        return self._getIcon(iconName, size)
+    
+    def getSize(self, size):
+        if(size==16):
+            return QtCore.QSize(16, 16) 
+        if(size==32):
+            return QtCore.QSize(32, 32)    
+
+    def _getIcon(self, iconName, size=16):
+        if (iconName):
+            icon = QtGui.QIcon()
+            pixMap = QtGui.QPixmap(self.getIconString(iconName))
+            s = self.getSize(size)
+            pixMap.scaled(s)        
+            icon.addPixmap(pixMap, QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            return icon
+        return None
+    
 class CommonTools(object):
     '''
     classdocs

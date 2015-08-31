@@ -18,8 +18,8 @@ class MenuBuilder(object):
 
     def createMenu(self, menuBar, menuName=''):
         newMenu = QtWidgets.QMenu(menuBar)
-        newMenu.setTitle(menuName)
-        menuBar.addAction(newMenu.menuAction())
+        newMenu.setTitle(menuName)        
+        if menuBar: menuBar.addAction(newMenu.menuAction())
         return newMenu
 
     def createMenuItem(self, parentWindow, menu, itemName='', fnToCall=None):
@@ -31,3 +31,22 @@ class MenuBuilder(object):
 
     def createMenuItemSeperator(self, menu):
         menu.addSeparator()
+
+    def createMenuForList(self, parentWindow, menuName, lstOfItems=[], fnToCall=None):
+        if (len(lstOfItems)>0):     
+            menu = self.createMenu(None, menuName)       
+            for eachItem in lstOfItems:
+                if(eachItem == '|'):
+                    menu.addSeparator()
+                else:
+                    self.createMenuItem(parentWindow, menu, eachItem, fnToCall)
+            return menu
+
+    def updateMenu(self, parentWindow, menu, itemName, fnToCall=None):
+        if(itemName == '|'): 
+            menu.addSeparator()
+        else:
+            self.createMenuItem(parentWindow, menu, itemName, fnToCall)                    
+                    
+                    
+            

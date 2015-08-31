@@ -36,7 +36,6 @@ class Ui_devConsole(object):
         self.sciOutput.setFrameShape(QtWidgets.QFrame.Box)
         self.sciOutput.setObjectName("sciOutput")
         self.treeWidget = QtWidgets.QTreeWidget(self.splitter_2)
-        self.treeWidget.setMaximumSize(QtCore.QSize(200, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.treeWidget.setFont(font)

@@ -22,8 +22,15 @@ import lxml
 import subprocess
 import xml.etree.ElementTree as ET
 import pythoncom, logging
+from pylab import *
+import sqlite3
+import sip
+import fatcow_rc
+import tarfile
+
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 #from PyQt5.uic import pyuic5
 import pkgutil
 import inspect
@@ -184,6 +191,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.qtTree = kmxQtTreeWidget.TreeWidget()
         self.qtMenu = kmxQtMenuBuilder.MenuBuilder()
         self.qtConn = kmxQtConnections.QtConnections(self)
+        self.qtIcon = kmxQtCommonTools.iconSetup(self)
 
         self.standalone = 0 if self.parent else 1
 
@@ -191,10 +199,29 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             print ('No parent specified! Creating standalone console!')
             self.parent = self.win = QtWidgets.QMainWindow()
             self.win.resize(689, 504)
+                        
             self.mainWidget = QtWidgets.QWidget(self.win)
             self.setupUi(self.mainWidget)
             self.win.setCentralWidget(self.mainWidget)
+            self.toolbar = QtWidgets.QToolBar('Main Tools',self)
+            self.toolbar2 = QtWidgets.QToolBar('Additional Tools',self) 
+            self.toolbar.setFloatable(True)           
+            self.toolbar2.setFloatable(True)
+            self.win.addToolBar(self.toolbar)
+            self.win.addToolBar(self.toolbar2)            
             self.setStandAloneModeFeatures()
+
+            self.btnExecute.setVisible(0)
+            self.btnLoadScript.setVisible(0)
+            self.btnSaveScript.setVisible(0)
+            self.btnNewScript.setVisible(0)
+            self.btnQuickSaveScript.setVisible(0)
+            
+            self.label.setVisible(1)
+            self.label.setText('Output:')
+            self.line.setVisible(0)
+            #self.sciOutput.resize(self.sciOutput.width(), self.sciOutput.height() + 90)                         
+                               
         elif self.asDock:
             if hasattr(self.parent, 'addDockWidget'):
                 print ('Creating dock based console!')
@@ -232,16 +259,20 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             self.win = QtWidgets.QDialog(self.parent)
             self.setupUi(self.win)
 
-        # toolbar = QtWidgets.QToolBar()
-        # self.win.addToolBar(toolbar)
+        self.outputFont = self.sciOutput.font()
+        self.outputFont.setFamily("Courier")
+        self.outputFont.setPointSize(10)
+        self.outputFont.setFixedPitch(True)
+        self.sciOutput.setFont(self.outputFont)
+        self.sciOutput.setMarginsFont(self.outputFont)
 
         print("Outputs Redirected to HaPy. Check HaPy console log for furthur system messages.")
         if ShowPrint: sys.stdout = self
         if ShowError: sys.stderr = self
 
         self.inter = InteractiveInterpreter()
-        self.inter.locals['parent'] = self
-        globals()['parent'] = self
+        self.inter.locals['dev'] = self       
+        globals()['dev'] = self
 
         self.win.setWindowIcon(self.parent.windowIcon())
         self.win.setWindowTitle('HaPy')
@@ -256,12 +287,14 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
 
         # Connections
         self.tabWidget.tabCloseRequested.connect(self.tabClose)
-        self.btnExecute.clicked.connect(self.btnRedirector)
-        #self.btnExecute_2.clicked.connect(self.btnRedirector)
-        self.btnLoadScript.clicked.connect(self.btnRedirector)
-        self.btnSaveScript.clicked.connect(self.btnRedirector)
-        self.btnNewScript.clicked.connect(self.btnRedirector)
-        self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
+        
+        if not self.standalone:
+            self.btnExecute.clicked.connect(self.btnRedirector)
+            #self.btnExecute_2.clicked.connect(self.btnRedirector)
+            self.btnLoadScript.clicked.connect(self.btnRedirector)
+            self.btnSaveScript.clicked.connect(self.btnRedirector)
+            self.btnNewScript.clicked.connect(self.btnRedirector)
+            self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
         
         self.qtTools.connectToRightClick(self.treeWidget,self.pluginRightClick)
 
@@ -285,7 +318,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
 
         self.win.hide()
 
-
         # Plugin Lister
         #self.treeWidget.headerItem().setText(0, "DevS")
         self.treeWidget.itemDoubleClicked.connect(self.pluginSelected)
@@ -308,7 +340,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         print ('FileSys encodeing: ' + str(sys.getfilesystemencoding()))
 
         drline = "\n---------------------------------------\n"
-        self.credit = drline + 'About HaPy:\nHandy Python - Interactive Interpreter/Scripting Environment \nAn expreimental project developed by \nKumaresan Lakshmanan\nFor Quick Windows Automation. \nDate: ' + last_update_date + drline
+        self.credit = drline + 'About HaPy:\nHandy Python - Interactive Interpreter/Scripting Environment \nAn expreimental project by \nKumaresan Lakshmanan\nFor Quick, Portable windows automation. \nDate: ' + last_update_date + drline
         print(self.credit)
 
         self.InitalizeScripts = InitalizeScripts
@@ -335,9 +367,15 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 self.addEmptyTab()
         except:
             print (errorReport())
+          
+        if self.standalone:            
+            self.qtConn.uiMain = self.win
+            self.qtConn.installEventHandler()
+            self.qtConn.addEventConnection(self.win, 'WindowDeactivate', self.onWinDeAct)
+            self.qtConn.addEventConnection(self.win, 'Close', self.onClose)
+            self.qtConn.addEventConnection(self.win, 'Hide', self.onHide)
+            self.qtConn.addEventConnection(self.win, 'Show', self.onShow)
             
-        if self.standalone:
-            self.qtConn.connectToClose(self.win, self.onClose)
             if (os.path.exists('layout.lyt')):  
                 customList = self.qtTools.uiLayoutRestore('layout.lyt',[self.splitter,self.splitter_2])
                 if(customList):
@@ -345,11 +383,76 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                     self.win.move(customList[1])                                
             self.loadTabs()            
 
+    def onWinDeAct(self, *arg):
+        #self.win.hide()
+        pass
+
+    def _handleTrayItemClicked(self, itemName):
+        pass
+        
+    def trayItemClicked(self, *arg):
+        caller = self.sender()        
+        itm = caller.text()
+        if(itm=='Quit'):
+            sys.exit(0)
+        if(itm=='About'):
+            print(self.credit)
+        if(itm=='Help'):
+            print('Not Implemented')
+        
+    def trayAgentReady(self):    
+        """
+        trayagent(forwho,trayclickedfunction)
+    
+        catch the trayobj i trhough...
+        Dont forget to kill your object on Close Event
+        use...
+        xtools.traykiller()
+    
+        """
+        self.tray = QtWidgets.QSystemTrayIcon(self.qtIcon.getIcon('action_log.png'), self.win)
+        self.tray.activated.connect(self.trayClicked)
+        #self.connect(self.tray,SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),self.trayClicked)
+        self.tray.show()
+        return self.tray
+    
+    def trayClicked(self, click):
+                         
+        if(click==3): 
+            if (self.win.isVisible()):
+                self.win.hide()
+            else:
+                self.win.show()
+                #if self.win.windowState() == QtCore.Qt.WindowMinimized: 
+                self.win.setWindowState(QtCore.Qt.WindowActive)
+                self.win.activateWindow()     
+                self.win.raise_()
+               
+    def traymessage(self, messagetitle, message):
+        self.tray.showMessage(messagetitle,message)
+    
+    def traykiller(self):
+        self.tray.hide()
+        del(self.tray)
+        
     def onClose(self,*arg):
+        print("Closing...")
+        self.traykiller()
         customList = [self.win.size(),self.win.pos()]
         self.qtTools.uiLayoutSave('layout.lyt',[self.splitter,self.splitter_2], customList)
         self.saveTabs()
+        self.writeToLog()
+        
+    def onHide(self, *arg):
+        #print("Hide")
+        #self.win.setWindowFlags(QtCore.Qt.ToolTip)
+        pass
 
+    def onShow(self, *arg):
+        #print("Show")
+        #self.win.setWindowFlags(QtCore.Qt.Window)
+        pass
+        
     def saveTabs(self):
         lst=[]
         for cnt in range(0, self.tabWidget.count()):
@@ -385,6 +488,16 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         namespace.update(frame.f_locals)
         return namespace
 
+    def addShortcut(self, label='text', icon='bullet_star.png', callBackFn=None):
+        if (text=='|'):
+            self.toolbar2.addSeparator()
+        else:
+            action = QtWidgets.QAction(self)
+            action.setText(label)
+            if callBackFn is not None: action.triggered.connect(callBackFn)
+            self.qtIcon.setIcon(action, icon)                        
+            self.toolbar2.addAction(action)         
+
     def setStandAloneModeFeatures(self):
         """
         Standalone Mode
@@ -397,7 +510,10 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.mnuRun = self.qtMenu.createMenu(self.menubar, "Run")
         self.mnuAbout = self.qtMenu.createMenu(self.menubar, "About")
 
+        self.mnuFileNewScript = self.qtMenu.createMenuItem(self.win, self.mnuFile, "New Script", self.btnRedirector)
+        self.qtMenu.createMenuItemSeperator(self.mnuFile)        
         self.mnuFileLoadScript = self.qtMenu.createMenuItem(self.win, self.mnuFile, "Load Script", self.btnRedirector)
+        self.mnuFileQuickSaveScript = self.qtMenu.createMenuItem(self.win, self.mnuFile, "Save Script", self.btnRedirector)
         self.mnuFileSaveScript = self.qtMenu.createMenuItem(self.win, self.mnuFile, "Save Script As", self.btnRedirector)
         self.qtMenu.createMenuItemSeperator(self.mnuFile)
         self.mnuFileQuit = self.qtMenu.createMenuItem(self.win, self.mnuFile, "Quit", self.btnRedirector)
@@ -411,6 +527,38 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.mnuRunExecute.setShortcut("Ctrl+Enter")
 
         self.mnuAboutHPSE = self.qtMenu.createMenuItem(self.win, self.mnuAbout, "About HaPy", self.btnRedirector)
+
+
+        self.qtIcon.setIcon(self.mnuFileNewScript, 'page.png')
+        self.qtIcon.setIcon(self.mnuFileLoadScript, 'page_edit.png')
+        self.qtIcon.setIcon(self.mnuFileQuickSaveScript, 'page_save.png')
+        self.qtIcon.setIcon(self.mnuFileSaveScript, 'page_green.png')
+        self.qtIcon.setIcon(self.mnuEditClearOutput, 'align_bellow.png')
+        self.qtIcon.setIcon(self.mnuEditClearInput, 'align_above.png')        
+        self.qtIcon.setIcon(self.mnuRunExecute, 'page_lightning.png')
+        self.qtIcon.setIcon(self.mnuAboutHPSE, 'emotion_happy.png')           
+                
+        self.toolbar.addAction(self.mnuFileNewScript)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(self.mnuFileLoadScript)
+        self.toolbar.addAction(self.mnuFileQuickSaveScript)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(self.mnuEditClearOutput)
+        #self.toolbar.addAction(self.mnuEditClearInput)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(self.mnuRunExecute)
+        
+        #self.toolbar.addWidget(self.mnuFileLoadScript)
+        self.tray = self.trayAgentReady()
+        #self.rightMenu = self.qtMenu.createMenuForList(self, 'DevConsoleMenu', ['|','Help','About','|','Quit'], self.trayItemClicked)
+        self.rightMenu = self.qtMenu.createMenu(None, 'DevConsoleMenu')
+        self.tray.setContextMenu(self.rightMenu)
+        self.updateTrayMenu('Quit',self.trayItemClicked)
+        self.updateTrayMenu('|')
+        self.updateTrayMenu('About',self.trayItemClicked)
+        self.updateTrayMenu('Help',self.trayItemClicked)
+        
+        #self.setWindowFlags(QtCore.Qt.Tool)
 
         '''
         # Remove other buttons
@@ -435,7 +583,9 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.label_2.setText("Workspace:")
         self.label_3.setText("Quick Commands:")
         '''
-
+    def updateTrayMenu(self, itemName, fnToCall=None):
+        self.qtMenu.updateMenu(self,  self.rightMenu, itemName, fnToCall)
+        
     def pluginRightClick(self, point):
         #menu = ['m1','m2',['m3','m31',['m32','m321','m322'],'m33'],'m4','m5',['m6','m61','m62'],'m7']
         #self.qtTools.popUpMenuAdv(menu,self.treeWidget,point,self.pluginRightClickSelected,'addedArgument')
@@ -491,7 +641,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             nFileName = self.qtTools.showInputBox("PlugName","Enter the new Plug name", "newPlug")   
             if (nFileName):            
                 data = self.ttls.fileContent('templatePlug.py')
-                data = data.replace('myClass', nFileName.capitalize())
+                data = data.replace('myClass', nFileName)
                 f = os.path.join(path, nFileName+".py")
                 self.ttls.writeFileContent(f, data)
                 self.execPlugin()
@@ -503,7 +653,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 uif = os.path.join(path, nFileName+".ui")                
                 data = self.ttls.fileContent('templateUIPlug.py')
                 data = data.replace('UI_myUIPlug.ui', uif)                
-                data = data.replace('myUIPlug', nFileName.capitalize())                
+                data = data.replace('myUIPlug', nFileName)                
                 self.ttls.writeFileContent(pyf, data)
                 self.execPlugin()
                 self.addNewTab(pyf)                
@@ -736,8 +886,11 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 
     def saveScriptAs(self):
         scpt = self.scriptsPath
-        scpt = scpt if os.path.exists(scpt) else 'D:'
-        fileName = QtWidgets.QFileDialog.getSaveFileName(self.parent, 'Save python script file...', scpt, 'Python(*.py);;All Files (*)')
+        scpt = scpt if os.path.exists(scpt) else 'C:'
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName = QFileDialog.getSaveFileName(self.win, 'Save python script file...', scpt, 'Python(*.py);;All Files (*)', options=options)
+        
         if (fileName and fileName[0] != ''):
             fileName = fileName[0]
             self.saveScriptCore(fileName)
@@ -756,7 +909,9 @@ if path2Add not in sys.path and os.path.exists(path2Add):
     def loadScript(self):
         scpt = self.scriptsPath
         scpt = scpt if os.path.exists(scpt) else 'D:'
-        fileName = QtWidgets.QFileDialog.getOpenFileName(self.parent, 'Open python script file...', scpt, 'Python(*.py);;All Files (*)')
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName = QFileDialog.getOpenFileName(self.win, 'Open python script file...', scpt, 'Python(*.py);;All Files (*)', options=options)
         if fileName and fileName[0] != '' and os.path.exists(fileName[0]):
             fileName = fileName[0]
             self.loadScriptCore(fileName)
@@ -776,9 +931,9 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                 self.win.hide()
             else:
                 self.win.show()
-        elif (actingButton == self.btnNewScript):
+        elif (actingButton == self.btnNewScript or (self.standalone and actingButton == self.mnuFileNewScript)):
             self.addEmptyTab()
-        elif (actingButton == self.btnQuickSaveScript):
+        elif (actingButton == self.btnQuickSaveScript or (self.standalone and actingButton == self.mnuFileQuickSaveScript)):
             self.quickSave()
         # elif (actingButton == self.btnClearOutput or (self.standalone and actingButton == self.mnuEditClearOutput)):
         #     self.sciOutput.clear()
@@ -869,22 +1024,10 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             print (errorReport())
 
     def appendPlainOutput(self, txt):
-        text = str(self.sciOutput.text())
-        text += txt
-        self.sciOutput.setText(text)
-        text = str(self.sciOutput.text())
-        vsb = self.sciOutput.verticalScrollBar()
-        vsb.setValue(vsb.maximum())
-        hsb = self.sciOutput.horizontalScrollBar()
-        hsb.setValue(0)
+        self.appendTextCore(txt)
 
     def appendLineOutput(self):
-        text = str(self.sciOutput.text())
-        text += '\n'
-        self.sciOutput.setText(text)
-        text = str(self.sciOutput.text())
-        vsb = self.sciOutput.verticalScrollBar()
-        vsb.setValue(vsb.maximum())
+        self.appendTextCore('\n')
 
     def appendSplOutput(self, txt):
         nowtime = strftime("%Y-%m-%d %H:%M:%S")
@@ -893,19 +1036,19 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 
     def appendLog(self, txt):
         self.appendLineOutput()
-        text = str(self.sciOutput.text())
-        text += txt
-        self.sciOutput.setText(text)
-        text = str(self.sciOutput.text())
-        vsb = self.sciOutput.verticalScrollBar()
-        vsb.setValue(vsb.maximum())
-        pass
+        self.appendTextCore(txt)
 
+    def appendTextCore(self, txt):
+        self.sciOutput.setCursorPosition(self.sciOutput.lines(),0)
+        self.sciOutput.insert(str(txt))
+        vsb = self.sciOutput.verticalScrollBar()
+        vsb.setValue(vsb.maximum())    
+        hsb = self.sciOutput.horizontalScrollBar()
+        hsb.setValue(0)        
+        
     # Standard Error and Print Capture
     def write(self, txt):
         self.appendPlainOutput(txt)
-        vsb = self.sciOutput.verticalScrollBar()
-        vsb.setValue(vsb.maximum())
 
     def showEditor(self, exec_=0):
         if exec_:
@@ -962,9 +1105,10 @@ if path2Add not in sys.path and os.path.exists(path2Add):
 import socket
 if __name__ == '__main__':
     try:
+        testhere=0
         app = QtWidgets.QApplication(sys.argv)
         if(socket.gethostname()=='MUKUND-PC'):
-            dc = DevConsole(ShowPrint=True, ShowError=True, ScriptsPath='J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug_BIN\Scripts')
+            dc = DevConsole(ShowPrint=not testhere, ShowError=not testhere, ScriptsPath='J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug_BIN\Scripts')
         else:
             dc = DevConsole(ShowPrint=True, ShowError=True)
         dc.showEditor()

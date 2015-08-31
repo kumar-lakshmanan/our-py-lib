@@ -9,7 +9,12 @@ from bs4 import BeautifulSoup
 import json
 import urllib3
 
+
+
 if __name__ == '__main__':
+
+    import py_compile
+    py_compile.compile('C:/Python34/Lib/site-packages/dropbox/rest.py')
 
 #     website = 'https://rafflesforex.com.au/'
 #     raffleSoup = BeautifulSoup(requests.get(website).text,"html.parser")

@@ -1,10 +1,85 @@
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
+# class MyEventFilter(QObject):
+#    def eventFilter(self, receiver, event):
+#       if(event.type() == QEvent.KeyPress):
+#     QMessageBox.information(None,"Filtered Key Press Event!!",
+#                      "You Pressed: "+ event.text())
+#     return True
+#       else:      
+#        #Call Base Class Method to Continue Normal Event Processing
+#        return super(MyEventFilter,self).eventFilter(receiver, event)
+   
 class QtConnections():
 
     def __init__(self, uiMain):
         self.uiMain = uiMain
+        self.eventConnection = []
 
+    def installEventHandler(self):
+        self.uiMain.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.uiMain.installEventFilter(self.uiMain)
+        self.uiMain.__class__.eventFilter = self.eventFilter
+
+    def testEventNames(self, obj, event):
+        eventName = self._getEventName(QtCore.QEvent, event.type())
+        eventNo = int(event.type())
+        print("Testing Event: ", str(obj), str(eventNo), eventName)
+        
+    def eventFilter(self, obj, event):
+        #Use this for testing the event Name
+        #self.testEventNames(obj, event)
+        
+        currentEvent = event
+        currentEventObject = obj        
+        currentEventName = self._getEventName(QtCore.QEvent, event.type())
+        currentEventNo = int(event.type())
+
+        for eachEntry in self.eventConnection:
+            if (currentEventObject in eachEntry and currentEventName in eachEntry):
+                eachEntry[2](currentEvent, currentEventObject, currentEventName)
+                
+        currentEvent.accept()
+
+        app = QtWidgets.QApplication.instance() 
+        app.processEvents()
+        #app.notify(obj, event)
+        return super(type(self.uiMain),self.uiMain).eventFilter(obj, event)
+
+    def addEventConnection(self, obj, eventName, fnToInvoke):
+        entry = (obj, eventName, fnToInvoke)
+        if (not entry in self.eventConnection):
+            self.eventConnection.append(entry)
+        
+    def _getTheEventEntry(self, obj, eventName):
+        for each in self.eventConnection:
+            if (obj in each and eventName in each):
+                return each
+        return None
+
+    def _getEventName(self, base, value):
+        """Convert a Qt Enum value to its key as a string.
+    
+        Args:
+            base: The object the enum is in, e.g. QFrame.
+            value: The value to get.
+    
+        Return:
+            The key associated with the value as a string, or None.
+        """
+        klass = value.__class__
+        try:
+            idx = klass.staticMetaObject.indexOfEnumerator(klass.__name__)
+        except AttributeError:
+            idx = -1
+        if idx != -1:
+            return klass.staticMetaObject.enumerator(idx).valueToKey(value)
+        else:
+            for name, obj in vars(base).items():
+                if isinstance(obj, klass) and obj == value:
+                    return name
+            return None
+        
     def sigConnect(self, sigSender=None, signal='', FunctionToInvoke=None):
         if not sigSender is None and not signal is '' and not FunctionToInvoke is None:
             QtCore.QObject.connect(sigSender,QtCore.SIGNAL(signal),FunctionToInvoke)
@@ -49,6 +124,11 @@ class QtConnections():
         Widget.__class__.dragEnterEvent = self.__DragEnterEvent
         Widget.__class__.dragMoveEvent = self.__DragEnterEvent
         Widget.__class__.dropEvent = FunctionToInvoke
+
+    def connectToFocusChange(self, Widget, FunctionToInvoke):
+        app = QtWidgets.QApplication.instance()        
+        app.__class__.focusChanged = FunctionToInvoke
+        app.focusChanged = FunctionToInvoke
 
     def connectToClose(self, Widget, FunctionToInvoke):
         Widget.__class__.closeEvent = FunctionToInvoke
@@ -118,3 +198,22 @@ class QtConnections():
             return 'Delete'
         else:
             return event.key()
+        
+
+
+# class MyWidget(QtGui.QWidget):
+# 
+#     def __init__(self, parent = None):
+#         super(MyWidget, self).__init__(parent)
+#         self.installEventFilter(self)
+# 
+#     def eventFilter(self, object, event):
+#         if event.type() == QtCore.QEvent.WindowActivate:
+#             print "widget window has gained focus"
+#         elif event.type()== QtCore.QEvent.WindowDeactivate:
+#             print "widget window has lost focus"
+#         elif event.type()== QtCore.QEvent.FocusIn:
+#             print "widget has gained keyboard focus"
+#         elif event.type()== QtCore.QEvent.FocusOut:
+#             print "widget has lost keyboard focus"
+        
