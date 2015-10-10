@@ -721,6 +721,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         
         print("Loading Plugins... ")
         spath = os.getcwd()
+        if('\.' in spath): return None
         self.addToSysPath(spath)
         self.addToSysPath(self.scriptsPath)
                 
@@ -739,8 +740,8 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         print("Plugins Loaded!")
                                                 
     def populatePluginsCore(self, parentItem, searchPath):                
-        self.addToSysPath(searchPath)
-        
+        if('\.' in searchPath): return None
+        self.addToSysPath(searchPath)        
         for eachItem in os.listdir(searchPath):
             currentDirName = eachItem
             currentDirPath = os.path.join(searchPath,currentDirName)    
@@ -754,6 +755,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         
     def addToSysPath(self, path):
         path = os.path.abspath(path)
+        if('\.' in path): return None
         print ("Adding path to system... " + path)
         code = r'''import sys,os
 path2Add="%s"
@@ -763,6 +765,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         self.runScript(code)
 
     def loadPlugin(self, plugFile, parentTreeItem=None):   
+        if('\.' in plugFile): return None
         modName = os.path.basename(plugFile).replace(os.path.splitext(plugFile)[1], '')
         content = self.ttls.fileContent(plugFile)
         expecting = "For DevConsole" 
@@ -1108,7 +1111,7 @@ if __name__ == '__main__':
         testhere=0
         app = QtWidgets.QApplication(sys.argv)
         if(socket.gethostname()=='MUKUND-PC'):
-            dc = DevConsole(ShowPrint=not testhere, ShowError=not testhere, ScriptsPath='J:\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug_BIN\Scripts')
+            dc = DevConsole(ShowPrint=not testhere, ShowError=not testhere, ScriptsPath='J:\devcon-scripts')
         else:
             dc = DevConsole(ShowPrint=True, ShowError=True)
         dc.showEditor()
