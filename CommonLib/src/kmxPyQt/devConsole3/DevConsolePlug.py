@@ -4,6 +4,7 @@ from importlib.abc import InspectLoader
 from threading import Thread
 from time import strftime
 import atexit
+
 import cgi
 import inspect
 import mimetypes
@@ -27,7 +28,6 @@ import sqlite3
 import sip
 import fatcow_rc
 import tarfile
-
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
@@ -923,10 +923,10 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         self.addNewTab(fileName)
 
     def btnRedirector(self):
-        actingButton = self.parent.sender()
+        actingButton = self.parent.sender()     
         scpt = self.scriptsPath
         scpt = scpt if os.path.exists(scpt) else 'D:'
-
+        
         #if actingButton == self.toolButton:
         #    self.treeWidget.setVisible(self.toolButton.isChecked())
         if actingButton == self.stsBtnDebugger:
@@ -969,7 +969,18 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             scriptName = cwidget.toolTip()
             return (qsci,scriptName)
 
+    def mouseLock(self):             
+        self.win.grabMouse(QtCore.Qt.WaitCursor)
+        self.win.grabKeyboard()
+        QtWidgets.QApplication.processEvents()        
+
+    def mouseRelease(self):
+        self.win.releaseMouse()
+        self.win.releaseKeyboard()
+        QtWidgets.QApplication.processEvents()        
+
     def doExecute(self):
+        self.mouseLock()
         (qsci,scriptName) = self.getCurrentEditor()
         if (scriptName!=""):
             print("Executing..."+scriptName)
@@ -980,6 +991,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.ABS.add(inputs)
             self.ABS.prepare()
             self.runScript(inputs)
+        self.mouseRelease()
+        
     """
     '''    def runScript(self, script):
             try:
