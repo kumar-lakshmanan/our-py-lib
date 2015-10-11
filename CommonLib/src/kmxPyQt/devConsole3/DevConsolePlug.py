@@ -49,6 +49,7 @@ import win32com.client
 import pprint
 from PyQt5 import Qsci
 from kmxPyQt import kmxQtMenuBuilder
+import argparse
 
 import ssl
 from functools import wraps
@@ -184,8 +185,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.loadedFileName = ''
         self.pyDesigner = 'C:\Python34\Lib\site-packages\PyQt5\designer.exe'
                 
-        #Flags
-        
+        #Flags        
         self.qtTools = kmxQtCommonTools.CommonTools(self)
         self.ttls = kmxTools.Tools()
         self.qtTree = kmxQtTreeWidget.TreeWidget()
