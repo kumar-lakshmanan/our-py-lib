@@ -347,12 +347,13 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.scriptsDirName = ScriptsPath
         self.scriptsPath = os.path.abspath(self.scriptsDirName)
         print("Checking scripts path..."+ os.path.abspath(self.scriptsPath))
+        
         if self.scriptsPath:
             if self.InitalizeScripts and self.scriptsPath and not os.path.exists(self.scriptsPath):
                 os.makedirs(self.scriptsPath)
         else:
             print ('Invalid script path!')
-
+                   
         #Start loading the scripts...
         try:
             self.execPlugin()
@@ -381,7 +382,9 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
                 if(customList):
                     self.win.resize(customList[0])
                     self.win.move(customList[1])                                
-            self.loadTabs()            
+            self.loadTabs()     
+        print("All set, You are ready to go...")
+
 
     def onWinDeAct(self, *arg):
         #self.win.hide()
@@ -723,7 +726,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         spath = os.getcwd()
         if('\.' in spath): return None
         self.addToSysPath(spath)
-        self.addToSysPath(self.scriptsPath)
                 
         for eachItem in os.listdir(self.scriptsPath):
             currentDirName = eachItem
@@ -783,16 +785,40 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         return plugTreeItem
 
     def execStartUp(self, *arg):
+        self.addToSysPath(self.scriptsPath)                
         self.userSetup = os.path.join(self.scriptsPath, 'userSetup.py')
         self.userSetup = self.userSetup if os.path.exists(self.userSetup) else os.path.join(self.scriptsPath, 'userSetup.pyc')
         self.userSetup = self.userSetup if os.path.exists(self.userSetup) else ''
-        if self.userSetup and os.path.exists(self.userSetup):
-            print ('Executing... %s' % self.userSetup)
-            data = self.ttls.fileContent(self.userSetup)
-            self.loadScriptCore(self.userSetup)
+        self.runScriptFile(self.userSetup)
+        self.loadScriptCore(self.userSetup)
+        
+    def runScriptFile(self, scriptFile):
+        if scriptFile and os.path.exists(scriptFile):
+            print ('Executing... %s' % scriptFile)
+            data = self.ttls.fileContent(scriptFile)
             self.runScript(data)
         else:
-            print ('No Startup script file! ' + self.userSetup)
+            print ('Script file missing...' + scriptFile)        
+
+    def encrypt(self, text):
+            code = int(sys.argv[1] if(len(sys.argv)>1) else 4321)
+            cipher=''
+            for each in text:
+                    c = (ord(each)+code) % 126
+                    if c < 32: 
+                            c+=31
+                    cipher += chr(c)
+            return cipher
+    
+    def decrypt(self, text):
+            code = int(sys.argv[1] if(len(sys.argv)>1) else 4321)
+            plaintext=''
+            for each in text:
+                    p = (ord(each)-code) % 126    
+                    if p < 32:
+                            p+=95
+                    plaintext += chr(p)
+            return plaintext 
 
     def commandLineExecute(self):
         if not str(self.cline.text()) == '':
@@ -920,7 +946,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.loadScriptCore(fileName)
 
     def loadScriptCore(self,fileName):
-        self.addNewTab(fileName)
+        if(os.path.isfile(fileName) and os.path.exists(fileName)):
+            self.addNewTab(fileName)
 
     def btnRedirector(self):
         actingButton = self.parent.sender()     
