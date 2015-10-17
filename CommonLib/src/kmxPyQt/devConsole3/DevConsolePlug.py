@@ -178,8 +178,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         super(DevConsole, self).__init__(self.parent)
         atexit.register(self.writeToLog)
 
-        self.nodesDirName = 'nodes'
-
         # Load File
         self.loadedFile = False
         self.loadedFileName = ''
@@ -693,11 +691,8 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         path = itemInfo['Data']
         if(os.path.isfile(path)):
             print("\nExecuting: " + path)
-            if not (self.nodesDirName in path):
-                content = self.ttls.fileContent(path)
-                self.runScript(content)
-            else:
-                self.addNewTab(path)
+            content = self.ttls.fileContent(path)
+            self.runScript(content)
 
     def showAttrs(self, obj):
         dlg = QtWidgets.QDialog(self.win)
