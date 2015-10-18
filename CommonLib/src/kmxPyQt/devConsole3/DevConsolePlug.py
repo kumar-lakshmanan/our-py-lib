@@ -174,7 +174,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         self.parent = parent
         self.asDock = AsDock
         self.logCount = logCount
-        self.history = []
+
         super(DevConsole, self).__init__(self.parent)
         atexit.register(self.writeToLog)
 
@@ -295,9 +295,6 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
             self.btnQuickSaveScript.clicked.connect(self.btnRedirector)
         
         self.qtTools.connectToRightClick(self.treeWidget,self.pluginRightClick)
-
-        self.cline.returnPressed.connect(self.commandLineExecute)
-        self.cline.__class__.keyReleaseEvent = self.commandLineKeyPress
         self.tabWidget.__class__.keyReleaseEvent = self.tabKeyPress
         
         if StatusBar:
@@ -815,15 +812,6 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                     plaintext += chr(p)
             return plaintext 
 
-    def commandLineExecute(self):
-        if not str(self.cline.text()) == '':
-            inputs = str(self.cline.text()).rstrip()
-            self.appendPlainOutput(">>> " + inputs)
-            self.appendLineOutput()
-            self.addToHistory(inputs)
-            self.runScript(inputs)
-            self.cline.setText('')
-
     def tabKeyPress(self, event):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         if (modifiers == QtCore.Qt.ControlModifier and event.key()==QtCore.Qt.Key_S):
@@ -833,17 +821,6 @@ if path2Add not in sys.path and os.path.exists(path2Add):
             self.addEmptyTab()
         #print(modifiers == QtCore.Qt.ControlModifier and event.key()==16777221)
         
-    def commandLineKeyPress(self, event):
-        if event.key() == QtCore.Qt.Key_Up:
-            self.setCommand(self.getPrevHistoryEntry())
-            return
-        elif event.key() == QtCore.Qt.Key_Down:
-            self.setCommand(self.getNextHistoryEntry())
-            return
-
-    def setCommand(self, command):
-        self.cline.setText(command)
-
     def tabClose(self,tabIndex):
         cnt = self.tabWidget.count()
         if(cnt>1):
@@ -1114,31 +1091,6 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         fileName = 'DC' + strftime("%Y%m%d%H%M%S") + '.log'
         logFileName = logdir + '/' + fileName
         self.saveQSCItoFile(self.sciOutput,logFileName)
-
-    def getHistory(self):
-        return self.history
-
-    def setHisory(self, history):
-        self.history = history
-
-    def addToHistory(self, command):
-        if command and (not self.history or self.history[-1] != command):
-            self.history.append(command)
-        self.history_index = len(self.history)
-
-    def getPrevHistoryEntry(self):
-        if self.history:
-            self.history_index = max(0, self.history_index - 1)
-            return self.history[self.history_index]
-        return ''
-
-    def getNextHistoryEntry(self):
-        if self.history:
-            hist_len = len(self.history)
-            self.history_index = min(hist_len, self.history_index + 1)
-            if self.history_index < hist_len:
-                return self.history[self.history_index]
-        return ''
 
 import socket
 if __name__ == '__main__':

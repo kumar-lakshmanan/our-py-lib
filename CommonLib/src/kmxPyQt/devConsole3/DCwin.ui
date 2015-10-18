@@ -175,14 +175,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QLineEdit" name="cline">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>25</height>
-       </size>
-      </property>
-     </widget>
     </widget>
    </item>
    <item row="0" column="2">
