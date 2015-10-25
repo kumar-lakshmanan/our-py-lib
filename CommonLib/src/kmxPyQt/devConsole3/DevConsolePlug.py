@@ -268,7 +268,7 @@ class DevConsole(QtWidgets.QMainWindow, QtWidgets.QDialog, Ui_devConsole):
         if ShowPrint: sys.stdout = self
         if ShowError: sys.stderr = self
 
-        self.inter = InteractiveInterpreter()
+        self.inter = InteractiveInterpreter()        
         self.inter.locals['dev'] = self       
         globals()['dev'] = self
 

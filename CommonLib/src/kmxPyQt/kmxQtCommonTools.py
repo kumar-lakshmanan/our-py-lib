@@ -3,6 +3,7 @@ Created on Sep 6, 2014
 
 @author: Mukundan
 '''
+from werkzeug import datastructures
 '''
 Usage:
 
@@ -30,6 +31,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from kmxGeneral import kmxINIConfigReadWrite
 from kmxGeneral import kmxTools
 import pickle
+import html2text
+
 
 class iconSetup():
     
@@ -95,10 +98,15 @@ class CommonTools(object):
             else:
                 self.IconPath = "../icons/"
 
+    def html2Text(self, data):
+        h = html2text.HTML2Text()
+        #h.ignore_links = True
+        return h.handle(data)
+        
+    
     def setIconByObj(self, itm2Icon):
         # print (itm2Icon.__name__)
         pass
-
 
     def getIconString(self, iconName='NoIcon.png', alternateIcon='NoIcon.png'):
         """
@@ -271,25 +279,15 @@ class CommonTools(object):
         win['size']=self.CallingUI.size()
         win['pos']=self.CallingUI.pos()
         
-
-        #Docks Objects
-        dcks=[]     
-        for each in self.CallingUI.children():
-            if isinstance(each,QtWidgets.QDockWidget):
-                dck={}
-                dck['size']=each.size()
-                dck['pos']=each.pos()
-                dcks.append(dck)
-                
         additionalObjs=[]
-        for each in additionalObjToSaveStates:
-            splt={}
-            splt['state']=each.saveState()
-            additionalObjs.append(splt)
+        if additionalObjToSaveStates:
+            for each in additionalObjToSaveStates:
+                splt={}
+                splt['state']=each.saveState()
+                additionalObjs.append(splt)
 
         data={}
         data['win']=win
-        data['dcks']=dcks
         data['added']=additionalObjs
         data['mylist']=saveThisList
         
@@ -315,16 +313,18 @@ class CommonTools(object):
                 elif isinstance(each,QtWidgets.QSplitter):
                     sptsObj.append(each)
             
-            dcks=data['dcks']
-            for cnt, each in enumerate(range(0,len(dcksObj))):
-                dcksObj[cnt].resize(dcks[cnt]['size'])
-                dcksObj[cnt].move(dcks[cnt]['pos'])
+#             dcks=data['dcks']
+#             for cnt, each in enumerate(range(len(dcksObj),0,-1)):
+#                 dcksObj[cnt].resize(dcks[cnt]['size'])
+#                 dcksObj[cnt].move(dcks[cnt]['pos'])
 
             added=data['added']
-            for cnt, each in enumerate(range(0,len(additionalObjToRestoreStates))):
-                additionalObjToRestoreStates[cnt].restoreState(added[cnt]['state'])
+            if additionalObjToRestoreStates:
+                for cnt, each in enumerate(range(0,len(additionalObjToRestoreStates))):
+                    additionalObjToRestoreStates[cnt].restoreState(added[cnt]['state'])
         
-        return data['mylist']
+            return data['mylist']
+        return None
 
     def popUpMenu(self, menuRequestingtObject, PopupPoint, menuListString, funcToInvoke, additionalArguments='', iconList = []):
 
@@ -383,8 +383,8 @@ class CommonTools(object):
                 Rmnu.addAction(newmenuitem)
 
 
-        PopupPoint.setY(PopupPoint.y() + 30)
-        PopupPoint.setX(PopupPoint.x() + 5)
+        PopupPoint.setY(PopupPoint.y())
+        PopupPoint.setX(PopupPoint.x())
         Rmnu.exec_(menuRequestingtObject.mapToGlobal(PopupPoint))
         del(Rmnu)
 

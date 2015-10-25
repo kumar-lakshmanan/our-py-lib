@@ -45,7 +45,8 @@ import pickle
 import random
 import shutil
 import sys
-
+import re
+numbers = re.compile('\d+')
 
 class MySettings(object):
     var1 = "aa"

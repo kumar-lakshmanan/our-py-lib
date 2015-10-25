@@ -1,0 +1,4 @@
+
+File: "J:\our-py-lib\PyOneApplication\src\core\executerLib.py", line 72, in runScript
+File: "J:\our-py-lib\PyOneApplication\src\core\executerLib.py", line 97, in getUpdatedLocals
+File: "<class 'AttributeError'>", line 0, in 'dict' object has no attribute '__name__'
