@@ -14,6 +14,7 @@ from PyQt5.uic import loadUi
 
 import os
 import sys
+import atexit
 
 import pyoneScriptWindow
 import mainWindow 
@@ -23,7 +24,6 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
     '''
     classdocs
     '''
-
     def __init__(self, currentApp):
         '''
         Constructor
@@ -32,6 +32,7 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
         central.CoreCentral.__init__(self)
+        atexit.register(self.sessionClosed)
         
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -48,8 +49,15 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         self.createToolBars()
         self.createStatusBar()
         self.updateMenus()
-        self.startupActivity()        
-        
+        self.startupActivity()
+                
+    def sessionClosed(self):
+        if hasattr(self, 'outputWindow') and self.outputWindow:
+            content=self.outputWindow.textEdit.text()
+            f=open('PyOne.log','w')
+            f.write(str(content))
+            f.close()
+            
     def closeEvent(self, event):
         self.mdiArea.closeAllSubWindows()
         if self.mdiArea.currentSubWindow():

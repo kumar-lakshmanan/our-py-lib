@@ -47,16 +47,8 @@ import shutil
 import sys
 import re
 numbers = re.compile('\d+')
-
-class MySettings(object):
-    var1 = "aa"
-    var2 = "ba"
-    var3 = 1
-    var4 = 20312312331231
-    var5 = -3
-    var6 = False
-    var7 = True
-    var8 = None
+import socket
+import getpass
 
 class infoStyle(object):
     errorLevel = 2  # -1-No Print, 0-Simple Message, 1-Calling Fn + Message, 2-Complete Info (Complete Path+Message)
@@ -69,8 +61,6 @@ class Tools(object):
     '''
     classdocs
     '''
-
-
     def __init__(self, infoStyle=None):
         '''
         Constructor
@@ -83,11 +73,46 @@ class Tools(object):
     def getRandom(self, stop, start=0):
         return self.rand.randrange(start, stop)
 
+    def getSystemName(self):
+        return str(socket.gethostname())
+
     def getCurrentPath(self):
         return os.path.abspath(os.curdir)
+    
+    def getCurrentUser(self):
+        return getpass.getuser()
 
     def getRelativeFolder(self, folderName):
         return os.path.join(self.getCurrentPath(), folderName)
+
+    def getDateTime(self, format="%Y-%m-%d %H:%M:%S"):
+        """
+        "%Y-%m-%d %H:%M:%S"
+        Directive Meaning Notes
+        %a Locale's abbreviated weekday name.
+        %A Locale's full weekday name.
+        %b Locale's abbreviated month name.
+        %B Locale's full month name.
+        %c Locale's appropriate date and time representation.
+        %d Day of the month as a decimal number [01,31].
+        %H Hour (24-hour clock) as a decimal number [00,23].
+        %I Hour (12-hour clock) as a decimal number [01,12].
+        %j Day of the year as a decimal number [001,366].
+        %m Month as a decimal number [01,12].
+        %M Minute as a decimal number [00,59].
+        %p Locale's equivalent of either AM or PM. (1)
+        %S Second as a decimal number [00,61]. (2)
+        %U Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0. (3)
+        %w Weekday as a decimal number [0(Sunday),6].
+        %W Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0. (3)
+        %x Locale's appropriate date representation.
+        %X Locale's appropriate time representation.
+        %y Year without century as a decimal number [00,99].
+        %Y Year with century as a decimal number.
+        %Z Time zone name (no characters if no time zone exists).
+        %% A literal "%" character.
+        """
+        return strftime(format)
 
     def fileContent(self, fileName):
         f = open(fileName, "r")
@@ -223,33 +248,3 @@ class Tools(object):
             return s
         s = str(s).strip().lower()
         return not s in ['false', 'f', 'n', '0', '']
-
-    def getDateTime(self, format="%Y-%m-%d %H:%M:%S"):
-        """
-        "%Y-%m-%d %H:%M:%S"
-        Directive Meaning Notes
-        %a Locale's abbreviated weekday name.
-        %A Locale's full weekday name.
-        %b Locale's abbreviated month name.
-        %B Locale's full month name.
-        %c Locale's appropriate date and time representation.
-        %d Day of the month as a decimal number [01,31].
-        %H Hour (24-hour clock) as a decimal number [00,23].
-        %I Hour (12-hour clock) as a decimal number [01,12].
-        %j Day of the year as a decimal number [001,366].
-        %m Month as a decimal number [01,12].
-        %M Minute as a decimal number [00,59].
-        %p Locale's equivalent of either AM or PM. (1)
-        %S Second as a decimal number [00,61]. (2)
-        %U Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0. (3)
-        %w Weekday as a decimal number [0(Sunday),6].
-        %W Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0. (3)
-        %x Locale's appropriate date representation.
-        %X Locale's appropriate time representation.
-        %y Year without century as a decimal number [00,99].
-        %Y Year with century as a decimal number.
-        %Z Time zone name (no characters if no time zone exists).
-        %% A literal "%" character.
-        """
-        return strftime(format)
-

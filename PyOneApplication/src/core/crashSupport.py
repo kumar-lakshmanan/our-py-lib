@@ -30,7 +30,7 @@ def errorReport(prittyPrint=1):
 def handleThis():
     data = errorReport()
     print(data)
-    f = open('CrashReport.txt','w')
+    f = open('PyOne.log','w')
     f.write(str(data))
     f.close()
     #Quit the program

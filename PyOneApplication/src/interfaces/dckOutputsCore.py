@@ -19,6 +19,7 @@ import sys
 import html2text
 
 import dckOutputs  
+import version
 
 class SysOutputs(dckOutputs.Ui_DockWidget):
     '''
@@ -62,8 +63,18 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         self.textEdit.setCaretLineBackgroundColor(QColor("#ffe4e4"))
         self.textEdit.setReadOnly(True)
 
-        print ('PyOne') 
-        print ('Interactive Python Interpreter')
+        print (self.parent.aboutInfoPlainText) 
+        print ('---------------------------------------')
+        print('{0}: {1}'.format('AppName'.ljust(20,'.'), version.__buildAppName__))
+        print('{0}: {1}'.format('ProductName'.ljust(20,'.'), version.__buildProductName__))
+        print('{0}: {1}'.format('AppDescription'.ljust(20,'.'), version.__buildAppDescription__))
+        print('{0}: {1}'.format('CompanyName'.ljust(20,'.'), version.__buildCompanyName__))
+        print('{0}: {1}'.format('Copyrights'.ljust(20,'.'), version.__buildCopyrights__))
+        
+        print('{0}: {1}'.format('Version'.ljust(20,'.'), version.__buildNumber__))
+        print('{0}: {1}'.format('Date'.ljust(20,'.'), version.__buildDateTime__))
+        print('{0}: {1}'.format('System'.ljust(20,'.'), version.__buildSystem__))
+        print('{0}: {1}'.format('Owner'.ljust(20,'.'), version.__buildOwner__))   
         print ('---------------------------------------')
         print ('Initiated!')
         print ('Log Start Time: ' + str(strftime("%Y/%m/%d %H:%M:%S")))
@@ -75,7 +86,7 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         print ('Version: ' + str(sys.getwindowsversion()))
         print ('FileSys encodeing: ' + str(sys.getfilesystemencoding()))  
         print ('')     
-        print (self.parent.qtTools.html2Text(self.parent.aboutInfo)) 
+
 
     def write(self, data):
         self.appendPlainOutput(data)

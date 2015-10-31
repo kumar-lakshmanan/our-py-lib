@@ -4,7 +4,7 @@ Created on Oct 24, 2015
 @author: MUKUND
 '''
 from PyQt5.QtCore import (QFile, QFileInfo, QPoint, QSettings, QSignalMapper, QSize, QTextStream, Qt, )
-from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow, QMdiArea, QMessageBox, QTextEdit, QWidget, )
+from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow, QMdiArea, QMessageBox, QTextEdit, QWidget, QDockWidget)
 from PyQt5.QtGui import (QIcon, QKeySequence, QFont, QColor)
 from PyQt5.Qsci import (QsciScintilla, QsciLexerPython)
 from PyQt5 import QtCore, QtGui, Qsci, QtWidgets
@@ -48,14 +48,24 @@ class trays(object):
         self.tray.show()
         return self.tray
     
-    def trayClicked(self, click):                         
+    def trayClicked(self, click):   
+        self.dcksState=[]                      
         if(click==3): 
             if (self.isVisible()):
+                for each in self.findChildren(QDockWidget):
+                    print(dir(each))
+                    obj = each
+                    objState = each.isVisible()
+                    self.dcksState.append((obj,objState))
                 self.hide()
             else:
+                for each in self.dcksState:
+                    obj = each[0]
+                    objState = each[1]
+                    obj.setVisible(objState)
                 self.show()
                 #if self.win.windowState() == QtCore.Qt.WindowMinimized: 
-                self.setWindowState(QtCore.Qt.WindowActive)
+                #self.setWindowState(QtCore.Qt.WindowActive)
                 self.activateWindow()     
                 self.raise_()
                

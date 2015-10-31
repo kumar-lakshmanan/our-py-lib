@@ -22,8 +22,8 @@ class settings():
         Constructor
         '''
         self.configs =  QSettings('config.ini',QSettings.IniFormat)
-        self.aboutInfo = "The <b>PyOne</b> - Kumar's experimental project for rapid automation of frequent windows activities. Its kind of swiss knife for devlopers.<br> Got some ideas for it? Share with me <a href=\"mailto:kaymatrixgmail.com\">kaymatrix@gmail.com</a>, will join and implement them."
-
+        self.aboutInfo = "The <b>PyOne</b> - Kumar's experimental project for rapid automation of frequent windows activities. Kind of swiss knife for developers.<br> Got some ideas for it? Share with me <a href=\"mailto:kaymatrixgmail.com\">kaymatrix@gmail.com</a>."
+        self.aboutInfoPlainText = "The PyOne - Kumar's experimental project for rapid automation of frequent windows activities. \nKind of swiss knife for developers. \nGot some ideas for it? Share with me kaymatrixgmail.com."
         
     def writeSettings(self):        
         #UI Settings

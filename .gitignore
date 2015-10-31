@@ -11,3 +11,6 @@ CommonLib/src/kmxPyQt/devConsole3/ToTransfer/*
 *.pyc
 PyOne_BIN
 today
+PyOne_BIN.7z
+Splitted
+/PyOneApplication/src/bin

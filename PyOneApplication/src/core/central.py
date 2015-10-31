@@ -84,24 +84,31 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
     def startupActivity(self):
         self.readAndApplySettings()   
         self.createDynamicTools()
-     
-        print("Checking custom scripts path..."+ os.path.abspath(self.scriptsPath))               
-        if self.scriptsPath:
-            if self.initalizeScripts and self.scriptsPath and not os.path.exists(self.scriptsPath):
-                os.makedirs(self.scriptsPath)
-            if os.path.exists(self.scriptsPath):
-                self.scriptsWindow.initializer()                
-        else:
-            print ('Invalid script path!')
-
-        try:
-            if self.initalizeScripts:
-                self.execStartUp()
-        except:
-            crashSupport.handleThis()
-
+        self.userScriptsExecution()
         self.readAndApplySettingsFinal()  
         self.customStartupForOverride()          
+
+    def userScriptsExecution(self):
+        try:     
+            print("Checking custom scripts path..."+ os.path.abspath(self.scriptsPath))               
+            if self.scriptsPath:
+                if self.initalizeScripts and self.scriptsPath and not os.path.exists(self.scriptsPath):
+                    os.makedirs(self.scriptsPath)
+                if os.path.exists(self.scriptsPath):
+                    self.scriptsWindow.initializer()                
+            else:
+                print ('Invalid script path!')
+
+            if(self.decrypt('r|thy') == 'kumar'):
+                print("Encryption Security Passed!")
+                if self.initalizeScripts:
+                    self.execStartUp()
+            else:
+                print("---Decryption Failed!---")
+                print("User script execution stopped!")
+        except:
+            crashSupport.handleThis()
+        
                
     def customStartupForOverride(self):
         print('Default Custom startup called.')
@@ -118,7 +125,6 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
         #Dock Scripts list 
         self.scriptsWindow = dckPOScriptsCore.POScripts(self)
         self.addNewDock(self.scriptsWindow, 'PyOneScripts', 'PyOne BuildIN Scripts')
-
 
         #System Tray
         self.setupTray()
