@@ -1,7 +1,7 @@
 '''
 Created on Oct 22, 2015
 
-@author: MUKUND-update
+@author: MUKUND-update-yes
 '''
 
 from PyQt5.QtCore import (QFile, QFileInfo, QPoint, QSettings, QSignalMapper, QSize, QTextStream, Qt, )
