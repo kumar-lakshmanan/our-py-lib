@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "F:\PythonWorkspace\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DevConsolePlug.py", line 112, in <module>
+    from kmxPyQt.devConsole3.DCwin import Ui_devConsole
+  File "F:\PythonWorkspace\our-py-lib\CommonLib\src\kmxPyQt\devConsole3\DCwin.py", line 152, in <module>
+    import fatcow_rc
+ImportError: No module named 'fatcow_rc'

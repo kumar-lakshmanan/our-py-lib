@@ -14,3 +14,4 @@ today
 PyOne_BIN.7z
 Splitted
 /PyOneApplication/src/bin
+__pycache__

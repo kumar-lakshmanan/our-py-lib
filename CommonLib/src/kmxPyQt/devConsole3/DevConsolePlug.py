@@ -19,14 +19,13 @@ import json
 import urllib3
 import xmlutils
 import logging
-import lxml
 import subprocess
 import xml.etree.ElementTree as ET
-import pythoncom, logging
-from pylab import *
+#import pythoncom, logging
+#from pylab import *
 import sqlite3
 import sip
-import fatcow_rc
+#import fatcow_rc
 import tarfile
 
 from PyQt5.uic.Compiler.qtproxies import QtWidgets
@@ -44,8 +43,8 @@ from PyQt5.Qsci import QsciScintilla
 """
 from PyQt5.Qsci import QsciScintilla
 from PyQt5.uic import loadUi
-import win32com
-import win32com.client
+#import win32com
+#import win32com.client
 import pprint
 from PyQt5 import Qsci
 from kmxPyQt import kmxQtMenuBuilder

@@ -149,4 +149,4 @@ class Ui_devConsole(object):
         self.btnExecute.setText(_translate("devConsole", "Execute"))
 
 from PyQt5 import Qsci
-import fatcow_rc
+#import fatcow_rc

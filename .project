@@ -3,6 +3,15 @@
 	<name>our-py-lib</name>
 	<comment></comment>
 	<projects>
+		<project>CommonLib</project>
+		<project>devPlugGenerator</project>
+		<project>pepper</project>
+		<project>PPG</project>
+		<project>PyOneApplication</project>
+		<project>SamplePyApp</project>
+		<project>tools</project>
+		<project>UI2PY</project>
+		<project>xecute-maya</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
