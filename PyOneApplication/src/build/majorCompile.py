@@ -22,6 +22,7 @@ import py2exe
 import requests
 import requests.certs
 import ssl
+from test.test_tools import basepath
 
 # Search Paths...
 currentFolder = os.getcwd()
@@ -36,12 +37,15 @@ for modulePath in modulePathList:
     if modulePath not in sys.path and os.path.exists(modulePath):
         sys.path.append(modulePath)
 
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication')
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication\src')
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication\core')
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication\build')
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication\resources')
-sys.path.append('F:\PythonWorkspace\our-py-lib\PyOneApplication\interfaces')
+MAIN_SCRIPT_FILE = 'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\PyOne.py'
+basepath = 'F:\PythonWorkspace\our-py-lib\PyOneApplication'
+
+sys.path.append(basepath)
+sys.path.append(basepath + '\src')
+sys.path.append(basepath + '\core')
+sys.path.append(basepath + '\build')
+sys.path.append(basepath + '\resources')
+sys.path.append(basepath + '\interfaces')
 
 dllpath = r'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4148_none_5090ab56bcba71c2'
 
@@ -114,7 +118,6 @@ f.write(data)
 f.close()
 
 # PY2EXE CONFIGURATION
-MAIN_SCRIPT_FILE = 'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\PyOne.py'
 USE_ICON = True
 ICON_FILE = 'appicon.ico'
 BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
