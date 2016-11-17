@@ -77,10 +77,8 @@ class customStartupsCls():
 	
 	def _actionRunOncePerDay(self, *arg):
 		#Updating exchange rate...
-		self.parent.AudratesClsObj = AUDRates.AudratesCls(self.parent)
-		self.parent.AudratesClsObj.showRates()
-		self.parent.AudratesClsObj.updateHistory()
 		#self.parent.techMTimeSheetClsObj.submitTimeSheet()
+		print('Run')
 
 	def _actionTimeOut(self):		
 		if(not hasattr(self.parent,'AudratesClsObj')):
