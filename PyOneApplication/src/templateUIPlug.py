@@ -9,8 +9,8 @@ class myUIPlugCls(QtWidgets.QMainWindow):
 	
 	def __init__(self,parent):
 		self.parent=parent 
-		self.settings=self.parent.settings
-		self.tools=self.parent.customTools
+		self.tools=self.parent.ttls		
+		self.qtTools=self.parent.qtTools
 		self.uiFile=myUIPlug.__file__.replace(".py",".ui")
 		super(myUIPlugCls, self).__init__(self.parent)
 		loadUi(self.uiFile, self)
@@ -21,9 +21,8 @@ class myUIPlugCls(QtWidgets.QMainWindow):
 		self.label.setText(input)
 		print(input)
 
-
 if (__name__=="__main__"):
-	if(not hasattr(dev,'myUIPlugClsObj') or sip.isdeleted(dev.myUIPlugClsObj) or dev.devMode):
+	if(not hasattr(dev,'myUIPlugClsObj') or sip.isdeleted(dev.myUIPlugClsObj)):
 		dev.myUIPlugClsObj = myUIPlugCls(dev)
 	dev.myUIPlugClsObj.show()
 	dev.myUIPlugClsObj.raise_()

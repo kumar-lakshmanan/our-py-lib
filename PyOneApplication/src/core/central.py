@@ -65,6 +65,7 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
         '''
         settingsLib.settings.__init__(self,None)
         widgetsLib.dynamicObjs.__init__(self,None)
+        saftyLib.cryption.__init__(self, self)
         self.qtTools = kmxQtCommonTools.CommonTools(self)
         self.ttls = kmxTools.Tools()
         self.qtTree = kmxQtTreeWidget.TreeWidget()
@@ -76,6 +77,9 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
         self.inter.locals['dev'] = self       
         globals()['dev'] = self
 
+    def getArg(self):
+        return str(sys.argv[1] if(len(sys.argv)>1) else '')
+    
     def shutdownActivity(self):
         self.writeSettings()
         self.traykiller()
@@ -98,17 +102,15 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
                     self.scriptsWindow.initializer()                
             else:
                 print ('Invalid script path!')
-
-            if(self.decrypt('r|thy') == 'kumar'):
-                print("Encryption Security Passed!")
+                
+            if(self.decryptValue==self.encrypt('4132')):
+                print("Encryption security passed!")
                 if self.initalizeScripts:
                     self.execStartUp()
             else:
-                print("---Decryption Failed!---")
-                print("User script execution stopped!")
+                print("Encryption security failed! - Encrypt 4132 and set the value to decryptValue setting in config.ini. Note: use double quote to cover the value.")                
         except:
             crashSupport.handleThis()
-        
                
     def customStartupForOverride(self):
         print('Default Custom startup called.')
@@ -120,7 +122,7 @@ class CoreCentral(settingsLib.settings, traysLib.trays, saftyLib.cryption, execu
         #Dock Output
         self.outputWindow = dckOutputsCore.SysOutputs(self)
         self.addNewDock(self.outputWindow, 'Output', 'Displays execution and all standard outputs')
-        self.outputWindow.initialize(self.disableOuput)
+        self.outputWindow.initialize(self)
         
         #Dock Scripts list 
         self.scriptsWindow = dckPOScriptsCore.POScripts(self)

@@ -2,17 +2,17 @@
 #For DevConsole
 '''
 
-class myClassCls():
+class newPlugCls():
 	
 	def __init__(self,parent):
 		self.parent=parent
 		self.tools=self.parent.ttls		
 		self.qtTools=self.parent.qtTools
-		print("myClassCls is ready!")
+		print("newPlugCls is ready!")
 
 	def doRun(self):
-		print("myClassCls is working fine")
+		print("newPlugCls is working fine")
 
 if __name__ == '__main__':
-	dev.myClassClsObj = myClassCls(dev)
-	dev.myClassClsObj.doRun()
+	dev.newPlugClsObj = newPlugCls(dev)
+	dev.newPlugClsObj.doRun()

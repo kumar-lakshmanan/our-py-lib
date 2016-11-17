@@ -11,6 +11,8 @@ from PyQt5 import QtCore, QtGui, Qsci, QtWidgets
 from PyQt5.uic import loadUi
 import os
 import sys
+from PyQt5.Qt import QVariant
+import string
 
 class settings():
     '''
@@ -36,15 +38,18 @@ class settings():
         self.configs.setValue('disableOuput', self.disableOuput)  
         self.configs.setValue('pyDesigner', self.pyDesigner)
         self.configs.setValue('ignoreList', self.ignoreList)  
+        self.configs.setValue('decryptValue',self.decryptValue)
+        
                 
     def readAndApplySettings(self):                  
         self.initalizeScripts =  self.configs.value('initalizeScripts',1,bool)
-        self.scriptsDirName = self.configs.value('scriptsDirName','J:\devcon-scripts')
+        self.scriptsDirName = self.configs.value('scriptsDirName','userScripts')
         self.scriptsPath = os.path.abspath(self.scriptsDirName)
         self.pluginsVerbose = self.configs.value('pluginsVerbose',1,bool)
         self.ignoreList = self.configs.value('ignoreList',['dropboxPkg','\.'])
-        self.disableOuput = self.configs.value('disableOuput',1,bool)
+        self.disableOuput = self.configs.value('disableOuput',0,bool)
         self.pyDesigner = self.configs.value('pyDesigner','C:\Python34\Lib\site-packages\PyQt5\designer.exe')
+        self.decryptValue = self.configs.value('decryptValue','9687',str)
                         
     def readAndApplySettingsFinal(self):    
         #UI Settings

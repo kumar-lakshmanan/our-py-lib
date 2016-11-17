@@ -10,15 +10,17 @@ class cryption(object):
     classdocs
     '''
 
-
-    def __init__(self, params):
+    def __init__(self, parent):
         '''
         Constructor
         '''
-        print('Cryption...!')
+        self.parent = parent
+
+    def isCryptionDefault(self):
+        return not len(sys.argv)>1 
         
     def encrypt(self, text):
-            code = int(sys.argv[1] if(len(sys.argv)>1) else 4321)
+            code = int(sys.argv[1] if(len(sys.argv)>1) else 4132)
             cipher=''
             for each in text:
                     c = (ord(each)+code) % 126
@@ -28,7 +30,7 @@ class cryption(object):
             return cipher
     
     def decrypt(self, text):
-            code = int(sys.argv[1] if(len(sys.argv)>1) else 4321)
+            code = int(sys.argv[1] if(len(sys.argv)>1) else 4132)
             plaintext=''
             for each in text:
                     p = (ord(each)-code) % 126    

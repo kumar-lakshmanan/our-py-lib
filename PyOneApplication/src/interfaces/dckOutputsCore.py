@@ -32,8 +32,9 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         '''
         self.parent = parent
         
-    def initialize(self, disableOuput):        
-        if not disableOuput:        
+    def initialize(self, configs):   
+        self.configs = configs
+        if not self.configs.disableOuput:        
             print("Standard outputs and errors redirected to the system... "+ self.__class__.__name__)
             sys.stdout = self
             sys.stderr = self
@@ -70,11 +71,21 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         print('{0}: {1}'.format('AppDescription'.ljust(20,'.'), version.__buildAppDescription__))
         print('{0}: {1}'.format('CompanyName'.ljust(20,'.'), version.__buildCompanyName__))
         print('{0}: {1}'.format('Copyrights'.ljust(20,'.'), version.__buildCopyrights__))
-        
+        print('')
         print('{0}: {1}'.format('Version'.ljust(20,'.'), version.__buildNumber__))
         print('{0}: {1}'.format('Date'.ljust(20,'.'), version.__buildDateTime__))
         print('{0}: {1}'.format('System'.ljust(20,'.'), version.__buildSystem__))
         print('{0}: {1}'.format('Owner'.ljust(20,'.'), version.__buildOwner__))   
+        print('')
+        print('{0}: {1}'.format('initalizeScripts'.ljust(20,'.'), self.configs.initalizeScripts))
+        print('{0}: {1}'.format('scriptsPath'.ljust(20,'.'), os.path.abspath(self.configs.scriptsDirName)))
+        print('{0}: {1}'.format('pluginsVerbose'.ljust(20,'.'), self.configs.pluginsVerbose))
+        print('{0}: {1}'.format('ignoreList'.ljust(20,'.'), self.configs.ignoreList))
+        print('{0}: {1}'.format('disableOuput'.ljust(20,'.'), self.configs.disableOuput))
+        print('{0}: {1}'.format('pyDesigner'.ljust(20,'.'), self.configs.pyDesigner))
+        print('{0}: {1}'.format('decryptValue'.ljust(20,'.'), self.configs.decryptValue))
+        print('{0}: {1}'.format('startArgument'.ljust(20,'.'), self.parent.getArg()))
+        print('')
         print ('---------------------------------------')
         print ('Initiated!')
         print ('Log Start Time: ' + str(strftime("%Y/%m/%d %H:%M:%S")))

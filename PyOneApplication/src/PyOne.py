@@ -20,6 +20,27 @@ import pyoneScriptWindow
 import mainWindow 
 import central
 
+'''
+First time runner setup
+
+- delete 'config.ini' file if present
+- make sure no 'argument' attach to exe
+- start the app and close the app
+- will create 'userScripts' and config.ini
+- setup 4 digit secret code and attach to argument of this exe
+- start the app again
+- open new file and run below command
+print(dev.encrypt('4132'))
+- get the value displayed in output 
+- paste that value in 'config.ini' file for below mentioned setting
+ decryptValue=9687
+- make sure to add double quote for your value
+eg: 
+decryptValue=";67|8"
+- save the config
+
+'''
+
 class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.CoreCentral):
     '''
     classdocs
@@ -58,11 +79,12 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
             f.write(str(content))
             f.close()
             
-    def closeEvent(self, event):
+    def closeEvent(self, event):           
         self.mdiArea.closeAllSubWindows()
         if self.mdiArea.currentSubWindow():
             event.ignore()
         else:
+            print('closing...')
             self.shutdownActivity()
             event.accept()
 

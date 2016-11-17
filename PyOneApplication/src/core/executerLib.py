@@ -51,7 +51,7 @@ class scriptExecute(object):
         self.userSetup = os.path.join(self.scriptsPath, 'userSetup.py')
         self.userSetup = self.userSetup if os.path.exists(self.userSetup) else os.path.join(self.scriptsPath, 'userSetup.pyc')
         self.userSetup = self.userSetup if os.path.exists(self.userSetup) else ''
-        print("Starting Usersetup script...")
+        print("Starting Usersetup script... userSetup.py")
         self.runScriptFile(self.userSetup)
 
     def addToSysPath(self, path):
@@ -98,8 +98,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
         return namespace                        
 
     def runScriptFile(self, scriptFile):
+        print ('Trying to execute script file... %s' % scriptFile)
         if scriptFile and os.path.exists(scriptFile):
-            print ('Executing... %s' % scriptFile)
             data = self.ttls.fileContent(scriptFile)
             self.runScript(data)
         else:
