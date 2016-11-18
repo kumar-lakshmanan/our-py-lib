@@ -1,10 +1,10 @@
 #PyOne - Help
 ##Kumaresan - Nov 18 2017
 
-##### Index
-- About PyOne
-- First time runner steps
-- Important Points
+### Index
+##### About PyOne
+##### First time runner steps
+##### Important Points
 
 ##### About PyOne
 
