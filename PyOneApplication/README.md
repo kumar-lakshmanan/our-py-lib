@@ -2,7 +2,7 @@
 ##Kumaresan - Nov 18 2017
 
 ### Index
-##### [About PyOne](/#about-pyone-about/)
+##### [About PyOne](/PyOneApplication/README.md#about-pyone-about/)
 ##### First time runner steps
 ##### Important Points
 
