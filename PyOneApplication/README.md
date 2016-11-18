@@ -1,11 +1,6 @@
 #PyOne - Help
 ##Kumaresan - Nov 18 2017
 
-### Index
-##### [About PyOne](/PyOneApplication/README.md#about-pyone-about/)
-##### First time runner steps
-##### Important Points
-
 ##### About PyOne
 
 The PyOne - Kumar's experimental project for rapid automation of frequent windows activities. Kind of swiss knife for developers. Got some ideas for it? Share with me kaymatrixgmail.com.
