@@ -15,6 +15,9 @@ class myUIPlugCls(QtWidgets.QMainWindow):
 		super(myUIPlugCls, self).__init__(self.parent)
 		loadUi(self.uiFile, self)
 		self.pushButton.clicked.connect(self.doRun)
+		
+	def initialize(self):
+		print("myUIPlugClsObj is working fine")
 
 	def doRun(self):
 		input = self.textEdit.toPlainText()

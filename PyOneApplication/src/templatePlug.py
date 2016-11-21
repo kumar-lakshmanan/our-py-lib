@@ -10,9 +10,9 @@ class myClassCls():
 		self.qtTools=self.parent.qtTools
 		print("myClassCls is ready!")
 
-	def doRun(self):
+	def initialize(self):
 		print("myClassCls is working fine")
 
 if __name__ == '__main__':
 	dev.myClassClsObj = myClassCls(dev)
-	dev.myClassClsObj.doRun()
+	dev.myClassClsObj.initialize()
