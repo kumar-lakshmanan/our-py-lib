@@ -8,10 +8,10 @@ class myClassCls():
 		self.parent=parent
 		self.tools=self.parent.ttls		
 		self.qtTools=self.parent.qtTools
-		print("myClassCls is ready!")
+		self.parent.pylib.say("myClassCls is ready!")
 
 	def initialize(self):
-		print("myClassCls is working fine")
+		self.parent.pylib.say("myClassCls initialized!")
 
 if __name__ == '__main__':
 	dev.myClassClsObj = myClassCls(dev)

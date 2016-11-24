@@ -17,12 +17,12 @@ class myUIPlugCls(QtWidgets.QMainWindow):
 		self.pushButton.clicked.connect(self.doRun)
 		
 	def initialize(self):
-		print("myUIPlugClsObj is working fine")
+		self.parent.pylib.say("myUIPlugClsObj is working fine")
 
 	def doRun(self):
 		input = self.textEdit.toPlainText()
 		self.label.setText(input)
-		print(input)
+		self.parent.pylib.say(input)
 
 if (__name__=="__main__"):
 	if(not hasattr(dev,'myUIPlugClsObj') or sip.isdeleted(dev.myUIPlugClsObj)):
