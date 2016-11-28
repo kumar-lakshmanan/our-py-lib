@@ -75,6 +75,8 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                 res = self.inter.runcode(command)
             except SyntaxError:
                 self.inter.showsyntaxerror()
+            except:
+                print(crashSupport.errorReport())
             QtWidgets.QApplication.processEvents()
             if res is not None:
                 print ('\n---------------------------------------\n')
@@ -82,9 +84,9 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                 print ('\n---------------------------------------\n')
         except SystemExit:
             self.inter.showsyntaxerror()
-            crashSupport.handleThis()
+            print(crashSupport.errorReport())
         except:
-            crashSupport.handleThis()
+            print(crashSupport.errorReport())
 
     def getUpdatedLocals(self):
         try:

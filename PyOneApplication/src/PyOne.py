@@ -19,6 +19,7 @@ import atexit
 import pyoneScriptWindow
 import mainWindow 
 import central
+import crashSupport
 
 '''
 First time runner setup
@@ -81,6 +82,7 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
             
     def closeEvent(self, event):           
         self.mdiArea.closeAllSubWindows()
+        self.sessionClosed()
         if self.mdiArea.currentSubWindow():
             event.ignore()
         else:
@@ -322,9 +324,15 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
     def setActiveSubWindow(self, window):
         if window:
             self.mdiArea.setActiveSubWindow(window)
+
+def except_hook(type, value, tback):
+    # manage unhandled exception here
+    print(crashSupport.errorReport())
+    sys.__excepthook__(type, value, tback) # then call the default handler
     
 if __name__ == '__main__':
     mainPyOneApp = QtWidgets.QApplication(sys.argv)
     mainPyOneWin = PyOneMainWindow(mainPyOneApp)
     mainPyOneWin.show()
+    sys.excepthook = except_hook
     sys.exit(mainPyOneApp.exec_())
