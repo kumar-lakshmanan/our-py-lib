@@ -14,6 +14,7 @@ from PyQt5.uic import loadUi
 import os
 import sys
 import crashSupport
+import time
 
 class scriptExecute(object):
     '''
@@ -77,6 +78,7 @@ if path2Add not in sys.path and os.path.exists(path2Add):
                 self.inter.showsyntaxerror()
             except:
                 print(crashSupport.errorReport())
+            time.sleep(.01)
             QtWidgets.QApplication.processEvents()
             if res is not None:
                 print ('\n---------------------------------------\n')
