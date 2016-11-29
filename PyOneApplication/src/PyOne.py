@@ -141,6 +141,12 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
     def about(self):
         QMessageBox.about(self, "About PyOne", self.aboutInfo)
 
+    def help(self):
+        data=self.ttls.fileContent('help.txt')
+        print("-------------------------------")
+        print(data)
+        print("-------------------------------")
+        
     def updateMenus(self):
         hasMdiChild = (self.activeMdiChild() is not None)
         self.saveAct.setEnabled(hasMdiChild)
@@ -257,6 +263,10 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         self.separatorAct = QAction(self)
         self.separatorAct.setSeparator(True)
 
+        self.helpAct = QAction("&Help", self,
+                statusTip="Show the application's Help",
+                triggered=self.help)
+
         self.aboutAct = QAction("&About", self,
                 statusTip="Show the application's About box",
                 triggered=self.about)
@@ -290,6 +300,7 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         self.menuBar().addSeparator()
 
         self.helpMenu = self.menuBar().addMenu("&Help")
+        self.helpMenu.addAction(self.helpAct)
         self.helpMenu.addAction(self.aboutAct)
         self.helpMenu.addAction(self.aboutQtAct)
 

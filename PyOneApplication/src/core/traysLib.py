@@ -37,9 +37,9 @@ class trays(object):
         if(itm=='Quit'):
             sys.exit(0)
         if(itm=='About'):
-            print(self.credit)
+            print(self.aboutInfoPlainText)
         if(itm=='Help'):
-            print('Not Implemented')
+            self.help()
         
     def trayAgentReady(self):    
         self.tray = QtWidgets.QSystemTrayIcon(self.qtIcon.getIcon('action_log.png'), self)
@@ -53,7 +53,6 @@ class trays(object):
         if(click==3): 
             if (self.isVisible()):
                 for each in self.findChildren(QDockWidget):
-                    print(dir(each))
                     obj = each
                     objState = each.isVisible()
                     self.dcksState.append((obj,objState))
@@ -64,8 +63,8 @@ class trays(object):
                     objState = each[1]
                     obj.setVisible(objState)
                 self.show()
-                #if self.win.windowState() == QtCore.Qt.WindowMinimized: 
-                #self.setWindowState(QtCore.Qt.WindowActive)
+                if self.windowState() == QtCore.Qt.WindowMinimized: 
+                    self.setWindowState(QtCore.Qt.WindowActive)
                 self.activateWindow()     
                 self.raise_()
                

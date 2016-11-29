@@ -155,15 +155,16 @@ opVars = {
 
 if DO_CONSOLE_SCREEN:
     if INCLUDE_SOURCE_ZIP:
-        setup(console=[appVariable], options=opVars, zipfile=1, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
+        r=setup(console=[appVariable], options=opVars, zipfile=1, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
     else:
-        setup(console=[appVariable], options=opVars, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
+        r=setup(console=[appVariable], options=opVars, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
 else:
     if INCLUDE_SOURCE_ZIP:
-        setup(windows=[appVariable], options=opVars, data_files=DATAS, zipfile=1 ,version=version.__buildNumber__, author=version.__buildOwner__)
+        r=setup(windows=[appVariable], options=opVars, data_files=DATAS, zipfile=1 ,version=version.__buildNumber__, author=version.__buildOwner__)
     else:
-        setup(windows=[appVariable], options=opVars, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
+        r=setup(windows=[appVariable], options=opVars, data_files=DATAS, version=version.__buildNumber__, author=version.__buildOwner__)
 
+print(r)
 print ("\n\nEvery thing is fine!")
 
 
