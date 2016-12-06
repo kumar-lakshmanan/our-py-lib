@@ -10,6 +10,7 @@ from PyQt5.QtGui import (QIcon, QKeySequence, QFont, QColor)
 from PyQt5.Qsci import (QsciScintilla, QsciLexerPython)
 from PyQt5 import QtCore, QtGui, Qsci, QtWidgets
 from PyQt5.uic import loadUi
+
 #from PyQt5.uic.Compiler.qtproxies import QtWidgets
 
 import ssl
