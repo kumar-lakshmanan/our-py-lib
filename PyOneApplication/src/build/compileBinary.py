@@ -53,7 +53,7 @@ DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
 INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'bs4','requests','json','urllib3','xmlutils','xml','logging','PyQt5.Qsci']
-PACKAGES = ['PyQt5','requests','xml']
+PACKAGES = ['PyQt5','requests','xml','youtube_dl']
 EXCLUDES = []
 
 #FILES TO COPY
