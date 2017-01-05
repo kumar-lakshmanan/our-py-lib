@@ -20,6 +20,7 @@ import pyoneScriptWindow
 import mainWindow 
 import central
 import crashSupport
+import version
 
 '''
 First time runner setup

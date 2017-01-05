@@ -48,18 +48,18 @@ MAIN_SCRIPT_FILE = r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\PyOne.py
 DESTINATION_DIR = r'F:\PythonWorkspace\our-py-lib\tools\PYONE\pack'
 USE_ICON = True
 ICON_FILE = 'appicon.ico'
-BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
 INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'bs4','requests','json','urllib3','xmlutils','xml','logging','PyQt5.Qsci']
-PACKAGES = ['PyQt5','requests','xml','youtube_dl']
+PACKAGES = ['PyQt5','requests','xml']
 EXCLUDES = []
 
 #FILES TO COPY
 listOfFiles = []
 listOfFiles.append(('Microsoft.VC90.CRT', glob(r'C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4148_none_5090ab56bcba71c2\*.*')))
-listOfFiles.append(('platforms', glob(r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\bin\platforms\*.*')))
+listOfFiles.append(('platforms', glob(r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\build\platforms\*.*')))
 listOfFiles.append(('', glob(r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\template*.*')))
 listOfFiles.append(('', glob(r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\help.*')))
 listOfFiles.append(('', glob(r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\devSystem.*')))
