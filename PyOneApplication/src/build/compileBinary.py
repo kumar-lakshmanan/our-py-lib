@@ -26,6 +26,7 @@ import ssl
 import socket
 import version
 from kmxGeneral import kmxTools
+import sqlite3
 
 ####################### PY2EXE CONFIGURATION ##############################
 ###########################################################################
@@ -48,12 +49,12 @@ MAIN_SCRIPT_FILE = r'F:\PythonWorkspace\our-py-lib\PyOneApplication\src\PyOne.py
 DESTINATION_DIR = r'F:\PythonWorkspace\our-py-lib\tools\PYONE\pack'
 USE_ICON = True
 ICON_FILE = 'appicon.ico'
-BUNDLE_LEVEL = 2  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
+BUNDLE_LEVEL = 3  # Can be 1 - For Full Package, 2 - Python Included, 3 - Normal
 DO_COMPRESS = False
 DO_CONSOLE_SCREEN = False
 INCLUDE_SOURCE_ZIP = False
 INCLUDES = ['sip', 'PyQt5.QtPrintSupport', 'PyQt5', 'bs4','requests','json','urllib3','xmlutils','xml','logging','PyQt5.Qsci']
-PACKAGES = ['PyQt5','requests','xml']
+PACKAGES = ['PyQt5','requests','xml','sqlite3','http','osa','pysimplesoap','xmljson','suds']
 EXCLUDES = []
 
 #FILES TO COPY
