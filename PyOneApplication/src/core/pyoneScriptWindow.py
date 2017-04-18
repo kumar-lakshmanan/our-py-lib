@@ -51,6 +51,7 @@ class PyOneScript(QsciScintilla):
 
         self.lexer = QsciLexerPython()
         self.lexer.setDefaultFont(font)
+
         self.setLexer(self.lexer)
         self.sense = Qsci.QsciAPIs(self.lexer)
         self.sense.prepare()        

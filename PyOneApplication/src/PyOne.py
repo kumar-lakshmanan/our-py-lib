@@ -21,6 +21,8 @@ import mainWindow
 import central
 import crashSupport
 import version
+import importlib
+import types
 
 '''
 First time runner setup
@@ -73,7 +75,22 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         self.createStatusBar()
         self.updateMenus()
         self.startupActivity()
-                
+        self.reloadedModules=[]
+
+    def moduleReloader(self, module, trace=0):
+        if (trace):
+            print('Reloading....' + str(module))
+        importlib.reload(module)
+        self.reloadedModules.append(module)
+        for child in vars(module).values():
+            if isinstance(child, types.ModuleType) and child.__cached__ and child not in self.reloadedModules:
+                self.moduleReloader(child, trace)    
+                    
+    def startModuleReloading(self, module, trace=0):
+        self.reloadedModules=[]
+        self.moduleReloader(module,trace)    
+        self.reloadedModules=[]
+                      
     def sessionClosed(self):
         if hasattr(self, 'outputWindow') and self.outputWindow:
             content=self.outputWindow.textEdit.text()
