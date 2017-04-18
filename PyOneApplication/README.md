@@ -26,3 +26,7 @@ decryptValue=";67|8"
 - Config files: All path/url type configs should use special care while using special characters in it. ``(eg. \ should be \\)`` 
 - ``print(dev.encrypt('4132'))`` execute this and get the code and add it to config file
 
+##### More
+- Click check the presentation:
+https://github.com/kaymatrix/our-py-lib/blob/master/PyOneApplication/PyOnePresentation.pdf
+- More info will be added later.
