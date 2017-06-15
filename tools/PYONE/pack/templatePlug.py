@@ -11,6 +11,8 @@ class myClassCls():
 		self.parent.pylib.say("myClassCls is ready!")
 
 	def initialize(self):
+		#insert your initialization and code logic here
+		
 		self.parent.pylib.say("myClassCls initialized!")
 
 if __name__ == '__main__':

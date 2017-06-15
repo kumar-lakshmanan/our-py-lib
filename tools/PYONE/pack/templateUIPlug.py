@@ -1,9 +1,9 @@
+#For DevConsole
 from PyQt5 import QtCore, QtGui, Qsci, QtWidgets
 from PyQt5.uic import loadUi
 import os
 import sip
 import myUIPlug
-#For DevConsole
 
 class myUIPlugCls(QtWidgets.QMainWindow):
 	
@@ -17,15 +17,20 @@ class myUIPlugCls(QtWidgets.QMainWindow):
 		self.pushButton.clicked.connect(self.doRun)
 		
 	def initialize(self):
+		# insert your initialization code here
+		
 		self.parent.pylib.say("myUIPlugClsObj is working fine")
 
 	def doRun(self):
+		# insert your logic for the button	
+		
 		input = self.textEdit.toPlainText()
 		self.label.setText(input)
 		self.parent.pylib.say(input)
 
 if (__name__=="__main__"):
-	if(not hasattr(dev,'myUIPlugClsObj') or sip.isdeleted(dev.myUIPlugClsObj)):
+	if(not hasattr(dev,'myUIPlugClsObj') or sip.isdeleted(dev.myUIPlugClsObj) or dev.devMode):
 		dev.myUIPlugClsObj = myUIPlugCls(dev)
+		dev.myUIPlugClsObj.initialize()
 	dev.myUIPlugClsObj.show()
 	dev.myUIPlugClsObj.raise_()
