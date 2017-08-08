@@ -77,18 +77,26 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         self.startupActivity()
         self.reloadedModules=[]
 
-    def moduleReloader(self, module, trace=0):
+    def _moduleReloader(self, module, trace=0):
+        '''
+        Reloads module
+        Don;t use this ... Use startModuleReloading
+        '''
         if (trace):
             print('Reloading....' + str(module))
         importlib.reload(module)
         self.reloadedModules.append(module)
         for child in vars(module).values():
-            if isinstance(child, types.ModuleType) and child.__cached__ and child not in self.reloadedModules:
-                self.moduleReloader(child, trace)    
+            if isinstance(child, types.ModuleType) and hasattr(child, '__cached__') and child not in self.reloadedModules:
+                self._moduleReloader(child, trace)    
                     
     def startModuleReloading(self, module, trace=0):
+        '''
+        Reloads module
+        Pass module name that has been imported already which need to be reloaded.
+        '''        
         self.reloadedModules=[]
-        self.moduleReloader(module,trace)    
+        self._moduleReloader(module,trace)    
         self.reloadedModules=[]
                       
     def sessionClosed(self):
@@ -354,14 +362,39 @@ class PyOneMainWindow(QtWidgets.QMainWindow, mainWindow.Ui_MainWindow, central.C
         if window:
             self.mdiArea.setActiveSubWindow(window)
 
-def except_hook(type, value, tback):
+def except_hook(type='', value='', tback=''):
     # manage unhandled exception here
     print(crashSupport.errorReport())
     sys.__excepthook__(type, value, tback) # then call the default handler
+
+class CloseAllFilter(QtCore.QObject):
+    """Event filter for closing all windows if the widget is closed."""
+    def eventFilter(self, receiver, event):
+        results = super().eventFilter(receiver, event)        
+        if event.type() == QtCore.QEvent.Close and event.isAccepted():
+            print('Filter: ' + str(results))
+            print('Event: ' + str(event))
+            for win in QApplication.instance().topLevelWidgets():
+                if win != receiver:
+                    try:
+                        crashSupport.errorReport()
+                        win.close()                        
+                        # win.deleteLater() # This seemed to make python crash more consistently.
+                    except (AttributeError, RuntimeError):
+                        pass
+        return results
+# end class CloseAllFilter
+
     
 if __name__ == '__main__':
-    mainPyOneApp = QtWidgets.QApplication(sys.argv)
-    mainPyOneWin = PyOneMainWindow(mainPyOneApp)
-    mainPyOneWin.show()
     sys.excepthook = except_hook
-    sys.exit(mainPyOneApp.exec_())
+    mainPyOneApp = QtWidgets.QApplication(sys.argv)
+    #mainPyOneApp.__close_all_filter = CloseAllFilter()
+    #mainPyOneApp.installEventFilter(mainPyOneApp.__close_all_filter)  
+    mainPyOneApp.aboutToQuit.connect(crashSupport.errorReport)
+    try:
+        mainPyOneWin = PyOneMainWindow(mainPyOneApp)
+        mainPyOneWin.show()
+        sys.exit(mainPyOneApp.exec_())
+    except:
+        crashSupport.errorReport()

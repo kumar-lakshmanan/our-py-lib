@@ -39,6 +39,9 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
             sys.stdout = self
             sys.stderr = self
         
+        self.logFile = os.path.join(self.configs.logPath,'PyOneLog_' + str(strftime("%Y-%m-%d_%H-%M-%S")) + '.log')
+        if self.configs.logEnable: self.parent.ttls.makePathForFile(self.logFile)
+        if self.configs.logEnable: self.parent.ttls.writeFileContent(self.logFile,'')
         font = QFont()
         font.setFamily('Courier')
         font.setFixedPitch(True)
@@ -82,6 +85,8 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         print('{0}: {1}'.format('pluginsVerbose'.ljust(20,'.'), self.configs.pluginsVerbose))
         print('{0}: {1}'.format('ignoreList'.ljust(20,'.'), self.configs.ignoreList))
         print('{0}: {1}'.format('disableOuput'.ljust(20,'.'), self.configs.disableOuput))
+        print('{0}: {1}'.format('logPath'.ljust(20,'.'), self.configs.logPath))
+        print('{0}: {1}'.format('logEnable'.ljust(20,'.'), self.configs.logEnable))
         print('{0}: {1}'.format('pyDesigner'.ljust(20,'.'), self.configs.pyDesigner))
         print('{0}: {1}'.format('decryptValue'.ljust(20,'.'), self.configs.decryptValue))
         print('{0}: {1}'.format('startArgument'.ljust(20,'.'), self.parent.getArg()))
@@ -98,13 +103,19 @@ class SysOutputs(dckOutputs.Ui_DockWidget):
         print ('FileSys encodeing: ' + str(sys.getfilesystemencoding()))  
         print ('')     
 
+    def logFileUpdate(self, data):
+        if self.configs.logEnable:
+            f = open(self.logFile,'a')
+            f.write(str(data))
+            f.close()
 
     def write(self, data):
         self.appendPlainOutput(data)
 
     def appendPlainOutput(self, data):
         self.textEdit.setCursorPosition(self.textEdit.lines(),0)
-        self.textEdit.insert(str(data))
+        self.logFileUpdate(data)
+        self.textEdit.insert(str(data))        
         vsb = self.textEdit.verticalScrollBar()
         vsb.setValue(vsb.maximum())    
         hsb = self.textEdit.horizontalScrollBar()

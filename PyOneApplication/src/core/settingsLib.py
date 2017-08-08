@@ -39,7 +39,8 @@ class settings():
         self.configs.setValue('pyDesigner', self.pyDesigner)
         self.configs.setValue('ignoreList', self.ignoreList)  
         self.configs.setValue('decryptValue',self.decryptValue)
-        
+        self.configs.setValue('logPath',self.logPath)
+        self.configs.setValue('logEnable',self.logEnable)
                 
     def readAndApplySettings(self):                  
         self.initalizeScripts =  self.configs.value('initalizeScripts',1,bool)
@@ -50,6 +51,8 @@ class settings():
         self.disableOuput = self.configs.value('disableOuput',0,bool)
         self.pyDesigner = self.configs.value('pyDesigner','C:\Python34\Lib\site-packages\PyQt5\designer.exe')
         self.decryptValue = self.configs.value('decryptValue','9687',str)
+        self.logPath = self.configs.value('logPath','logs',str)
+        self.logEnable = self.configs.value('logEnable',1,bool)
                         
     def readAndApplySettingsFinal(self):    
         #UI Settings
